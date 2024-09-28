@@ -5,10 +5,10 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thyme_to_cook/views/forgot_password_view.dart';
-import 'package:thyme_to_cook/views/login_view.dart';
-import 'package:thyme_to_cook/views/register_view.dart';
-import 'package:thyme_to_cook/views/verify_email_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,8 +44,9 @@ class HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is AuthStateLoggedIn) {
-          return ;
+        return const RegisterView();
+        /* if (state is AuthStateLoggedIn) {
+          return const RegisterView();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateForgotPassword) {
@@ -58,7 +59,7 @@ class HomePage extends StatelessWidget {
           return const Scaffold(
             body: CircularProgressIndicator(),
           );
-        }
+        } */
       },
     );
   }
