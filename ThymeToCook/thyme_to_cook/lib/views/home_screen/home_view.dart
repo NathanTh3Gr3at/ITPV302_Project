@@ -2,13 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
+import 'package:thyme_to_cook/constants/screens.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/models/category_model.dart';
 import 'package:thyme_to_cook/models/recipe_viewed.dart';
+import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
-import 'package:thyme_to_cook/views/profile_section/profile_view.dart';
+import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,10 +20,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-   List<CategoryModel> categories = [];
-   List<ViewedRecipeModel> viewedRecipes = [];
+  List<CategoryModel> categories = [];
+  List<ViewedRecipeModel> viewedRecipes = [];
 
-    void _getCategories() {
+  void _getCategories() {
     categories = CategoryModel.getCategories();
   }
 
@@ -41,24 +43,18 @@ class _HomeViewState extends State<HomeView> {
     viewedRecipes = ViewedRecipeModel.getRecipes();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    //Come back here and fix!!!
     _getInitial();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 254, 247),
       body: _viewedRecipes(),
-
-
-
       appBar: AppBar(
         title: const Text(
           "Good Morning!",
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 25,
-            fontWeight: FontWeight.bold
-          ),
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 252, 253, 245),
         actions: [
@@ -72,195 +68,187 @@ class _HomeViewState extends State<HomeView> {
                   final shouldLogOut = await showLogOutDialog(context);
                   if (shouldLogOut) {
                     context.read<AuthBloc>().add(
-                      const AuthEventLogOut(),
-                    );
-
+                          const AuthEventLogOut(),
+                        );
                   }
-                 // added menu action to go to profile view 
-                case MenuAction.profile:  
-                  Navigator.push(context, 
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileView(),
-                  ),);
-                  
-                } 
-                // case ProfileAction.profile:
-                //     const userProfile = ProfileView();
-                //     if (userProfile)
-                //     {
-                //       return ProfileView();
-                    
-                   
-                      
-          },
-          itemBuilder: (context) {
+                // added menu action to go to profile view
+                case MenuAction.profile:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileView(),
+                    ),
+                  );
+              }
+              // case ProfileAction.profile:
+              //     const userProfile = ProfileView();
+              //     if (userProfile)
+              //     {
+              //       return ProfileView();
+            },
+            itemBuilder: (context) {
               return [
                 const PopupMenuItem<MenuAction>(
-                  value: MenuAction.logout, 
-                  child:  Text("Log Out"),
+                  value: MenuAction.logout,
+                  child: Text("Log Out"),
                 ),
                 // User profile text
                 const PopupMenuItem<MenuAction>(
                   value: MenuAction.profile,
                   child: Text("User Profile"),
-
-                  
-                  )
-                  
+                )
               ];
             },
-            
           )
         ],
-        
-      
       ),
+      // Navigation bar
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 
   Column _viewedRecipes() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,   // aligns to left of screen
+      crossAxisAlignment: CrossAxisAlignment.start, // aligns to left of screen
       children: [
         searchField(),
-        const SizedBox(height: 20,),    // distance from searchbar 
+        const SizedBox(
+          height: 20,
+        ), // distance from searchbar
         _recommended(),
-        const SizedBox(height: 40,),   // distance from _recommended() section
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
- 
+        const SizedBox(
+          height: 40,
+        ), // distance from _recommended() section
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Padding(
             // formatting of text
-            padding: EdgeInsets.only(left: 30),     
+            padding: EdgeInsets.only(left: 30),
             child: Text(
               "Recently viewed\nrecipes",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 18,
-                fontWeight: FontWeight.bold,    
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 15,),
+          const SizedBox(
+            height: 15,
+          ),
           Container(
-              // color: Colors.green,
-              // height of container
-              height:  120,
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: viewedRecipes[index].boxColor.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        
-                        IconButton( onPressed: (){
-                            }, icon: const Icon(Icons.add_card_rounded)
-                            ,
-                          ),
-                        
-                        Container(
-                          alignment: const Alignment(0, 0),
-                          child: Text(
-                            // Uses the viewedRecipes to display data
-                            
-                            '${viewedRecipes[index].name}\n${viewedRecipes[index].duration}',
-                            style: const TextStyle(
+            // color: Colors.green,
+            // height of container
+            height: 120,
+            child: ListView.separated(
+              itemBuilder: (context, index) {
+                return Container(
+                  width: 120,
+                  decoration: BoxDecoration(
+                    color: viewedRecipes[index].boxColor.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add_card_rounded),
+                      ),
+                      Container(
+                        alignment: const Alignment(0, 0),
+                        child: Text(
+                          // Uses the viewedRecipes to display data
+
+                          '${viewedRecipes[index].name}\n${viewedRecipes[index].duration}',
+                          style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
                               fontSize: 12,
-                              fontStyle: FontStyle.italic    
-                            ),
-                          ),
-
+                              fontStyle: FontStyle.italic),
                         ),
-                      ],
-                    ),
-                  );
-                },
-                // space between items
-                separatorBuilder: (context, index) => const SizedBox(width: 20,),
-                // number of items in container
-                itemCount: viewedRecipes.length,
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              // space between items
+              separatorBuilder: (context, index) => const SizedBox(
+                width: 20,
               ),
+              // number of items in container
+              itemCount: viewedRecipes.length,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(
+                left: 20,
+                right: 20,
+              ),
+            ),
           )
-        ]
-         
-        )
+        ])
       ],
     );
   }
 
   Column _recommended() {
     return Column(
-          
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 20),     // specifies padding from left of screen 
-              child: Text(
-                "Recommended",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,    // bolds font
-                ),
-              ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(
+              left: 20), // specifies padding from left of screen
+          child: Text(
+            "Recommended",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold, // bolds font
             ),
-            const SizedBox(height: 15,),    // distance from category text
-            SizedBox(
-              height: 150,
-             
-              child: ListView.separated(
-                // allows scrolling  from left to right
-                scrollDirection: Axis.horizontal,     
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 10,
-                ),
-                separatorBuilder: (context, index) => const SizedBox(width: 25,),
-                // Length of category recommended
-                itemCount: categories.length,       
-                itemBuilder: (context, index) {   // index of images
-                  return Container(
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: categories[index].boxColor.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ), // distance from category text
+        SizedBox(
+          height: 150,
+          child: ListView.separated(
+            // allows scrolling  from left to right
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.only(
+              left: 20,
+              right: 10,
+            ),
+            separatorBuilder: (context, index) => const SizedBox(
+              width: 25,
+            ),
+            // Length of category recommended
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              // index of images
+              return Container(
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: categories[index].boxColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         // contains placeholder image
-                        Container( 
-                           
+                        Container(
                           width: 50,
                           height: 50,
                           decoration: const BoxDecoration(
                             // icon outer shape colour
-                            color: Colors.white,    
+                            color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Padding(
-                            
-                            padding: const EdgeInsets.all(5.0),
-                            child: IconButton(
-                              onPressed: (){
-
-                              }, icon: const Icon(Icons.favorite_outline_outlined)
-                            )
-                          ),
+                              padding: const EdgeInsets.all(5.0),
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                      Icons.favorite_outline_outlined))),
                         ),
                         Text(
                           categories[index].name,
@@ -269,54 +257,47 @@ class _HomeViewState extends State<HomeView> {
                             color: Colors.black,
                             fontSize: 14,
                           ),
-                        ), 
-                      ]
-                    )
-                  );
-                },
-              ),
-            ),
-          ],
-        );
+                        ),
+                      ]));
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Container searchField() {
     return Container(
-          margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
-                blurRadius: 40,
-                spreadRadius: 0.0
-              )
-            ]
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(15),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.search),
-              ),
-              hintText: "Search for recipes",
-              hintStyle: const TextStyle(
-                color: Color.fromARGB(122, 0, 0, 0),
-                fontSize: 12,
-              ),
-              suffixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.filter_alt_rounded),
-                
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
-              )
+      margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+            color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
+            blurRadius: 40,
+            spreadRadius: 0.0)
+      ]),
+      child: TextField(
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(15),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(Icons.search),
             ),
-          ),
+            hintText: "Search for recipes",
+            hintStyle: const TextStyle(
+              color: Color.fromARGB(122, 0, 0, 0),
+              fontSize: 12,
+            ),
+            suffixIcon: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(Icons.filter_alt_rounded),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none,
+            )),
+      ),
     );
   }
 }

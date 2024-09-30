@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -10,8 +11,9 @@ class ProfileView extends StatelessWidget {
 
 
       appBar: AppBar(
-        
+        title: const Text("Profile")
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 

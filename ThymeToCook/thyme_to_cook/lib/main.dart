@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen.dart';
+import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
@@ -10,21 +12,32 @@ import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
+import 'package:thyme_to_cook/views/main_navigation.dart';
+
+
 
 void main() {
+  
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,    // removes debug label on top-right corner
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
+      BlocProvider(create: (context) => NavigationBloc())
+    ], 
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,  //removes debug label on top-right corner
       title: 'Flutter Demo',
       theme: ThemeData(
-        
+        textTheme: const TextTheme(
+        headlineLarge: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, fontFamily: 'Poppins'),
+        headlineMedium: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic, fontFamily: 'Poppins'),
+        bodySmall: TextStyle(fontSize: 14.0, fontFamily: 'Poppins'),
+    ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: BlocProvider<AuthBloc>(
-        create:(context)=>AuthBloc(FirebaseAuthProvider()),
-        child:const HomePage(),),
-    ));
+      home: const HomePage(),
+    )));
 }
 
 
@@ -47,7 +60,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         // return const RegisterView()
-        return const HomeView();              // starts at HomeView
+        return const MainNavigation();              // starts at HomeView
         /* if (state is AuthStateLoggedIn) {
           return const RegisterView();
         } else if (state is AuthStateNeedsVerification) {
