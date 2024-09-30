@@ -5,6 +5,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thyme_to_cook/views/home_screen/home_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
@@ -13,6 +14,7 @@ import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dar
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,    // removes debug label on top-right corner
       title: 'Flutter Demo',
       theme: ThemeData(
         
@@ -44,7 +46,8 @@ class HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return const RegisterView();
+        // return const RegisterView()
+        return const HomeView();              // starts at HomeView
         /* if (state is AuthStateLoggedIn) {
           return const RegisterView();
         } else if (state is AuthStateNeedsVerification) {
