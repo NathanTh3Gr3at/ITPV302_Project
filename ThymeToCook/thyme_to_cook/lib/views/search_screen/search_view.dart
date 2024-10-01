@@ -12,8 +12,16 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 254, 247),
       appBar: AppBar(
-        title: const Text("Search"),
+        title: const Text(
+          "Search",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       bottomNavigationBar: const BottomNavBar(),
     );

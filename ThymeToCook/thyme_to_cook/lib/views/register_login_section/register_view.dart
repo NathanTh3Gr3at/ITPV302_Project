@@ -12,7 +12,7 @@ class RegisterView extends StatefulWidget {
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
-
+//Navigation fix needed
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
@@ -33,6 +33,7 @@ class _RegisterViewState extends State<RegisterView> {
         }
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -41,8 +42,8 @@ class _RegisterViewState extends State<RegisterView> {
             children: [
               const Image(
                 image: AssetImage('assets/images/placeholder_image.jpg'),
-                width: 250,
-                height: 250,
+                width: 300,
+                height: 300,
               ),
               Align(
                 alignment: Alignment.center,
@@ -73,7 +74,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
               ),
-              //error overflow of text need to fix it
+              
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: TextField(

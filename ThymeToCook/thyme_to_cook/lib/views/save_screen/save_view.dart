@@ -13,8 +13,14 @@ class _SaveViewState extends State<SaveView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Saved Recipes")
-      ),
+          title: const Text(
+        "Saved Recipes",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+      )),
       bottomNavigationBar: const BottomNavBar(),
     );
   }

@@ -44,21 +44,26 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     //Come back here and fix!!!
+    //Could make keyboard unfocus when user clicks away
     _getInitial();
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 255, 254, 247),
       body: _viewedRecipes(),
       appBar: AppBar(
         title: const Text(
           "Good Morning!",
           style: TextStyle(
-              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+            color: Colors.black,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: const Color.fromARGB(255, 252, 253, 245),
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.menu),
             onSelected: (value) async {
               switch (value) {
                 //handles logging out
@@ -107,8 +112,6 @@ class _HomeViewState extends State<HomeView> {
                   child: Text("Log Out"),
                 )
                 // User profile text
-                
-                
               ];
             },
           )
@@ -283,8 +286,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Container searchField() {
+   Container searchField() {
     return Container(
+      
       margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(
         boxShadow: [
@@ -318,6 +322,48 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-    );
+    ); 
+ /*  Widget searchField() {
+    return Center(
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+          
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                  color:
+                      const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
+                  blurRadius: 40,
+                  spreadRadius: 0.0)
+            ],
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(15),
+              prefixIcon: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Icon(Icons.search),
+              ),
+              hintText: "Search for recipes",
+              hintStyle: const TextStyle(
+                color: Color.fromARGB(122, 0, 0, 0),
+                fontSize: 12,
+              ),
+              suffixIcon: const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Icon(Icons.filter_alt_rounded),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ); */
   }
 }
