@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -12,7 +13,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 254, 247),
+      backgroundColor: mainBackground,
       appBar: AppBar(
         title: const Text(
           "Search",

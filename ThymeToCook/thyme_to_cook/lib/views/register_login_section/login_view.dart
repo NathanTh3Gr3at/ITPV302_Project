@@ -4,6 +4,8 @@ import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -37,8 +39,9 @@ class _LoginViewState extends State<LoginView> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-            //title: const Text('Login'),
+            
             ),
+        backgroundColor: mainBackground,
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -118,7 +121,7 @@ class _LoginViewState extends State<LoginView> {
                         );
                   },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 87, 132, 155),
+                      backgroundColor: mainButtonColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30))),
                   child: const Text(

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 import 'package:thyme_to_cook/utilities/dialogs/password_reset_dialog.dart';
 
@@ -43,6 +45,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         }
       },
       child: Scaffold(
+        backgroundColor: mainBackground,
         appBar: AppBar(
           title: const Text('Forgot Password'),
         ),
@@ -61,22 +64,40 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   hintText: 'Your email address....',
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  final email = _controller.text;
-                  context
-                      .read<AuthBloc>()
-                      .add(AuthEventForgotPassword(email: email));
-                },
-                child: const Text('Send me password reset link'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    final email = _controller.text;
+                    context
+                        .read<AuthBloc>()
+                        .add(AuthEventForgotPassword(email: email));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainButtonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('Send me password reset link'),
+                ),
               ),
-              TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(
-                        const AuthEventLogOut(),
-                      );
-                },
-                child: const Text('Back to login page'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogOut(),
+                        );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: mainButtonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('Back to login page'),
+                ),
               ),
             ],
           ),

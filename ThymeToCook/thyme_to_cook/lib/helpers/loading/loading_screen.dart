@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen_controller.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class LoadingScreen {
   static final LoadingScreen _shared = LoadingScreen._sharedInstance();
@@ -41,7 +42,7 @@ class LoadingScreen {
     final overlay = OverlayEntry(
       builder: (context) {
         return Material(
-          color: Colors.black.withAlpha(150),
+          color: loadingScreenColor.withAlpha(150),
           child: Center(
             child: Container(
               constraints: BoxConstraints(

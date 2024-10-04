@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class ViewedRecipeModel {
   String name;
@@ -17,7 +18,7 @@ class ViewedRecipeModel {
   });
 
   static List <ViewedRecipeModel> getRecipes() {
-    const color = Color.fromARGB(255, 157, 229, 255);
+    const color = recentlyViewedTileColor;
     List <ViewedRecipeModel> recipes = [];
 
     // placeholder logic

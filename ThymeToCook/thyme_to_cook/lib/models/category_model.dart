@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class CategoryModel {
   String name;
@@ -15,7 +16,7 @@ class CategoryModel {
 
 static List<CategoryModel> getCategories() {
   // change recomendation box color here
-  const color = Color.fromARGB(255, 176, 255, 197);
+  const color = recTileColor;
   List<CategoryModel> categories = [];
 
     // 5 in placeholder

@@ -6,6 +6,7 @@ import 'package:thyme_to_cook/models/recipe_viewed.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
@@ -53,7 +54,7 @@ class _HomeViewState extends State<HomeView> {
     _getInitial();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromARGB(255, 255, 254, 247),
+      backgroundColor: mainBackground,
       body: _viewedRecipes(),
       appBar: AppBar(
         title: const Text(
@@ -64,7 +65,7 @@ class _HomeViewState extends State<HomeView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 252, 253, 245),
+        backgroundColor:mainBackground,
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -96,11 +97,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   );
               }
-              // case ProfileAction.profile:
-              //     const userProfile = ProfileView();
-              //     if (userProfile)
-              //     {
-              //       return ProfileView();
+             
             },
             itemBuilder: (context) {
               return [
@@ -298,7 +295,7 @@ class _HomeViewState extends State<HomeView> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
+              color: searchBarColor.withOpacity(0.11),
               blurRadius: 40,
               spreadRadius: 0.0)
         ],

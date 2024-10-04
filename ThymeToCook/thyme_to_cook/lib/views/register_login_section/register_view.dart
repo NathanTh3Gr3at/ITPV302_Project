@@ -4,6 +4,8 @@ import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
@@ -12,6 +14,7 @@ class RegisterView extends StatefulWidget {
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
+
 //Navigation fix needed
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
@@ -34,6 +37,7 @@ class _RegisterViewState extends State<RegisterView> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        backgroundColor: mainBackground,
         appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -74,7 +78,6 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
               ),
-              
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: TextField(
@@ -126,8 +129,7 @@ class _RegisterViewState extends State<RegisterView> {
                               );
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 87, 132, 155),
+                            backgroundColor: mainButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
