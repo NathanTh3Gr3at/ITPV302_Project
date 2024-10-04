@@ -43,8 +43,13 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    //Come back here and fix!!!
-    //Could make keyboard unfocus when user clicks away
+    
+    // needs to be tested
+    GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      });
+   
     _getInitial();
     return Scaffold(
       resizeToAvoidBottomInset: false,
