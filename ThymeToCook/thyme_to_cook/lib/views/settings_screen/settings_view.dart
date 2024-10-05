@@ -15,7 +15,7 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text("Settings"),
         actions: [

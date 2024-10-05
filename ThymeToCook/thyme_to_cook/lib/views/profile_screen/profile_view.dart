@@ -4,7 +4,7 @@ import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
-import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
@@ -16,7 +16,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text("Profile"),
         actions: [
@@ -133,8 +133,7 @@ class ProfileView extends StatelessWidget {
                           // styles the button
                           style: TextButton.styleFrom(
                             side: const BorderSide(color: Colors.black),
-                            backgroundColor:
-                                editProfileButton,
+                            backgroundColor: iconColor,
                           ),
                           child: const Text(
                             'Edit profile',

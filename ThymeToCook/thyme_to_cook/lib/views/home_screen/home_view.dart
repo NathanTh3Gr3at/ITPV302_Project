@@ -45,27 +45,26 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     
+
     // needs to be tested
-    GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      });
-   
+    GestureDetector(onTap: () {
+      FocusScope.of(context).unfocus();
+    });
+
     _getInitial();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: mainBackground,
+      backgroundColor: backgroundColor,
       body: _viewedRecipes(),
       appBar: AppBar(
-        title: const Text(
-          "Good Morning!",
+        title: const Text("Good Morning",
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor:mainBackground,
+        backgroundColor: backgroundColor,
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -97,7 +96,6 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   );
               }
-             
             },
             itemBuilder: (context) {
               return [
@@ -288,22 +286,22 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-   Container searchField() {
+  Container searchField() {
     return Container(
-      
       margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              color: searchBarColor.withOpacity(0.11),
+              color: searchbarBackgroundColor.withOpacity(0.11),
               blurRadius: 40,
               spreadRadius: 0.0)
         ],
       ),
       child: TextField(
+        
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: searchbarBackgroundColor,
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: const Padding(
             padding: EdgeInsets.all(16.0),
@@ -324,48 +322,6 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-    ); 
- /*  Widget searchField() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
-          
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color:
-                      const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
-                  blurRadius: 40,
-                  spreadRadius: 0.0)
-            ],
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(15),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.search),
-              ),
-              hintText: "Search for recipes",
-              hintStyle: const TextStyle(
-                color: Color.fromARGB(122, 0, 0, 0),
-                fontSize: 12,
-              ),
-              suffixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.filter_alt_rounded),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ); */
+    );
   }
 }

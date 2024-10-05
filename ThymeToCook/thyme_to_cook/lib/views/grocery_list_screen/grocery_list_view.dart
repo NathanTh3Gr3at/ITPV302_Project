@@ -20,12 +20,13 @@ class _GroceryListViewState extends State<GroceryListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
         title: const Text(
           "Grocery List",
           style: TextStyle(
-            color: Colors.black,
+            color: headingColor,
             fontSize: 25,
             fontWeight: FontWeight.bold,
           ),

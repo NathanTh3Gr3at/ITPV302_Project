@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
-import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class VerifyEmailView extends StatefulWidget {
@@ -17,7 +17,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mainBackground,
+        backgroundColor: backgroundColor,
         title: const Text('Verify email'),
       ),
       body: Column(
@@ -33,7 +33,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: mainButtonColor,
+              backgroundColor: primaryButtonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -47,7 +47,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: mainButtonColor,
+              backgroundColor: primaryButtonColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

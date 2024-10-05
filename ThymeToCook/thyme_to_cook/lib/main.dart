@@ -7,6 +7,11 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
+import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,10 +62,10 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         // return const RegisterView()
-        // MainNavigation();
-        return const MainNavigation(); // starts at HomeView
-        /* if (state is AuthStateLoggedIn) {
-          return const RegisterView();
+        
+        return const RecipeView(); // starts at HomeView
+        /*  if (state is AuthStateLoggedIn) {
+          return const MainNavigation();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateForgotPassword) {
@@ -73,7 +78,7 @@ class HomePage extends StatelessWidget {
           return const Scaffold(
             body: CircularProgressIndicator(),
           );
-        } */
+        }  */
       },
     );
   }

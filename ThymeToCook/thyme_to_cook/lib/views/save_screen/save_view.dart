@@ -13,8 +13,9 @@ class _SaveViewState extends State<SaveView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: mainBackground,
+        backgroundColor: backgroundColor,
           title: const Text(
         "Saved Recipes",
         style: TextStyle(

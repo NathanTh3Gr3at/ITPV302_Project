@@ -4,7 +4,7 @@ import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
-import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 
@@ -37,7 +37,7 @@ class _RegisterViewState extends State<RegisterView> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: mainBackground,
+        backgroundColor: backgroundColor,
         appBar: AppBar(),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -129,7 +129,7 @@ class _RegisterViewState extends State<RegisterView> {
                               );
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: mainButtonColor,
+                            backgroundColor: primaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -146,7 +146,10 @@ class _RegisterViewState extends State<RegisterView> {
                               const AuthEventLogOut(),
                             );
                       },
-                      child: const Text('Already registered? Login here'),
+                      child: const Text(
+                        'Already registered? Login here',
+                        style: TextStyle(color: secodaryButtonColor),
+                      ),
                     )
                   ],
                 ),

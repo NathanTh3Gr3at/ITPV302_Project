@@ -1,31 +1,37 @@
 import 'package:flutter/material.dart';
 // import 'package:hexcolor/hexcolor.dart'; can remove this dependency
 
-
-
-const Color color1 = Color(0xFFF7F9F2); // #F7F9F2
-
-const Color color2 = Color(0xFFD8EFD3); // #D8EFD3
-
-const Color color3 = Color(0xFF95D2B3); // #95D2B3
-
-const Color color4 = Color(0xFF55AD9B); // #55AD9B
-
-// main background color
-const Color mainBackground = Color(0xFFF1F8E8);
-
-// for the search bar
-const searchBarColor= Color(0xffF6EBEB);
-
-// dialog background
-const dialogBackground= Color(0xffF6EBEB);
-
-
-//home screen recently viewed tile color
-const recentlyViewedTileColor= Color.fromARGB(255, 157, 229, 255);
-
-// home screen recommended tile color
-const recTileColor= Color.fromARGB(255, 176, 255, 197);
-
-// loading screen color
-const loadingScreenColor=Colors.black;
+// Background 
+const Color backgroundColor = Color(0xFFF1F8E8);
+// Primary buttons
+const Color primaryButtonColor = Color(0xFF95D2B3);
+// Secondary buttons
+const Color secodaryButtonColor = Color(0xFFD8EFD3);
+// Recently Viewed tile
+const Color recentlyViewedTileColor= Color(0xffF3E8D8);
+// Recommended Tile 
+const Color recTileColor= Color(0xffe8d8f3);
+// Headings
+const Color headingColor = Color(0xFF55ad9b);
+// body Text
+const Color bodyTextColor = Color(0xFF0a060d);
+// Search bar Background
+const Color searchbarBackgroundColor= Color(0xffe8d8f3);
+// Search bar text
+const Color searchbarTextColor = Color(0xff0a060d);
+// Links
+const Color linksColour = Color(0xFF2710cc);
+// Navigation bar
+const Color navigationBarColor = Color(0xFFf7f9f2);
+// Icons
+const Color iconColor = Color(0xFF55ad9b);
+// Bottom Nav bar Icon color
+const Color navIconColor=Colors.black;
+// Bottom nav bar icon selected 
+const Color navIconSelectedColor=Color.fromARGB(206, 236, 235, 235);
+// Borders and dividers
+const Color bordersAndDividersColor = Color(0xFFd8efd3);
+// Error messages and alerts
+const Color errorMessagesAndAlertsColor= Color(0xffaa5523);
+// Loading Screen color
+const Color loadingScreenColor=Colors.black;

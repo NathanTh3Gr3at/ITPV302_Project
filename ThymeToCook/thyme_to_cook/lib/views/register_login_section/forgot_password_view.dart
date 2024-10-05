@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
-import 'package:thyme_to_cook/themes/colors/button_colors.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 import 'package:thyme_to_cook/utilities/dialogs/password_reset_dialog.dart';
@@ -45,7 +45,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         }
       },
       child: Scaffold(
-        backgroundColor: mainBackground,
+        backgroundColor: backgroundColor,
         appBar: AppBar(
           title: const Text('Forgot Password'),
         ),
@@ -74,7 +74,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         .add(AuthEventForgotPassword(email: email));
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: mainButtonColor,
+                    backgroundColor: primaryButtonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -91,7 +91,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                         );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: mainButtonColor,
+                    backgroundColor: primaryButtonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

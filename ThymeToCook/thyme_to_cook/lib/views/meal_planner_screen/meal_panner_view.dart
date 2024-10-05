@@ -20,8 +20,9 @@ class _MealPannerViewState extends State<MealPannerView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
         title: const Text(
           "Meal Planner",
           style: TextStyle(
