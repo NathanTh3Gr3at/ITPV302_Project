@@ -116,6 +116,7 @@ class ProfileView extends StatelessWidget {
                         width: 80,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
+                          
                           //user profile image
                           image: DecorationImage(
                             fit: BoxFit.cover,
@@ -167,7 +168,7 @@ class ProfileView extends StatelessWidget {
                     TabBar(
                       tabs: [
                         Tab(
-                          child: Text("Kitchen Activitiy"),
+                          child: Text("Kitchen Activity"),
                         ),
                         Tab(
                           child: Text("Recipes Created"),
