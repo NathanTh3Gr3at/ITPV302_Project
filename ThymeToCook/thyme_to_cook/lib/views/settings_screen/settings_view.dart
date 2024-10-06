@@ -17,6 +17,7 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
         title: const Text("Settings"),
         actions: [
           // pop menu

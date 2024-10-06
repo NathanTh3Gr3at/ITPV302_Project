@@ -26,7 +26,7 @@ class _GroceryListViewState extends State<GroceryListView> {
         title: const Text(
           "Grocery List",
           style: TextStyle(
-            color: headingColor,
+            color: Colors.black,
             fontSize: 25,
             fontWeight: FontWeight.bold,
           ),

@@ -11,8 +11,6 @@ const Color secodaryButtonColor = Color(0xFFD8EFD3);
 const Color recentlyViewedTileColor= Color(0xffF3E8D8);
 // Recommended Tile 
 const Color recTileColor= Color(0xffe8d8f3);
-// Headings
-const Color headingColor = Color(0xFF55ad9b);
 // body Text
 const Color bodyTextColor = Color(0xFF0a060d);
 // Search bar Background
@@ -35,3 +33,6 @@ const Color bordersAndDividersColor = Color(0xFFd8efd3);
 const Color errorMessagesAndAlertsColor= Color(0xffaa5523);
 // Loading Screen color
 const Color loadingScreenColor=Colors.black;
+// Search Screen Mini Tiles
+const Color miniTileColor=Color(0xfff3e8d8);
+const Color miniTileColor2=Color(0xffe8d8f3);

@@ -16,7 +16,14 @@ class MealPannerView extends StatefulWidget {
   State<MealPannerView> createState() => _MealPannerViewState();
 }
 
-class _MealPannerViewState extends State<MealPannerView> {
+class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProviderStateMixin{
+  late TabController _tabController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController=TabController(length:7,vsync:this);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +93,7 @@ class _MealPannerViewState extends State<MealPannerView> {
               ];
             },
           )
-        ],
+        ],bottom:TabBar(controller:_tabController,isScrollable: true,tabs:[Tab(text: 'Moday')],)
       ),
       bottomNavigationBar: const BottomNavBar(),
     );

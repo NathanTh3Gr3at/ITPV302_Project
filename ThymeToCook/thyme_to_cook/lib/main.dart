@@ -63,7 +63,7 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         // return const RegisterView()
         
-        return const RecipeView(); // starts at HomeView
+        return const MainNavigation(); // starts at HomeView
         /*  if (state is AuthStateLoggedIn) {
           return const MainNavigation();
         } else if (state is AuthStateNeedsVerification) {
