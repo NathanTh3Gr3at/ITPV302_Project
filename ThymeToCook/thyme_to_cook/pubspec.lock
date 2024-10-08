@@ -280,14 +280,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  http:
-    dependency: transitive
+  hexcolor:
+    dependency: "direct main"
     description:
-      name: http
-      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
+      name: hexcolor
+      sha256: c07f4bbb9095df87eeca87e7c69e8c3d60f70c66102d7b8d61c4af0453add3f6
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "3.0.1"
   http_parser:
     dependency: transitive
     description:

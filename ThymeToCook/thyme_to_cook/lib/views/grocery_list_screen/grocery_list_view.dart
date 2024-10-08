@@ -4,6 +4,7 @@ import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
@@ -19,8 +20,9 @@ class _GroceryListViewState extends State<GroceryListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 254, 247),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
         title: const Text(
           "Grocery List",
           style: TextStyle(

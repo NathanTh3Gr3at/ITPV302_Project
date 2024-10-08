@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class SaveView extends StatefulWidget {
   const SaveView({super.key});
@@ -12,7 +13,9 @@ class _SaveViewState extends State<SaveView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
           title: const Text(
         "Saved Recipes",
         style: TextStyle(

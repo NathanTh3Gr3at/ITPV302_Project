@@ -6,6 +6,7 @@ import 'package:thyme_to_cook/models/recipe_viewed.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
@@ -52,10 +53,17 @@ class _HomeViewState extends State<HomeView> {
     }
   }
     //Could make keyboard unfocus when user clicks away
+    
+
+    // needs to be tested
+    GestureDetector(onTap: () {
+      FocusScope.of(context).unfocus();
+    });
+
     _getInitial();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromARGB(255, 255, 254, 247),
+      backgroundColor: backgroundColor,
       body: _viewedRecipes(),
       appBar: AppBar(
         title: Text(
@@ -66,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 252, 253, 245),
+        backgroundColor: backgroundColor,
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -98,11 +106,6 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   );
               }
-              // case ProfileAction.profile:
-              //     const userProfile = ProfileView();
-              //     if (userProfile)
-              //     {
-              //       return ProfileView();
             },
             itemBuilder: (context) {
               return [
@@ -293,22 +296,22 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-   Container searchField() {
+  Container searchField() {
     return Container(
-      
       margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
+              color: searchbarBackgroundColor.withOpacity(0.11),
               blurRadius: 40,
               spreadRadius: 0.0)
         ],
       ),
       child: TextField(
+        
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: searchbarBackgroundColor,
           contentPadding: const EdgeInsets.all(15),
           prefixIcon: const Padding(
             padding: EdgeInsets.all(16.0),
@@ -329,48 +332,6 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-    ); 
- /*  Widget searchField() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
-          
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color:
-                      const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
-                  blurRadius: 40,
-                  spreadRadius: 0.0)
-            ],
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              contentPadding: const EdgeInsets.all(15),
-              prefixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.search),
-              ),
-              hintText: "Search for recipes",
-              hintStyle: const TextStyle(
-                color: Color.fromARGB(122, 0, 0, 0),
-                fontSize: 12,
-              ),
-              suffixIcon: const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Icon(Icons.filter_alt_rounded),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
-        ),
-      ),
-    ); */
+    );
   }
 }
