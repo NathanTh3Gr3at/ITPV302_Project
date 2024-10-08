@@ -42,7 +42,7 @@ void main() {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
@@ -59,7 +59,6 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         // return const RegisterView()
-        // MainNavigation();
         return const MainNavigation(); // starts at HomeView
         /* if (state is AuthStateLoggedIn) {
           return const RegisterView();

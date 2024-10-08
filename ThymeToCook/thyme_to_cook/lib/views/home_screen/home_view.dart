@@ -43,7 +43,14 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    //Come back here and fix!!!
+    final myDay = TimeOfDay.fromDateTime(DateTime.now());
+    String greeting () {
+    if (myDay.hour > 12) {
+      return "Good Afternoon";
+    } else {
+      return "Good Morning";
+    }
+  }
     //Could make keyboard unfocus when user clicks away
     _getInitial();
     return Scaffold(
@@ -51,9 +58,9 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: const Color.fromARGB(255, 255, 254, 247),
       body: _viewedRecipes(),
       appBar: AppBar(
-        title: const Text(
-          "Good Morning!",
-          style: TextStyle(
+        title: Text(
+          greeting(),
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 25,
             fontWeight: FontWeight.bold,
