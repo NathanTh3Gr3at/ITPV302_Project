@@ -6,12 +6,15 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
+import 'package:thyme_to_cook/views/home_screen/home_view.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
+import 'package:thyme_to_cook/views/save_screen/save_view.dart';
+import 'package:thyme_to_cook/views/search_screen/search_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
