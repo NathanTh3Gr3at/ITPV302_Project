@@ -20,41 +20,44 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         backgroundColor: backgroundColor,
         title: const Text('Verify email'),
       ),
-      body: Column(
-        children: [
-          const Text(
-              "We've sent you an email verification. Please open it to verify your account."),
-          const Text(
-              "If you have'nt received a verification email yet, press the button below."),
-          ElevatedButton(
-            onPressed: () {
-              context.read()<AuthBloc>().add(
-                    const AuthEventSendEmailVerification(),
-                  );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryButtonColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            const Text(
+                "We've sent you an email verification. Please open it to verify your account."),
+            const Text(
+                "If you have'nt received a verification email yet, press the button below."),
+            ElevatedButton(
+              onPressed: () {
+                context.read()<AuthBloc>().add(
+                      const AuthEventSendEmailVerification(),
+                    );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryButtonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
+              child: const Text('Send email verification'),
             ),
-            child: const Text('Send email verification'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              context.read()<AuthBloc>().add(
-                    const AuthEventLogOut(),
-                  );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryButtonColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            ElevatedButton(
+              onPressed: () async {
+                context.read()<AuthBloc>().add(
+                      const AuthEventLogOut(),
+                    );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryButtonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
-            ),
-            child: const Text('Restart'),
-          )
-        ],
+              child: const Text('Restart'),
+            )
+          ],
+        ),
       ),
     );
   }

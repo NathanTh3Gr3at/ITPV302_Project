@@ -19,6 +19,7 @@ class ProfileView extends StatelessWidget {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text("Profile"),
+        backgroundColor: backgroundColor,
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -128,7 +129,7 @@ class ProfileView extends StatelessWidget {
 
                       // spacing edit profile button
                       SizedBox(
-                        height: 30,
+                        height: 35,
                         child: TextButton(
                           onPressed: () {},
                           // styles the button
@@ -192,10 +193,10 @@ class ProfileView extends StatelessWidget {
                                 child: Text("Recipes Created"),
                               ),
                             ),
-                          ]),
+                          ],),
                     )
                   ],
-                ))
+                ),)
           ],
         )
       ],

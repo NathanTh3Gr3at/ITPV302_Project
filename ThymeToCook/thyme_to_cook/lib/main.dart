@@ -9,6 +9,9 @@ import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/views/home_screen/home_view.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietary_selection.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
@@ -65,7 +68,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         // return const RegisterView()
-        
+        //Nathan - add the new user intro section to the nav stuff
         return const MainNavigation(); // starts at HomeView
         /*  if (state is AuthStateLoggedIn) {
           return const MainNavigation();
