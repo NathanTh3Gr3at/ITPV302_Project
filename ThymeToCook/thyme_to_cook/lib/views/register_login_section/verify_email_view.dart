@@ -16,6 +16,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
         title: const Text('Verify email'),
@@ -30,7 +31,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                 "If you have'nt received a verification email yet, press the button below."),
             ElevatedButton(
               onPressed: () {
-                context.read()<AuthBloc>().add(
+                context.read<AuthBloc>().add(
                       const AuthEventSendEmailVerification(),
                     );
               },
@@ -44,7 +45,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             ),
             ElevatedButton(
               onPressed: () async {
-                context.read()<AuthBloc>().add(
+                context.read<AuthBloc>().add(
                       const AuthEventLogOut(),
                     );
               },

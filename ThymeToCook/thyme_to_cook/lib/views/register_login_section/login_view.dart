@@ -102,7 +102,7 @@ class _LoginViewState extends State<LoginView> {
                 child: TextButton(
                   onPressed: () {
                     print('button pressed');
-                    context.read()<AuthBloc>().add(
+                    context.read<AuthBloc>().add(
                           const AuthEventForgotPassword(),
                         );
                   },
@@ -137,8 +137,9 @@ class _LoginViewState extends State<LoginView> {
                 child: TextButton(
                   
                   onPressed: () {
-                    print('Register button pressed');
-                    context.read()<AuthBloc>().add(
+                    
+                    
+                    context.read<AuthBloc>().add(
                           const AuthEventShouldRegister(),
                         );
                         

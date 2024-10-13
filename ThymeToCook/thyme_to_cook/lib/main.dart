@@ -77,7 +77,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         //Nathan - add the new user intro section to the nav stuff
-        print('Current State: $state');
+        
         
         /*  return const MainNavigation(); */ // starts at HomeView
         if (state is AuthStateLoggedIn) {
@@ -87,11 +87,10 @@ class HomePage extends StatelessWidget {
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();
         } else if (state is AuthStateLoggedOut) {
-          print('works here');
-          print('state: $state');
+          
           return const LoginView();
         } else if (state is AuthStateRegistering) {
-          print('works till here');
+          
           return const RegisterView();
         } else {
           return const Scaffold(

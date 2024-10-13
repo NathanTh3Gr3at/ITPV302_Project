@@ -38,7 +38,7 @@ class _RegisterViewState extends State<RegisterView> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: backgroundColor,
-        appBar: AppBar(),
+        appBar: AppBar(backgroundColor: backgroundColor,),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -78,7 +78,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                 ),
               ),
-              Padding(
+              /* Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: TextField(
                   controller: _email,
@@ -89,7 +89,7 @@ class _RegisterViewState extends State<RegisterView> {
                   decoration:
                       const InputDecoration(hintText: 'Enter username here'),
                 ),
-              ),
+              ), */
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: TextField(
@@ -121,7 +121,7 @@ class _RegisterViewState extends State<RegisterView> {
                         onPressed: () async {
                           final email = _email.text;
                           final password = _password.text;
-                          context.read()<AuthBloc>().add(
+                          context.read<AuthBloc>().add(
                                 AuthEventRegister(
                                   email,
                                   password,
@@ -148,7 +148,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                       child: const Text(
                         'Already registered? Login here',
-                        style: TextStyle(color: secodaryButtonColor),
+                        style: TextStyle(color: Colors.black),
                       ),
                     )
                   ],
