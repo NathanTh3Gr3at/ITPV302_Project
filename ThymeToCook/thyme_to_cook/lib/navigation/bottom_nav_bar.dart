@@ -14,51 +14,46 @@ class BottomNavBar extends StatelessWidget {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         return NavigationBar(
-            onDestinationSelected: (index) {
-              context.read<NavigationBloc>().add(SelectTabEvent(index));
-            },
-            indicatorColor: navIconSelectedColor,
-            selectedIndex: state.selectedTabIndex,
-            backgroundColor: navigationBarColor,
-            destinations: <Widget> [
-              NavigationDestination(
+          onDestinationSelected: (index) {
+            context.read<NavigationBloc>().add(SelectTabEvent(index));
+          },
+          indicatorColor: navIconSelectedColor,
+          selectedIndex: state.selectedTabIndex,
+          backgroundColor: navigationBarColor,
+          destinations: <Widget>[
+            NavigationDestination(
                 icon: Icon(
-                  MdiIcons.homeVariant, 
+                  MdiIcons.homeVariant,
                   color: navIconColor,
-                  ),
-                label: "Home"
-              ),
-              NavigationDestination(
+                ),
+                label: "Home"),
+            NavigationDestination(
                 icon: Icon(
                   MdiIcons.heart,
                   color: navIconColor,
-                ), 
-                label: "Saved"
-              ),
-              NavigationDestination(
+                ),
+                label: "Saved"),
+            NavigationDestination(
                 icon: Icon(
                   MdiIcons.magnify,
                   color: navIconColor,
-                  ), 
-                label: "Search"
-              ),
-              NavigationDestination(
+                ),
+                label: "Search"),
+            NavigationDestination(
                 icon: Icon(
                   MdiIcons.calendarBlank,
                   color: navIconColor,
-                  ), 
-                label: "Planner"
-              ),
-              NavigationDestination(
+                ),
+                label: "Planner"),
+            NavigationDestination(
                 icon: Icon(
                   MdiIcons.listBox,
                   color: navIconColor,
-                  ), 
+                ),
                 label: "Lists")
-            ],
-          );
+          ],
+        );
       },
     );
   }
 }
-

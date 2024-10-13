@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class DietarySelection extends StatefulWidget {
@@ -52,8 +55,13 @@ class _DietarySelectionState extends State<DietarySelection> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        context
+                            .read<DietaryPreferencesBloc>()
+                            .add(SelectDietaryPreference(1));
+                      },
                       style: ElevatedButton.styleFrom(
+                          
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),

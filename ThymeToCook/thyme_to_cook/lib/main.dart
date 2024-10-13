@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/src/provider.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_system_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/views/home_screen/home_view.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
@@ -21,10 +24,13 @@ import 'package:thyme_to_cook/views/search_screen/search_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiBlocProvider(
+  runApp(
+    MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
-        BlocProvider(create: (context) => NavigationBloc())
+        BlocProvider(create: (context) => NavigationBloc()),
+        BlocProvider(create: (context) => MeasurementSystemBloc()),
+        BlocProvider(create: (context) => DietaryPreferencesBloc()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner:
@@ -46,15 +52,18 @@ void main() {
           useMaterial3: true,
         ),
         home: const HomePage(),
-      )));
+      ),
+    ),
+  );
 }
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.isLoading) {
@@ -67,24 +76,28 @@ class HomePage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        // return const RegisterView()
         //Nathan - add the new user intro section to the nav stuff
-        return const MainNavigation(); // starts at HomeView
-        /*  if (state is AuthStateLoggedIn) {
+        print('Current State: $state');
+        
+        /*  return const MainNavigation(); */ // starts at HomeView
+        if (state is AuthStateLoggedIn) {
           return const MainNavigation();
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();
         } else if (state is AuthStateLoggedOut) {
+          print('works here');
+          print('state: $state');
           return const LoginView();
         } else if (state is AuthStateRegistering) {
+          print('works till here');
           return const RegisterView();
         } else {
           return const Scaffold(
             body: CircularProgressIndicator(),
           );
-        }  */
+        }
       },
     );
   }

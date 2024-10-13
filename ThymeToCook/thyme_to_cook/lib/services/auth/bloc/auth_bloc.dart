@@ -13,6 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
     on<AuthEventRegister>(
+      
       (event, emit) async {
         final email = event.email;
         final password = event.password;
@@ -139,9 +140,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       },
     );
     on<AuthEventShouldRegister>(
+      
       (event, emit) {
+        print('AuthEventShouldRegister triggered'); //Debugging line
         emit(
           const AuthStateRegistering(
+            
             exception: null,
             isLoading: false,
           ),
@@ -150,6 +154,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthEventLogOut>(
       (event, emit) async {
+        print('AUTHEVENTLOGOUT');
         try {
           await provider.logOut();
           emit(
