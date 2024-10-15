@@ -45,15 +45,16 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final myDay = TimeOfDay.fromDateTime(DateTime.now());
-    String greeting () {
-    if (myDay.hour > 12) {
-      return "Good Afternoon";
-    } else {
-      return "Good Morning";
+    String greeting() {
+      if (myDay.hour > 18) {
+        return "Good Evening";
+      } else if (myDay.hour > 12) {
+        return "Good Afternoon";
+      } else {
+        return "Good Morning";
+      }
     }
-  }
     //Could make keyboard unfocus when user clicks away
-    
 
     // needs to be tested
     GestureDetector(onTap: () {
@@ -308,7 +309,6 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       child: TextField(
-        
         decoration: InputDecoration(
           filled: true,
           fillColor: searchbarBackgroundColor,

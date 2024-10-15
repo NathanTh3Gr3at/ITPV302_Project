@@ -17,6 +17,7 @@ import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingred
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 import 'package:thyme_to_cook/views/save_screen/save_view.dart';
@@ -77,8 +78,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         //Nathan - add the new user intro section to the nav stuff
-        
-        
+
         /*  return const MainNavigation(); */ // starts at HomeView
         if (state is AuthStateLoggedIn) {
           return const MainNavigation();
@@ -87,11 +87,12 @@ class HomePage extends StatelessWidget {
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();
         } else if (state is AuthStateLoggedOut) {
-          
+          //return const OpenAppView();
+        //OpenAppView is a new screen for the intro to app
           return const LoginView();
         } else if (state is AuthStateRegistering) {
-          
           return const RegisterView();
+          //will need to add the routing to the 3 screens
         } else {
           return const Scaffold(
             body: CircularProgressIndicator(),

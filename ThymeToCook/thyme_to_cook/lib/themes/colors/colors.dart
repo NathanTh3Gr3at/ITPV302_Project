@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 // Background 
 const Color backgroundColor = Color(0xFFF1F8E8);
+//Background for the Open App Screen
+const Color openAppBackgroundColor= Color(0xffc8ceca);
 // Primary buttons
 const Color primaryButtonColor = Color(0xFF95D2B3);
 // Secondary buttons
@@ -11,8 +13,6 @@ const Color secodaryButtonColor = Color(0xFFD8EFD3);
 const Color recentlyViewedTileColor= Color(0xffF3E8D8);
 // Recommended Tile 
 const Color recTileColor= Color(0xffe8d8f3);
-// body Text
-const Color bodyTextColor = Color(0xFF0a060d);
 // Search bar Background
 const Color searchbarBackgroundColor= Color(0xffe8d8f3);
 // Search bar text
@@ -30,7 +30,7 @@ const Color navIconSelectedColor=Color.fromARGB(206, 236, 235, 235);
 // Borders and dividers
 const Color bordersAndDividersColor = Color(0xFFd8efd3);
 // Error messages and alerts
-const Color errorMessagesAndAlertsColor= Color(0xffaa5523);
+const Color errorMessagesAndAlertsColor= Color(0xffd5aa91);
 // Loading Screen color
 const Color loadingScreenColor=Colors.black;
 // Search Screen Mini Tiles

@@ -37,7 +37,6 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: backgroundColor,
@@ -101,7 +100,6 @@ class _LoginViewState extends State<LoginView> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    print('button pressed');
                     context.read<AuthBloc>().add(
                           const AuthEventForgotPassword(),
                         );
@@ -132,17 +130,12 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ),
               ),
-              
               GestureDetector(
                 child: TextButton(
-                  
                   onPressed: () {
-                    
-                    
                     context.read<AuthBloc>().add(
                           const AuthEventShouldRegister(),
                         );
-                        
                   },
                   child: const Text("Don't have an account? Sign up"),
                 ),
