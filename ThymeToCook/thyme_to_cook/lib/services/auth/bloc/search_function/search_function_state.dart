@@ -20,3 +20,9 @@ class SearchError extends SearchState{
   final String errorMessage;
   SearchError(this.errorMessage);
 }
+
+// for recipe detail 
+class SearchRecipeDetail extends SearchState {
+  final CloudRecipe recipe;
+  SearchRecipeDetail(this.recipe);
+}

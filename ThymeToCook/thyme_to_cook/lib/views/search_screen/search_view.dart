@@ -8,6 +8,7 @@ import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 
 class SearchView extends StatefulWidget {
   const SearchView({super.key});
@@ -35,6 +36,7 @@ class _SearchViewState extends State<SearchView> {
       searchBloc.add(SelectSearchEvent(query));
     }
   }
+
   // List<RecipeModel> recipes = [];
   Set<String> selectedFilter = {};
 
@@ -58,7 +60,6 @@ class _SearchViewState extends State<SearchView> {
       body: Column(
         children: [
           _searchRecipes(),
-         
           Expanded(
             child: BlocBuilder<SearchBloc, SearchState>(
               builder: (context, state) {
@@ -88,11 +89,19 @@ class _SearchViewState extends State<SearchView> {
                       }
                       // return _searchRecipes(recipe: recipe);
 
-                      // search UI
+                      // Display UI
                       return InkWell(
                         onTap: () {
+                          searchBloc.add(RecipeDetailEvent(recipe: recipe));
+                          
+                          // selecting to go to recipe screens
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => RecipeView(recipe: recipe),
+                            ),
+                          );
                           setState(() {
-                            // selecting to go to recipe screens would go here
+                            
                           });
                         },
                         child: Container(
@@ -140,10 +149,10 @@ class _SearchViewState extends State<SearchView> {
                                         color: Colors.black,
                                         fontSize: 20),
                                     softWrap: true,
-                                    maxLines: 2,
+                                    maxLines: 3,
                                   ),
                                   Text(
-                                    // getting recipe duration
+                                    // getting recipe calories
                                     'Calories: ${recipe.calories}',
                                     style: const TextStyle(
                                         color: Colors.black,
@@ -200,11 +209,6 @@ class _SearchViewState extends State<SearchView> {
                   child: Text("Search for recipes"),
                 );
               },
-
-              // ListView(
-              //   children: [
-              //     _searchRecipes(),
-              //   ],
             ),
           ),
         ],
@@ -261,98 +265,6 @@ class _SearchViewState extends State<SearchView> {
               // ),
               SizedBox(
                 height: 10,
-                // child: ListView.separated(
-                //   shrinkWrap: true, // wraps list content
-          
-                //   itemBuilder: (context, index) {
-          
-                //     return InkWell(
-                //       onTap: () {
-                //         setState(() {
-                //           // selecting to go to recipe screens would go here
-                //         });
-                //       },
-                //       child: Container(
-                //         height: 115,
-                //         decoration: BoxDecoration(
-                //           color: recipes[index].liked
-                //               ? const Color.fromARGB(255, 240, 240, 240)
-                //               : Colors.transparent,
-                //           border: Border.all(
-                //             color: const Color.fromARGB(255, 232, 232, 232),
-                //           ),
-                //           borderRadius: BorderRadius.circular(15),
-                //           boxShadow: recipes[index].liked
-                //               ? [
-                //                   BoxShadow(
-                //                     color: const Color.fromARGB(235, 217, 217, 217)
-                //                         .withOpacity(0.5),
-                //                     offset: const Offset(0, 9),
-                //                     blurRadius: 20,
-                //                     spreadRadius: 0,
-                //                   )
-                //                 ]
-                //               : [],
-                //         ),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //           children: [
-                //             // recipe image
-                //             Image.asset(
-                //               recipes[index].iconPath,
-                //               width: 100,
-                //               height: 100,
-                //             ),
-                //             Column(
-                //               mainAxisAlignment: MainAxisAlignment.center,
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               children: [
-                //                 Text(
-                //                   recipes[index].name,
-                //                   style: const TextStyle(
-                //                       fontWeight: FontWeight.w500,
-                //                       color: Colors.black,
-                //                       fontSize: 20),
-                //                 ),
-                //                 Text(
-                //                   '${recipes[index].nutrition} ${recipes[index].duration}  ',
-                //                   style: const TextStyle(
-                //                       color: Colors.black,
-                //                       fontSize: 14,
-                //                       fontWeight: FontWeight.w300),
-                //                 ),
-                //               ],
-                //             ),
-                //             // Heart Icon
-                //             IconButton(
-                //               onPressed: () {
-                //                 setState(
-                //                   () {
-                //                     recipes[index].liked = !recipes[index].liked;
-                //                   },
-                //                 );
-                //               },
-                //               icon: Icon(
-                //                 recipes[index].liked
-                //                     ? Icons.favorite
-                //                     : Icons.favorite_border_rounded,
-                //                 color:
-                //                     recipes[index].liked ? Colors.red : Colors.grey,
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     );
-                //   },
-                //   separatorBuilder: (context, index) => const SizedBox(
-                //     height: 20,
-                //   ),
-                //   padding: const EdgeInsets.only(left: 10, right: 10),
-          
-                //   // amount of recipes being displayed
-                //   itemCount: recipes.length,
-                // ),
               ),
             ],
           ),

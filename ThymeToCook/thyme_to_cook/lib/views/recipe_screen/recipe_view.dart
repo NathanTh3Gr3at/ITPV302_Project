@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class RecipeView extends StatefulWidget {
-  const RecipeView({super.key});
+  final CloudRecipe recipe;
+  const RecipeView({super.key, required this.recipe});
 
   @override
   State<RecipeView> createState() => _RecipeViewState();
 }
 
 class _RecipeViewState extends State<RecipeView> {
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+   
       resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor,
       appBar: AppBar(
           backgroundColor: backgroundColor,
-          title: const Text(
-            "Recipe title needs to go here",
-            style: TextStyle(
+          title: Text(
+           widget.recipe.recipeName, 
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 25,
               fontWeight: FontWeight.bold,
@@ -52,13 +57,14 @@ class _RecipeViewState extends State<RecipeView> {
         image: AssetImage('assets/images/placeholder_image.jpg'),
         fit: BoxFit.cover, 
       ),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
     ),
   );
 }
 
 
   Column _instructions() {
-    return const Column(
+    return Column(
       children: [
         Column(
           children: [
@@ -67,7 +73,7 @@ class _RecipeViewState extends State<RecipeView> {
               child: Column(
                 children: [
                   // tab sections
-                  TabBar(
+                  const TabBar(
                     tabs: [
                       Tab(
                         child: Text("Ingredients"),
@@ -78,7 +84,7 @@ class _RecipeViewState extends State<RecipeView> {
                     ],
                   ),
                   SizedBox(
-                    height: 400,
+                    height: 250,
                     child: TabBarView(
                       // text under each tab
                       children: [
@@ -88,13 +94,30 @@ class _RecipeViewState extends State<RecipeView> {
                           // elevation: 5,
                           child: Center(
                             
-                            child: Text("Ingredients go here"),
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    widget.recipe.recipeIngredients[index],
+                                  ),
+                                );
+                              },
+                              itemCount: widget.recipe.recipeIngredients.length,
+                            ),
                           ),
                         ),
                         Card(
                           color: backgroundColor,
                           child: Center(
-                            child: Text("Instructions go here"),
+                            child: ListView.builder(
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    widget.recipe.recipeInstructions[index],
+                                  ),
+                                );
+                              }, itemCount: widget.recipe.recipeInstructions.length,
+                            ),
                           ),
                         ),
                       ],
