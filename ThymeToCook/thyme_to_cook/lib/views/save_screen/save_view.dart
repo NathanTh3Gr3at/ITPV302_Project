@@ -169,7 +169,7 @@ class _SaveViewState extends State<SaveView> {
                                       fontSize: 20),
                                 ),
                                 Text(
-                                  '${recipes[index].nutrition} ${recipes[index].duration}  ',
+                                  '${recipes[index].nutrition} ${recipes[index].duration}',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
