@@ -54,82 +54,81 @@ class _HomeViewState extends State<HomeView> {
         return "Good Morning";
       }
     }
-    //Could make keyboard unfocus when user clicks away
-
-    // needs to be tested
-    GestureDetector(onTap: () {
-      FocusScope.of(context).unfocus();
-    });
+    
+   
 
     _getInitial();
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: backgroundColor,
-      body: _viewedRecipes(),
-      appBar: AppBar(
-        title: Text(
-          greeting(),
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+    return GestureDetector(
+      onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: backgroundColor,
-        actions: [
-          // pop menu
-          PopupMenuButton<MenuAction>(
-            icon: const Icon(Icons.menu),
-            onSelected: (value) async {
-              switch (value) {
-                //handles logging out
-                case MenuAction.logout:
-                  final shouldLogOut = await showLogOutDialog(context);
-                  if (shouldLogOut) {
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  }
-                // added menu action to go to profile view
-                case MenuAction.profile:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileView(),
-                    ),
-                  );
-                //added a settings page
-                case MenuAction.settings:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsView(),
-                    ),
-                  );
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.profile,
-                  child: Text("User Profile"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.settings,
-                  child: Text("Settings"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.logout,
-                  child: Text("Log Out"),
-                )
-                // User profile text
-              ];
-            },
-          )
-        ],
+        body: _viewedRecipes(),
+        appBar: AppBar(
+          title: Text(
+            greeting(),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: backgroundColor,
+          actions: [
+            // pop menu
+            PopupMenuButton<MenuAction>(
+              icon: const Icon(Icons.menu),
+              onSelected: (value) async {
+                switch (value) {
+                  //handles logging out
+                  case MenuAction.logout:
+                    final shouldLogOut = await showLogOutDialog(context);
+                    if (shouldLogOut) {
+                      context.read<AuthBloc>().add(
+                            const AuthEventLogOut(),
+                          );
+                    }
+                  // added menu action to go to profile view
+                  case MenuAction.profile:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileView(),
+                      ),
+                    );
+                  //added a settings page
+                  case MenuAction.settings:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsView(),
+                      ),
+                    );
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  const PopupMenuItem<MenuAction>(
+                    value: MenuAction.profile,
+                    child: Text("User Profile"),
+                  ),
+                  const PopupMenuItem<MenuAction>(
+                    value: MenuAction.settings,
+                    child: Text("Settings"),
+                  ),
+                  const PopupMenuItem<MenuAction>(
+                    value: MenuAction.logout,
+                    child: Text("Log Out"),
+                  )
+                  // User profile text
+                ];
+              },
+            )
+          ],
+        ),
+        // Navigation bar
+        bottomNavigationBar: const BottomNavBar(),
       ),
-      // Navigation bar
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 
