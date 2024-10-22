@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/services/auth/auth_user.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 
@@ -147,6 +148,7 @@ class ProfileView extends StatelessWidget {
                   ),
                   // section for user details, must fill in
                   const Text("User"),
+                  
                 ],
               ),
             ],

@@ -17,6 +17,33 @@ class GroceryListView extends StatefulWidget {
 }
 
 class _GroceryListViewState extends State<GroceryListView> {
+  final List<_IngredientItem> _ingredients = []; //list of ingredients
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeIngredients(); // add ingredients to list
+  }
+
+  void _initializeIngredients() {
+    //replace with other code for now just to test
+    _addIngredient('Cooking oil');
+    _addIngredient('Olive oil');
+    _addIngredient('Flour');
+  }
+
+  void _addIngredient(String ingredient) {
+    setState(() {
+      _ingredients.add(_IngredientItem(name: ingredient));
+    });
+  }
+
+  void _toggleIngredientStatus(int index) {
+    setState(() {
+      _ingredients[index].isBought = !_ingredients[index].isBought;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +116,42 @@ class _GroceryListViewState extends State<GroceryListView> {
           )
         ],
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: _ingredients.isEmpty
+            ? const Center(child: Text('No ingredients to buy'))
+            : ListView.builder(
+                itemCount: _ingredients.length,
+                itemBuilder: (context, index) {
+                  final ingredient = _ingredients[index];
+                  return ListTile(
+                    title: Text(
+                      ingredient.name,
+                      style: TextStyle(
+                        decoration: ingredient.isBought
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                        color: ingredient.isBought ? Colors.grey : Colors.black,
+                      ),
+                    ),
+                    trailing: Icon(
+                      ingredient.isBought
+                          ? Icons.check_circle
+                          : Icons.radio_button_unchecked,
+                      color: ingredient.isBought ? Colors.green : Colors.grey,
+                    ),
+                    onTap: () => _toggleIngredientStatus(index),
+                  );
+                },
+              ),
+      ),
       bottomNavigationBar: const BottomNavBar(),
     );
   }
+}
+
+class _IngredientItem {
+  final String name;
+  bool isBought;
+  _IngredientItem({required this.name, this.isBought = false});
 }

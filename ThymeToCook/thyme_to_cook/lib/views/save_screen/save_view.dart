@@ -30,15 +30,18 @@ class _SaveViewState extends State<SaveView> {
   @override
   Widget build(BuildContext context) {
     // _getInitial();
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: appBar(),
-      body: ListView(
-        children: [
-          _likedRecipes(),
-        ],
+    return GestureDetector(
+      onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: appBar(),
+        body: ListView(
+          children: [
+            _likedRecipes(),
+          ],
+        ),
+        bottomNavigationBar: const BottomNavBar(),
       ),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 

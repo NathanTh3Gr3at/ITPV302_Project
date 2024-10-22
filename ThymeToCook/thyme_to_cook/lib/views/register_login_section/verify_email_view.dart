@@ -4,6 +4,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/main_navigation.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -45,6 +46,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             ),
             ElevatedButton(
               onPressed: () async {
+                
                 context.read<AuthBloc>().add(
                       const AuthEventLogOut(),
                     );

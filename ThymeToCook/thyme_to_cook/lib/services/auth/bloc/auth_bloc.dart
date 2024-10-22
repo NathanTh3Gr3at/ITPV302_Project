@@ -142,7 +142,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventShouldRegister>(
       
       (event, emit) {
-        print('AuthEventShouldRegister triggered'); //Debugging line
+        
         emit(
           const AuthStateRegistering(
             
@@ -154,7 +154,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     on<AuthEventLogOut>(
       (event, emit) async {
-        print('AUTHEVENTLOGOUT');
+        
         try {
           await provider.logOut();
           emit(
