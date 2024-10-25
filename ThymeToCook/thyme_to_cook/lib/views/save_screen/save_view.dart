@@ -31,11 +31,13 @@ class _SaveViewState extends State<SaveView> {
   Widget build(BuildContext context) {
     // _getInitial();
     return GestureDetector(
-      onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+      
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: backgroundColor,
         appBar: appBar(),
         body: ListView(
+          
           children: [
             _likedRecipes(),
           ],
@@ -89,7 +91,7 @@ class _SaveViewState extends State<SaveView> {
           // const SizedBox(height: 10,
           // ),
           SizedBox(
-            height: 350,
+            height: 450,
             // width: 400,
             child: GridView.builder(
               //  padding: const EdgeInsets.only(left: 10, right: 10),
@@ -112,7 +114,9 @@ class _SaveViewState extends State<SaveView> {
                     height: 100,
                     decoration: BoxDecoration(
                       color: recipes[index].liked
-                          ? const Color.fromARGB(255, 240, 240, 240)
+                          // tile background
+                          //? const Color.fromARGB(255, 240, 240, 240)
+                          ? const Color.fromARGB(255, 190, 233, 170)
                           : Colors.transparent,
                       border: Border.all(
                         color: const Color.fromARGB(255, 232, 232, 232),
@@ -130,11 +134,7 @@ class _SaveViewState extends State<SaveView> {
                             ]
                           : [],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                      ),
-                      child: Column(
+                    child: Column(
                         //  crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
@@ -159,7 +159,7 @@ class _SaveViewState extends State<SaveView> {
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 10),
+                            padding: const EdgeInsets.only(top: 5),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,10 +169,17 @@ class _SaveViewState extends State<SaveView> {
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
-                                      fontSize: 20),
+                                      fontSize: 16),
                                 ),
                                 Text(
-                                  '${recipes[index].nutrition} ${recipes[index].duration}',
+                                  recipes[index].nutrition,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                Text(
+                                  recipes[index].duration,
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -184,18 +191,18 @@ class _SaveViewState extends State<SaveView> {
 
                           // positioning of image
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 10),
                             // recipe image
                             child: Image.asset(
                               recipes[index].iconPath,
-                              width: 100,
-                              height: 100,
+                              width: 150,
+                              height: 150,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
+               
                 );
               },
 
@@ -253,7 +260,7 @@ class _SaveViewState extends State<SaveView> {
         const Padding(
           padding: EdgeInsets.only(
             left: 5,
-            bottom: 20,
+            bottom: 15,
           ),
           child: Text(
             "Recipe Collection",
@@ -290,7 +297,7 @@ class _SaveViewState extends State<SaveView> {
         ),
         padding: const EdgeInsets.all(2),
         selected: selectedFilter.contains(label),
-        selectedColor: const Color.fromARGB(255, 226, 226, 226),
+        selectedColor: const Color.fromARGB(255, 123, 175, 116),
         onSelected: (bool selected) {
           setState(() {
             if (selected) {
