@@ -22,7 +22,7 @@ class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProvi
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController=TabController(length:7,vsync:this);
+    _tabController=TabController(length:3,vsync:this);
   }
   @override
   Widget build(BuildContext context) {
@@ -37,65 +37,65 @@ class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProvi
             fontSize: 25,
             fontWeight: FontWeight.bold,
           ),
-        ),actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              //add functionality
-            },
-          ),
-          // pop menu
-          PopupMenuButton<MenuAction>(
-            icon: const Icon(Icons.menu),
-            onSelected: (value) async {
-              switch (value) {
-                //handles logging out
-                case MenuAction.logout:
-                  final shouldLogOut = await showLogOutDialog(context);
-                  if (shouldLogOut) {
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  }
-                // added menu action to go to profile view
-                case MenuAction.profile:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileView(),
-                    ),
-                  );
-                //added a settings page
-                case MenuAction.settings:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsView(),
-                    ),
-                  );
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.profile,
-                  child: Text("User Profile"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.settings,
-                  child: Text("Settings"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.logout,
-                  child: Text("Log Out"),
-                )
-                // User profile text
-              ];
-            },
-          )
-        ],bottom:TabBar(controller:_tabController,isScrollable: true,tabs:[Tab(text: 'Moday')],)
+        // ),actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.share),
+        //     onPressed: () {
+        //       //add functionality
+        //     },
+        //   ),
+        //   // pop menu
+        //   PopupMenuButton<MenuAction>(
+        //     icon: const Icon(Icons.menu),
+        //     onSelected: (value) async {
+        //       switch (value) {
+        //         //handles logging out
+        //         case MenuAction.logout:
+        //           final shouldLogOut = await showLogOutDialog(context);
+        //           if (shouldLogOut) {
+        //             context.read<AuthBloc>().add(
+        //                   const AuthEventLogOut(),
+        //                 );
+        //           }
+        //         // added menu action to go to profile view
+        //         case MenuAction.profile:
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => const ProfileView(),
+        //             ),
+        //           );
+        //         //added a settings page
+        //         case MenuAction.settings:
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => const SettingsView(),
+        //             ),
+        //           );
+        //       }
+        //     },
+        //     itemBuilder: (context) {
+        //       return [
+        //         const PopupMenuItem<MenuAction>(
+        //           value: MenuAction.profile,
+        //           child: Text("User Profile"),
+        //         ),
+        //         const PopupMenuItem<MenuAction>(
+        //           value: MenuAction.settings,
+        //           child: Text("Settings"),
+        //         ),
+        //         const PopupMenuItem<MenuAction>(
+        //           value: MenuAction.logout,
+        //           child: Text("Log Out"),
+        //         )
+        //         // User profile text
+        //       ];
+        //     },
+        //   )
+        // ],bottom:TabBar(controller:_tabController,isScrollable: true,tabs:[Tab(text: 'Moday')],)
+      )
       ),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

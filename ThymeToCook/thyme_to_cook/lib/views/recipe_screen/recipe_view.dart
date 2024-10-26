@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
-import 'package:thyme_to_cook/services/cloud/cloud_recipe.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class RecipeView extends StatefulWidget {

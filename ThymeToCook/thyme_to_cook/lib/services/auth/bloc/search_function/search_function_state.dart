@@ -1,7 +1,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:thyme_to_cook/services/cloud/cloud_recipe.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 
 @immutable
 abstract class SearchState {}

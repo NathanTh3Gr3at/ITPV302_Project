@@ -40,7 +40,6 @@ class _SaveViewState extends State<SaveView> {
             _likedRecipes(),
           ],
         ),
-        bottomNavigationBar: const BottomNavBar(),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/auth_user.dart';
@@ -21,6 +22,11 @@ class ProfileView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Profile"),
         backgroundColor: backgroundColor,
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(), 
+          icon: Icon(MdiIcons.chevronLeft),
+          iconSize: 30,
+        ),
         actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -80,7 +86,6 @@ class ProfileView extends StatelessWidget {
         ],
       ),
       body: _profilePage(),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 

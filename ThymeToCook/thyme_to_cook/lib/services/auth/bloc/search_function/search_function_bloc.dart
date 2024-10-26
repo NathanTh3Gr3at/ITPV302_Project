@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/features/search/search_domain.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_state.dart';
-import 'package:thyme_to_cook/services/cloud/cloud_recipe.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 
 class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
   final SearchRepo searchRepo;

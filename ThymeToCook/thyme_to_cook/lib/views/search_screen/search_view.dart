@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
-import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
-import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
-import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_state.dart';
+// import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
+// import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
+// import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 
@@ -20,22 +17,22 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   // tracks what user typed
   final TextEditingController searchController = TextEditingController();
-  late SearchBloc searchBloc;
+  // late SearchBloc searchBloc;
 
   @override
   void initState() {
     super.initState();
-    searchBloc = BlocProvider.of<SearchBloc>(context);
-    searchController.addListener(onSearchChanged); // listens for each keystroke
+    // searchBloc = BlocProvider.of<SearchBloc>(context);
+    // searchController.addListener(onSearchChanged); // listens for each keystroke
     // _getRecipes();
   }
 
-  void onSearchChanged() {
-    final query = searchController.text;
-    if (searchController.text.isNotEmpty) {
-      searchBloc.add(SelectSearchEvent(query));
-    }
-  }
+  // void onSearchChanged() {
+  //   final query = searchController.text;
+  //   if (searchController.text.isNotEmpty) {
+  //     searchBloc.add(SelectSearchEvent(query));
+  //   }
+  // }
 
   // List<RecipeModel> recipes = [];
   Set<String> selectedFilter = {};
@@ -46,8 +43,8 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   void dispose() {
-    searchController.removeListener(onSearchChanged);
-    searchController.dispose();
+    // searchController.removeListener(onSearchChanged);
+    // searchController.dispose();
     super.dispose();
   }
 
@@ -62,160 +59,159 @@ class _SearchViewState extends State<SearchView> {
         body: Column(
           children: [
             _searchRecipes(),
-            Expanded(
-              child: BlocBuilder<SearchBloc, SearchState>(
-                builder: (context, state) {
-                  // if(state is SearchInitial)
-                  // {
-                  //   return _searchField();
-                  // }
-                  if (state is SearchLoaded) {
-                    // no recipes
-                    if (state.recipes.isEmpty) {
-                      return const Center(
-                        child: Text("No recipes found"),
-                      );
-                    }
+            // Expanded(
+            //   child: BlocBuilder<SearchBloc, SearchState>(
+            //     builder: (context, state) {
+            //       // if(state is SearchInitial)
+            //       // {
+            //       //   return _searchField();
+            //       // }
+            //       if (state is SearchLoaded) {
+            //         // no recipes
+            //         if (state.recipes.isEmpty) {
+            //           return const Center(
+            //             child: Text("No recipes found"),
+            //           );
+            //         }
       
-                    return ListView.separated(
-                      shrinkWrap: true, // wraps list content
+            //         return ListView.separated(
+            //           shrinkWrap: true, // wraps list content
       
-                      // amount of recipes being displayed
-                      // itemCount: recipes.length,
-                      itemCount: state.recipes.length,
+            //           // amount of recipes being displayed
+            //           // itemCount: recipes.length,
+            //           itemCount: state.recipes.length,
       
-                      itemBuilder: (context, index) {
-                        final recipe = state.recipes[index];
-                        if (recipe == null) {
-                          return const SizedBox();
-                        }
-                        // return _searchRecipes(recipe: recipe);
+            //           itemBuilder: (context, index) {
+            //             final recipe = state.recipes[index];
+            //             if (recipe == null) {
+            //               return const SizedBox();
+            //             }
+            //             // return _searchRecipes(recipe: recipe);
       
-                        // Display UI
-                        return InkWell(
-                          onTap: () {
-                            searchBloc.add(RecipeDetailEvent(recipe: recipe));
+            //             // Display UI
+            //             return InkWell(
+            //               onTap: () {
+            //                 searchBloc.add(RecipeDetailEvent(recipe: recipe));
                             
-                            // selecting to go to recipe screens
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => RecipeView(recipe: recipe),
-                              ),
-                            );
-                            setState(() {
+            //                 // selecting to go to recipe screens
+            //                 Navigator.of(context).push(
+            //                   MaterialPageRoute(
+            //                     builder: (context) => RecipeView(recipe: recipe),
+            //                   ),
+            //                 );
+            //                 setState(() {
                               
-                            });
-                          },
-                          child: Container(
-                            height: 115,
-                            decoration: BoxDecoration(
-                              // color: recipe.liked
-                              //     ? const Color.fromARGB(255, 240, 240, 240)
-                              //     : Colors.transparent,
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 232, 232, 232),
-                              ),
-                              borderRadius: BorderRadius.circular(15),
-                              // boxShadow: recipes[index].liked
-                              //     ? [
-                              //         BoxShadow(
-                              //           color: const Color.fromARGB(235, 217, 217, 217)
-                              //               .withOpacity(0.5),
-                              //           offset: const Offset(0, 9),
-                              //           blurRadius: 20,
-                              //           spreadRadius: 0,
-                              //         )
-                              //       ]
-                              //     : [],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // recipe image
-                                // Image.asset(
-                                //   Image.asset(
-                                //     recipe.iconPath,
-                                //     ),
-                                //   width: 100,
-                                //   height: 100,
-                                // ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      // getting recipe name
-                                      recipe.recipeName,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
-                                          fontSize: 20),
-                                      softWrap: true,
-                                      maxLines: 3,
-                                    ),
-                                    Text(
-                                      // getting recipe calories
-                                      'Calories: ${recipe.calories}',
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300),
-                                      softWrap: true,
-                                      maxLines: 1,
-                                    ),
-                                  ],
-                                ),
-                                //  Heart Icon
-                                IconButton(
-                                  onPressed: () {
-                                    setState(
-                                      () {
-                                        // recipes[index].liked = recipe.copyWith(liked: !recipe.liked);
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.favorite_border_rounded,
-                                    // recipes[index].liked
-                                    //     ? Icons.favorite
-                                    //     : Icons.favorite_border_rounded,
-                                    // color:
-                                    //     recipe[index].liked ? Colors.red : Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 20,
-                      ),
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                    );
-                  }
+            //                 });
+            //               },
+            //               child: Container(
+            //                 height: 115,
+            //                 decoration: BoxDecoration(
+            //                   // color: recipe.liked
+            //                   //     ? const Color.fromARGB(255, 240, 240, 240)
+            //                   //     : Colors.transparent,
+            //                   border: Border.all(
+            //                     color: const Color.fromARGB(255, 232, 232, 232),
+            //                   ),
+            //                   borderRadius: BorderRadius.circular(15),
+            //                   // boxShadow: recipes[index].liked
+            //                   //     ? [
+            //                   //         BoxShadow(
+            //                   //           color: const Color.fromARGB(235, 217, 217, 217)
+            //                   //               .withOpacity(0.5),
+            //                   //           offset: const Offset(0, 9),
+            //                   //           blurRadius: 20,
+            //                   //           spreadRadius: 0,
+            //                   //         )
+            //                   //       ]
+            //                   //     : [],
+            //                 ),
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //                   children: [
+            //                     // recipe image
+            //                     // Image.asset(
+            //                     //   Image.asset(
+            //                     //     recipe.iconPath,
+            //                     //     ),
+            //                     //   width: 100,
+            //                     //   height: 100,
+            //                     // ),
+            //                     Column(
+            //                       mainAxisAlignment: MainAxisAlignment.start,
+            //                       crossAxisAlignment: CrossAxisAlignment.start,
+            //                       children: [
+            //                         Text(
+            //                           // getting recipe name
+            //                           recipe.recipeName,
+            //                           style: const TextStyle(
+            //                               fontWeight: FontWeight.w500,
+            //                               color: Colors.black,
+            //                               fontSize: 20),
+            //                           softWrap: true,
+            //                           maxLines: 3,
+            //                         ),
+            //                         Text(
+            //                           // getting recipe calories
+            //                           'Calories: ${recipe.calories}',
+            //                           style: const TextStyle(
+            //                               color: Colors.black,
+            //                               fontSize: 14,
+            //                               fontWeight: FontWeight.w300),
+            //                           softWrap: true,
+            //                           maxLines: 1,
+            //                         ),
+            //                       ],
+            //                     ),
+            //                     //  Heart Icon
+            //                     IconButton(
+            //                       onPressed: () {
+            //                         setState(
+            //                           () {
+            //                             // recipes[index].liked = recipe.copyWith(liked: !recipe.liked);
+            //                           },
+            //                         );
+            //                       },
+            //                       icon: const Icon(
+            //                         Icons.favorite_border_rounded,
+            //                         // recipes[index].liked
+            //                         //     ? Icons.favorite
+            //                         //     : Icons.favorite_border_rounded,
+            //                         // color:
+            //                         //     recipe[index].liked ? Colors.red : Colors.grey,
+            //                       ),
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             );
+            //           },
+            //           separatorBuilder: (context, index) => const SizedBox(
+            //             height: 20,
+            //           ),
+            //           padding: const EdgeInsets.only(left: 10, right: 10),
+            //         );
+            //       }
       
-                  // loading
-                  else if (state is SearchLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+            //       // loading
+            //       else if (state is SearchLoading) {
+            //         return const Center(child: CircularProgressIndicator());
+            //       }
       
-                  // error message
-                  else if (state is SearchError) {
-                    return Center(
-                      child: Text(state.errorMessage),
-                    );
-                  }
+            //       // error message
+            //       else if (state is SearchError) {
+            //         return Center(
+            //           child: Text(state.errorMessage),
+            //         );
+            //       }
       
-                  return const Center(
-                    child: Text("Search for recipes"),
-                  );
-                },
-              ),
-            ),
+            //       return const Center(
+            //         child: Text("Search for recipes"),
+            //       );
+            //     },
+            //   ),
+            // ),
           ],
         ),
-        bottomNavigationBar: const BottomNavBar(),
       ),
     );
   }

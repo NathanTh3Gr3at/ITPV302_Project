@@ -34,7 +34,7 @@ class _GroceryListViewState extends State<GroceryListView> {
 
   void _addIngredient(String ingredient) {
     setState(() {
-      _ingredients.add(_IngredientItem(name: ingredient));
+      _ingredients.add(_IngredientItem(name: ingredient, isBought: false));
     });
   }
 
@@ -145,13 +145,12 @@ class _GroceryListViewState extends State<GroceryListView> {
                 },
               ),
       ),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
 
 class _IngredientItem {
   final String name;
-  bool isBought;
-  _IngredientItem({required this.name, this.isBought = false});
+  late bool isBought;
+  _IngredientItem({required this.name, required this.isBought});
 }
