@@ -15,7 +15,9 @@ class BottomNavBar extends StatelessWidget {
       builder: (context, state) {
         return NavigationBar(
           onDestinationSelected: (index) {
-            context.read<NavigationBloc>().add(SelectTabEvent(index));
+            context.read<NavigationBloc>().add(
+                  SelectTabEvent(index),
+                );
           },
           indicatorColor: navIconSelectedColor,
           selectedIndex: state.selectedTabIndex,
@@ -32,25 +34,25 @@ class BottomNavBar extends StatelessWidget {
                   MdiIcons.heart,
                   color: navIconColor,
                 ),
-                label: "Saved"),
+                label: "Saved",tooltip: 'Saved Recipes',),
             NavigationDestination(
                 icon: Icon(
                   MdiIcons.magnify,
                   color: navIconColor,
                 ),
-                label: "Search"),
+                label: "Search",tooltip: 'Search for Recipes',),
             NavigationDestination(
                 icon: Icon(
                   MdiIcons.calendarBlank,
                   color: navIconColor,
                 ),
-                label: "Planner"),
+                label: "Planner",tooltip: 'Meal Planner',),
             NavigationDestination(
                 icon: Icon(
                   MdiIcons.listBox,
                   color: navIconColor,
                 ),
-                label: "Lists")
+                label: "Lists",tooltip: 'Grocery List',)
           ],
         );
       },

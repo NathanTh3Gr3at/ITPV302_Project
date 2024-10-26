@@ -19,7 +19,7 @@ class ProfileView extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Profile"),
+        //title: const Text("Profile"),
         backgroundColor: backgroundColor,
         actions: [
           // pop menu

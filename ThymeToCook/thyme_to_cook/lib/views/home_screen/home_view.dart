@@ -54,12 +54,10 @@ class _HomeViewState extends State<HomeView> {
         return "Good Morning";
       }
     }
-    
-   
 
     _getInitial();
     return GestureDetector(
-      onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: backgroundColor,
@@ -272,11 +270,12 @@ class _HomeViewState extends State<HomeView> {
                         shape: BoxShape.circle,
                       ),
                       child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: IconButton(
-                              onPressed: () {},
-                              icon:
-                                  const Icon(Icons.favorite_outline_outlined))),
+                        padding: const EdgeInsets.all(5.0),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.favorite_outline_outlined),
+                        ),
+                      ),
                     ),
                     Text(
                       categories[index].name,
@@ -298,7 +297,7 @@ class _HomeViewState extends State<HomeView> {
 
   Container searchField() {
     return Container(
-      margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
+      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -323,7 +322,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           suffixIcon: const Padding(
             padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.filter_alt_rounded),
+            child: Icon(Icons.filter_alt_rounded,size:30),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),

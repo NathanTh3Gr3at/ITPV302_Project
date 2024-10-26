@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:thyme_to_cook/models/recipe_model.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
@@ -31,13 +28,11 @@ class _SaveViewState extends State<SaveView> {
   Widget build(BuildContext context) {
     // _getInitial();
     return GestureDetector(
-      
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: backgroundColor,
-        appBar: appBar(),
+        //appBar: appBar(),
         body: ListView(
-          
           children: [
             _likedRecipes(),
           ],
@@ -47,7 +42,7 @@ class _SaveViewState extends State<SaveView> {
     );
   }
 
-  AppBar appBar() {
+ /*  AppBar appBar() {
     return AppBar(
       backgroundColor: backgroundColor,
       title: const Text(
@@ -59,7 +54,7 @@ class _SaveViewState extends State<SaveView> {
         ),
       ),
     );
-  }
+  } */
 
   Column _likedRecipes() {
     return Column(children: [
@@ -78,7 +73,7 @@ class _SaveViewState extends State<SaveView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 20),
+            padding: EdgeInsets.only(left: 8, bottom: 20),
             child: Text(
               "Recipes",
               style: TextStyle(
@@ -88,10 +83,8 @@ class _SaveViewState extends State<SaveView> {
               ),
             ),
           ),
-          // const SizedBox(height: 10,
-          // ),
           SizedBox(
-            height: 450,
+            height: 520,
             // width: 400,
             child: GridView.builder(
               //  padding: const EdgeInsets.only(left: 10, right: 10),
@@ -135,74 +128,73 @@ class _SaveViewState extends State<SaveView> {
                           : [],
                     ),
                     child: Column(
-                        //  crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // Heart Icon
+                      //  crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // Heart Icon
 
-                              IconButton(
-                                onPressed: () {
-                                  setState(
-                                    () {
-                                      recipes[index].liked =
-                                          !recipes[index].liked;
-                                    },
-                                  );
-                                },
-                                icon: Icon(recipes[index].liked
-                                    ? Icons.keyboard_control
-                                    : Icons.keyboard_control),
+                            IconButton(
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    recipes[index].liked =
+                                        !recipes[index].liked;
+                                  },
+                                );
+                              },
+                              icon: Icon(recipes[index].liked
+                                  ? Icons.keyboard_control
+                                  : Icons.keyboard_control),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                recipes[index].name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                    fontSize: 16),
+                              ),
+                              Text(
+                                recipes[index].nutrition,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Text(
+                                recipes[index].duration,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  recipes[index].name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                      fontSize: 16),
-                                ),
-                                Text(
-                                  recipes[index].nutrition,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                                Text(
-                                  recipes[index].duration,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
-                          ),
+                        ),
 
-                          // positioning of image
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            // recipe image
-                            child: Image.asset(
-                              recipes[index].iconPath,
-                              width: 150,
-                              height: 150,
-                            ),
+                        // positioning of image
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          // recipe image
+                          child: Image.asset(
+                            recipes[index].iconPath,
+                            width: 150,
+                            height: 150,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-               
+                  ),
                 );
               },
 
@@ -258,9 +250,8 @@ class _SaveViewState extends State<SaveView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(
-            left: 5,
-            bottom: 15,
+          padding: EdgeInsets.all(
+            8
           ),
           child: Text(
             "Recipe Collection",
