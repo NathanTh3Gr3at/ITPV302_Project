@@ -53,8 +53,20 @@ class CloudRecipe {
     imageSrc = snapshot.data()[imageSrcFieldName] as String? ?? "",
     tags = snapshot.data()[tagsFieldName] as Map<String, dynamic>? ?? {},
     recipeDescription = snapshot.data()[recipeDescriptionFieldName] as String? ?? "",
-    recipeIngredients = snapshot.data()[recipeIngredientsFieldName] as List<dynamic>? ?? [],
-    recipeInstructions = snapshot.data()[recipeInstructionsFieldName] as List<dynamic>? ?? [],
+    recipeIngredients = (snapshot.data()[recipeIngredientsFieldName] as List<dynamic>?) 
+    ?.map((item) => Ingredient(
+        name: item['ingredient_name'] ?? "",
+        quantity: item['quantity'] ?? "",
+        unit: item['unit'] ?? "",
+    ))
+    .toList()
+    ?? [],
+// .map((e) => e['instruction'])
+    recipeInstructions = (snapshot.data()[recipeInstructionsFieldName] as List<dynamic>?)
+    ?.map((item) => item['instruction'])
+    .toList()
+     ?? [],
+
     recipeName = snapshot.data()[recipeNameFieldName] as String? ?? "",
     recipeServings = int.tryParse(snapshot.data()[recipeServingsFieldName]?.toString() ?? "1") ?? 1,
     updateDate = (snapshot.data()[updateDateFieldName] as Timestamp).toDate(),
@@ -66,6 +78,16 @@ class CloudRecipe {
     prepTime = snapshot.data()[prepTimeFieldName] as String? ?? "",
     rating = snapshot.data()[ratingFieldName] as String? ?? "",
     totalTime = snapshot.data()[totalTimeFieldName] as String? ?? "";
+    
+}
+
+// handles ingredients
+class Ingredient{
+  final String name;
+  final String quantity;
+  final String unit;
+  Ingredient({required this.name, required this.quantity, required this.unit});
+  
 }
 
 // import 'package:cloud_firestore/cloud_firestore.dart';

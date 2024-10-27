@@ -19,7 +19,7 @@
 //       .map((doc) {  
 //         final data = doc.data() as Map<String, dynamic>;
 //         // print("$data");   // debug
-//         return CloudRecipe.fromJson(data);
+//         return CloudRecipe.fromSnapshot(data as QueryDocumentSnapshot<Map<String, dynamic>>);
 //       }).toList();  
 //     }  
 //     catch (e) {

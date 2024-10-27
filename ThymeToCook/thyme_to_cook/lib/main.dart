@@ -17,6 +17,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_system_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
@@ -39,7 +40,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  // initializes firebase with current platform
   
-  // final searchRepo = FirebaseSearch(); // used for searching
   
   runApp(
     MultiBlocProvider(
@@ -47,9 +47,8 @@ void main() async {
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
         BlocProvider(create: (context) => NavigationBloc()),
         BlocProvider(create: (context) => MeasurementSystemBloc()),
-        BlocProvider(create: (context) => DietaryPreferencesBloc()), 
-         
-        // BlocProvider(create: (context) => SearchBloc(searchRepo: searchRepo)), 
+        BlocProvider(create: (context) => DietaryPreferencesBloc()),      
+        BlocProvider(create: (context) => SearchBloc()), 
       ],
       child: MaterialApp(
         builder: (context, child) => ResponsiveWrapper.builder(

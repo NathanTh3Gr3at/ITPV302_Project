@@ -12,18 +12,15 @@ class RecipeView extends StatefulWidget {
 }
 
 class _RecipeViewState extends State<RecipeView> {
-  
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-   
       resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor,
       appBar: AppBar(
           backgroundColor: backgroundColor,
           title: Text(
-           widget.recipe.recipeName, 
+            widget.recipe.recipeName,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 25,
@@ -40,28 +37,31 @@ class _RecipeViewState extends State<RecipeView> {
       children: [
         _imageArea(),
         const SizedBox(
-        height: 10,
-      ),
+          height: 10,
+        ),
         _instructions(),
-        
       ],
     );
   }
 
   Container _imageArea() {
-  return Container(
-    width: 320,
-    height: 225,
-    decoration: const BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/images/placeholder_image.jpg'),
-        fit: BoxFit.cover, 
+    final recipeImage = widget.recipe.imageUrl;
+    return Container(
+      width: 320,
+      height: 225,
+      decoration: BoxDecoration(
+        image: recipeImage != null && recipeImage.isNotEmpty
+            ? DecorationImage(
+                image: NetworkImage(recipeImage),
+                fit: BoxFit.cover,
+              )
+            : const DecorationImage(
+                image: AssetImage('assets/images/placeholder_image.jpg'),
+              ),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-    ),
-  );
-}
-
+    );
+  }
 
   Column _instructions() {
     return Column(
@@ -93,12 +93,14 @@ class _RecipeViewState extends State<RecipeView> {
                           // color: Color.fromARGB(255, 252, 253, 242),
                           // elevation: 5,
                           child: Center(
-                            
                             child: ListView.builder(
                               itemBuilder: (context, index) {
+                                final ingredients =
+                                    widget.recipe.recipeIngredients[index];
                                 return ListTile(
                                   title: Text(
-                                    widget.recipe.recipeIngredients[index],
+                                    ('${ingredients.name} ${ingredients.quantity} ${ingredients.unit}'),
+                                    // widget.recipe.recipeIngredients[index].toString(),
                                   ),
                                 );
                               },
@@ -111,12 +113,16 @@ class _RecipeViewState extends State<RecipeView> {
                           child: Center(
                             child: ListView.builder(
                               itemBuilder: (context, index) {
+                                final instructions =
+                                    widget.recipe.recipeInstructions[index];
                                 return ListTile(
                                   title: Text(
-                                    widget.recipe.recipeInstructions[index],
+                                    '$instructions',
                                   ),
                                 );
-                              }, itemCount: widget.recipe.recipeInstructions.length,
+                              },
+                              itemCount:
+                                  widget.recipe.recipeInstructions.length,
                             ),
                           ),
                         ),
