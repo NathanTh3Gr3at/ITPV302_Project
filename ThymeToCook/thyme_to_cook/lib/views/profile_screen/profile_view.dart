@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -152,6 +153,7 @@ class ProfileView extends StatelessWidget {
                     ],
                   ),
                   // section for user details, must fill in
+                  
                   const Text("User"),
                   
                 ],

@@ -1,9 +1,6 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
@@ -38,6 +35,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
   late TabController _disTabController;
   bool isOffline = false;
   
+  
 @override
   void initState() {
     super.initState();
@@ -55,6 +53,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
   }
   @override
   Widget build(BuildContext context) {
+    print(FirebaseAuth.instance.currentUser);
     final myDay = TimeOfDay.fromDateTime(DateTime.now());
     String greeting() {
       if (myDay.hour > 18) {
@@ -149,6 +148,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
           )
         ],),
       body: RefreshIndicator(
+        
         onRefresh: () async {
         },
         child: SingleChildScrollView(

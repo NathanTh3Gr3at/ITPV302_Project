@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 
 class OpenAppView extends StatefulWidget {
   const OpenAppView({super.key});
@@ -48,10 +49,11 @@ class _OpenAppViewState extends State<OpenAppView> {
             padding: const EdgeInsets.all(60.0),
             child: ElevatedButton(
               onPressed: () {
-                //Zanele Please fix this so the user clicks this button to go to login screen
-                context.read<AuthBloc>().add(
+                Navigator.push(context,MaterialPageRoute(builder:(context)=>const LoginView()));
+                
+                /* context.read<AuthBloc>().add(
                       const AuthEventLogOut(),
-                    );
+                    ); */
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryButtonColor,
