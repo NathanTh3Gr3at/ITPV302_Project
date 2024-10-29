@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
@@ -15,20 +15,24 @@ class LowCarbTabView extends StatefulWidget {
 }
 
 class _LowCarbTabViewState extends State<LowCarbTabView> {
-  late final RecipeStorage _recipeStorage;
 
   @override
   void initState() {
-    _recipeStorage = RecipeStorage();
+    final recipeStorage = Provider.of<RecipeStorage>(context, listen: false);
+    // Ensuring recipes are cached when the tab is opened
+    recipeStorage.fetchAndCacheRecipes();
     super.initState();
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
+  final recipeStorage = Provider.of<RecipeStorage>(context);
   var isLiked = false;
+  int limit = 5;
+  
     return StreamBuilder(
       // Getting vegan recipes
-      stream: _recipeStorage.getLowCarbRecipes(),
+      stream: recipeStorage.getAllRecipes(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -36,11 +40,18 @@ class _LowCarbTabViewState extends State<LowCarbTabView> {
           case ConnectionState.active:
             if (snapshot.hasData) {
               final allRecipes = snapshot.data as Iterable<CloudRecipe>;
+              log(allRecipes.length.toString());
+              if (allRecipes.isEmpty) {
+                return const Center(child: Text("No Recipes available"));
+              }
+              // Limiting the number of recipes shown to the user 
+              final displayRecipes = allRecipes.take(limit).toList();
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: allRecipes.length, 
+                itemCount: displayRecipes.length, 
                 itemBuilder: (context, index) {
-                  final recipe = allRecipes.elementAt(index);
+                  final recipe = displayRecipes[index];
+                  log(recipe.recipeName);
                   return SizedBox(
                     height: double.infinity,
                     width: 210,
@@ -60,7 +71,7 @@ class _LowCarbTabViewState extends State<LowCarbTabView> {
                           child: Stack(
                             children: [
                             Image.network(
-                                  recipe.imageSrc ?? "",
+                                  recipe.imageSrc ?? recipe.imageUrl ?? "",
                                   // recipeImages[index],
                                   fit: BoxFit.cover,
                                   height: 265,

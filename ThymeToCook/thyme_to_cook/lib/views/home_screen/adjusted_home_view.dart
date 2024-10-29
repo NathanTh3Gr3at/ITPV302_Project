@@ -1,9 +1,5 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
@@ -14,13 +10,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/gluten_free_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/keto_tab_view.dart';
 import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/low_carb_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/low_sodium_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/paleo_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/pescatarian_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/vegan_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/vegetarian_tab_view.dart';
 import 'package:thyme_to_cook/views/home_screen/sub_containers/recommended_view.dart';
 import 'package:thyme_to_cook/views/home_screen/sub_containers/sections/daily_delights_view.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
@@ -43,8 +33,8 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
     super.initState();
     
     // Initialize the tab controllers
-    _tabController = TabController(length: 6, vsync: this);
-    _disTabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 1, vsync: this);
+    _disTabController = TabController(length: 1, vsync: this);
   }
 
   @override
@@ -242,7 +232,6 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
                                     
                                     tabs: const [
                                         Tab(text: "Low-Carb"), 
-                                        Tab(text: "Low-Sodium"),
                                 ],
                               ),
                       ),  
@@ -253,7 +242,6 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
                             controller: _disTabController,
                             children: const [
                               LowCarbTabView(),
-                              LowSodiumTabView(),
                             ],
                           )
                         ),
@@ -390,12 +378,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
                                     dividerColor: Colors.transparent,
                                     
                                     tabs: const [
-                                        Tab(text: "Vegan"), 
-                                        Tab(text: "Vegetarian"),
-                                        Tab(text: "Paleo"),
-                                        Tab(text: "Keto"),
                                         Tab(text: "Gluten Free"),
-                                        Tab(text: "Pescatarian"),
                                 ],
                               ),
                       ),  
@@ -405,12 +388,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
                           child: TabBarView(
                             controller: _tabController,
                             children: const [
-                              VeganTabView(),
-                              VegetarianTabView(),
-                              PaleoTabView(),
-                              KetoTabView(),
                               GlutenFreeTabView(),
-                              PescatarianTabView()
                             ],
                           )
                         ),

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
@@ -15,14 +16,6 @@ class RecommendedView extends StatefulWidget {
 }
 
 class _RecommendedViewState extends State<RecommendedView> {
-  late final RecipeStorage _recipeStorage;
-
-  @override
-  void initState() {
-    _recipeStorage = RecipeStorage();
-    super.initState();
-  } 
-
   @override
   Widget build(BuildContext context) {
   // Checking purposes --> for when database goes down
@@ -36,10 +29,11 @@ class _RecommendedViewState extends State<RecommendedView> {
   //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-em-ba-em-s-ultimate-lobster-rolls-51169080.jpg?alt=media&token=99ae6608-57f6-4dc2-be49-970982cca1d8",
   //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-em-gourmet-live-em-s-first-birthday-cake-367789.jpg?alt=media&token=04a02ab0-20fe-46d3-9c62-9cdb2c236d61"
   // ];
+  final recipeStorage = Provider.of<RecipeStorage>(context);
   var isLiked = false;
     return StreamBuilder(
       // Getting all recipes
-      stream: _recipeStorage.getVeganRecipes(),
+      stream: recipeStorage.getAllRecipes(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -73,7 +67,7 @@ class _RecommendedViewState extends State<RecommendedView> {
                           child: Stack(
                             children: [
                             Image.network(
-                                  recipe.imageSrc ?? "",
+                                  recipe.imageSrc ?? recipe.imageUrl ??  "",
                                   // recipeImages[index],
                                   fit: BoxFit.cover,
                                   height: 265,

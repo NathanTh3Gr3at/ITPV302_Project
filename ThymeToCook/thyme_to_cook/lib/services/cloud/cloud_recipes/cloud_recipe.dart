@@ -1,71 +1,256 @@
+// For checking purposes 
+// import 'dart:developer';
+import 'dart:developer';
+
 import "package:cloud_firestore/cloud_firestore.dart";
+import 'package:fraction/fraction.dart';
+import 'package:hive/hive.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_storage_constants.dart';
 
+part "cloud_recipe.g.dart";
+
+@HiveType(typeId: 1)
+class RecipeIngredient {
+  @HiveField(0)
+  final String? ingredientName;
+  @HiveField(1)
+  final double? quantity;
+  @HiveField(2)
+  final String? unit;
+
+  RecipeIngredient({
+    required this.ingredientName,
+    required this.quantity,
+    required this.unit,
+  });
+  // Mapping data from the database to the our class model 
+  // Conerting our string values from the database to doubles so we can perform calculations on them
+  factory RecipeIngredient.fromMap(Map<String, dynamic> map) {
+    double? quantity;
+
+    try {
+      quantity = Fraction.fromString(map["quantity"] as String).toDouble();
+      // log(quantity.toString());
+    } catch (e) {
+      quantity = 0.0; 
+      // log(quantity.toString());
+    }
+    return RecipeIngredient(
+      ingredientName: map["ingredient_name"] as String?,
+      quantity: quantity,
+      unit: map["unit"] as String?,
+    );
+  }
+ // Mapping a the quantity field in firebase to the our data to then be sent to firebase
+  Map<String, dynamic> toMap() {
+    return {
+      "ingredient_name": ingredientName,
+      "quantity": quantity?.toString(),
+      "unit": unit
+    };
+  }
+  // Method to get convert our values back to human readable fractions so our numbers have a consistent feel and we have a more user-centric design
+  String getQuantityAsFraction() {
+    if (quantity != null) {
+      return Fraction.fromDouble(quantity!).toMixedFraction().toString();
+    }
+    return '0';
+  }
+
+}
+@HiveType(typeId: 2)
+class RecipeInstructions {
+  @HiveField(0)
+  String? instruction;
+  @HiveField(1)
+  int? time;
+  @HiveField(2)
+  String? unit;
+
+  RecipeInstructions({
+    required this.instruction,
+    required this.time,
+    required this.unit,
+  });
+ // Mapping data from the database to the our class model 
+  factory RecipeInstructions.fromMap(Map<String, dynamic> map) {
+    return RecipeInstructions(
+      instruction: map["instruction"] as String?,
+      time: map["time"] as int?,
+      unit: map["unit"] as String?,
+    );
+  }
+  // Method to get convert our values back to human readable fractions so our numbers have a consistent feel and we have a more user-centric design
+  Map<String, dynamic> toMap() {
+    return {
+      "instruction": instruction,
+      "time": time,
+      "unit": unit
+    };
+  }
+}
+@HiveType(typeId: 0)
 class CloudRecipe {
-  final String recipeId;
-  final String? cookingTime;
-  final DateTime createDate;
-  final int? calories;
+  @HiveField(0)
+  String recipeId;
+  @HiveField(1)
+  String? cookingTime;
+  @HiveField(2)
+  DateTime createDate;
+  @HiveField(3)
+  int? calories;
   // For the jpg not the actual url
+  @HiveField(4)
   String? imageSrc;
-  final Map<String, dynamic> tags;
-  final String? recipeDescription;
-  final List<dynamic> recipeIngredients;
-  final List<dynamic> recipeInstructions;
-  final List<dynamic> nutritionalInfo;
-  final String recipeName;
-  final int? recipeServings;
-  final DateTime updateDate;
-  final List<dynamic>? cuisinePath;
+  @HiveField(5)
+  Map<String, dynamic> tags;
+  @HiveField(6)
+  String? recipeDescription;
+  @HiveField(7)
+  List<RecipeIngredient> recipeIngredients;
+  @HiveField(8)
+  List<RecipeInstructions> recipeInstructions;
+  @HiveField(9)
+  List<String> nutritionalInfo;
+  @HiveField(10)
+  String recipeName;
+  @HiveField(11)
+  int? recipeServings;
+  @HiveField(12)
+  DateTime updateDate;
+  @HiveField(13)
+  List<String>? cuisinePath;
+  @HiveField(14)
   String? imageUrl;
-  final String? identifier;
-  final String? prepTime;
-  final String? rating;
-  final String? totalTime; 
+  @HiveField(15)
+  String? identifier;
+  @HiveField(16)
+  String? prepTime;
+  @HiveField(17)
+  String? rating;
+  @HiveField(18)
+  String? totalTime; 
+  
+  DocumentSnapshot<Map<String, dynamic>>? docSnapshot;
 
 
-  CloudRecipe(
-    this.recipeId,
-    this.cookingTime, 
-    this.createDate, 
-    this.imageSrc, 
-    this.tags, 
-    this.recipeDescription, 
-    this.recipeIngredients, 
-    this.recipeInstructions, 
-    this.recipeName, 
-    this.recipeServings, 
-    this.updateDate, 
-    this.calories, 
-    this.nutritionalInfo, 
-    this.cuisinePath, 
-    this.imageUrl, 
-    this.identifier, 
-    this.prepTime, 
-    this.rating, 
-    this.totalTime, 
-  );
+  CloudRecipe({
+    required this.recipeId,
+    required this.cookingTime, 
+    required this.createDate, 
+    required this.imageSrc, 
+    required this.tags, 
+    required this.recipeDescription, 
+    required this.recipeIngredients, 
+    required this.recipeInstructions, 
+    required this.recipeName, 
+    required this.recipeServings, 
+    required this.updateDate, 
+    required this.calories, 
+    required this.nutritionalInfo, 
+    required this.cuisinePath, 
+    required this.imageUrl, 
+    required this.identifier, 
+    required this.prepTime, 
+    required this.rating, 
+    required this.totalTime, 
+    this.docSnapshot,
+});
 
-  CloudRecipe.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot):
-    recipeId = snapshot.id,
-    cookingTime = snapshot.data()[cookingTimeFieldName].toString(),
-    createDate = (snapshot.data()[createDateFieldName] as Timestamp).toDate(),
-    imageSrc = snapshot.data()[imageSrcFieldName] as String? ?? "",
-    tags = snapshot.data()[tagsFieldName] as Map<String, dynamic>? ?? {},
-    recipeDescription = snapshot.data()[recipeDescriptionFieldName] as String? ?? "",
-    recipeIngredients = snapshot.data()[recipeIngredientsFieldName] as List<dynamic>? ?? [],
-    recipeInstructions = snapshot.data()[recipeInstructionsFieldName] as List<dynamic>? ?? [],
-    recipeName = snapshot.data()[recipeNameFieldName] as String? ?? "",
-    recipeServings = int.tryParse(snapshot.data()[recipeServingsFieldName]?.toString() ?? "1") ?? 1,
-    updateDate = (snapshot.data()[updateDateFieldName] as Timestamp).toDate(),
-    calories = snapshot.data()[caloriesFieldName]?? 0,
-    nutritionalInfo = snapshot.data()[nutritionalInfoFieldName] as List<dynamic>? ?? [],
-    cuisinePath = snapshot.data()[cuisinePathFieldName] as List<dynamic>? ?? [],
-    imageUrl = snapshot.data()[imageUrlFieldName] as String? ?? "",
-    identifier = snapshot.data()[identifierFieldName] as String? ?? "",
-    prepTime = snapshot.data()[prepTimeFieldName] as String? ?? "",
-    rating = snapshot.data()[ratingFieldName] as String? ?? "",
-    totalTime = snapshot.data()[totalTimeFieldName] as String? ?? "";
+  factory CloudRecipe.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
+  {
+  var data = snapshot.data();
+  // log('Snapshot data: $data');
+  try {
+    List<RecipeIngredient> ingredients = [];
+    if (data[recipeIngredientsFieldName] is List) {
+      ingredients = (data[recipeIngredientsFieldName] as List)
+          .map((ingredient) => RecipeIngredient.fromMap(ingredient as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<RecipeInstructions> instructions = [];
+    if (data[recipeInstructionsFieldName] is List) {
+      instructions = (data[recipeInstructionsFieldName] as List)
+          .map((instruction) => RecipeInstructions.fromMap(instruction as Map<String, dynamic>))
+          .toList();
+    }
+
+    List<String> nutritionalInfo = [];
+    var nutritionalInfoField = data[nutritionalInfoFieldName];
+    if (nutritionalInfoField is List) {
+      nutritionalInfo = List<String>.from(nutritionalInfoField);
+    } else if (nutritionalInfoField is String) {
+      nutritionalInfo = [nutritionalInfoField];
+    }
+
+    int? calories;
+    var caloriesField = data[caloriesFieldName];
+    if (caloriesField is int) {
+      calories = caloriesField;
+    } else if (caloriesField is double) {
+      calories = caloriesField.toInt();
+    } else {
+      calories = null; 
+    }
+
+    List<String> cuisinePath = [];
+    var cuisinePathField = data[cuisinePathFieldName];
+    if (cuisinePathField is List) {
+      cuisinePath = List<String>.from(cuisinePathField);
+    } else if (cuisinePathField is String) {
+      cuisinePath = [cuisinePathField];
+    }
+
+    return CloudRecipe(
+      recipeId: snapshot.id,
+      cookingTime: data[cookingTimeFieldName]?.toString(),
+      createDate: (data[createDateFieldName] as Timestamp).toDate(),
+      calories: calories,
+      imageSrc: data[imageSrcFieldName] as String? ?? "",
+      tags: Map<String, dynamic>.from(data[tagsFieldName] as Map? ?? {}),
+      recipeDescription: data[recipeDescriptionFieldName] as String? ?? "",
+      recipeIngredients: ingredients,
+      recipeInstructions: instructions,
+      nutritionalInfo: nutritionalInfo,
+      recipeName: data[recipeNameFieldName] as String? ?? "",
+      recipeServings: int.tryParse(data[recipeServingsFieldName]?.toString() ?? "1") ?? 1,
+      updateDate: (data[updateDateFieldName] as Timestamp).toDate(),
+      cuisinePath: cuisinePath,
+      imageUrl: data[imageUrlFieldName] as String? ?? "",
+      identifier: data[identifierFieldName] as String? ?? "",
+      prepTime: data[prepTimeFieldName] as String? ?? "",
+      rating: data[ratingFieldName] as String? ?? "",
+      totalTime: data[totalTimeFieldName] as String? ?? "",
+      docSnapshot: snapshot, // Not stored in Hive
+    );
+  } catch (e) {
+    log('Error processing snapshot data: $e');
+    return CloudRecipe(
+      recipeId: snapshot.id,
+      cookingTime: "",
+      createDate: DateTime.now(),
+      calories: 0,
+      imageSrc: "",
+      tags: {},
+      recipeDescription: "",
+      recipeIngredients: [],
+      recipeInstructions: [],
+      nutritionalInfo: [],
+      recipeName: "Unknown Recipe",
+      recipeServings: 1,
+      updateDate: DateTime.now(),
+      cuisinePath: [],
+      imageUrl: "",
+      identifier: "",
+      prepTime: "",
+      rating: "",
+      totalTime: "",
+      docSnapshot: snapshot,
+    ); // Continue handling the error gracefully
+  }
+  }
+    
 }
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -171,3 +356,4 @@ class CloudRecipe {
 //     }
 //   }
 // }
+}

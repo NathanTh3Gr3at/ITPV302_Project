@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
@@ -15,20 +16,13 @@ class GlutenFreeTabView extends StatefulWidget {
 }
 
 class _GlutenFreeTabViewState extends State<GlutenFreeTabView> {
-  late final RecipeStorage _recipeStorage;
-
-  @override
-  void initState() {
-    _recipeStorage = RecipeStorage();
-    super.initState();
-  } 
-
   @override
   Widget build(BuildContext context) {
+  final recipeStorage = Provider.of<RecipeStorage>(context);
   var isLiked = false;
     return StreamBuilder(
       // Getting vegan recipes
-      stream: _recipeStorage.getGlutenFreeRecipes(),
+      stream: recipeStorage.getAllRecipes(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:

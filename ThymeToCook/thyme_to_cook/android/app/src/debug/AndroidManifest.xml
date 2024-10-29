@@ -5,20 +5,4 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     
-    <application
-        android:name="io.flutter.app.FlutterApplication"
-        android:label="thyme_to_cook"
-        android:icon="@mipmap/ic_launcher">
-
-        <!-- Add this line to include the Play Services version -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-        
-        <!-- Firebase services -->
-        <meta-data
-            android:name="firebase_analytics_collection_enabled"
-            android:value="true"/>
-
-    </application>
 </manifest>
