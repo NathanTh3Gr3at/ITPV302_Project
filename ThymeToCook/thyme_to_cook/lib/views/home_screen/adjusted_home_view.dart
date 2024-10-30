@@ -28,6 +28,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
   late TabController _disTabController;
   bool isOffline = false;
   
+  
 @override
   void initState() {
     super.initState();
@@ -45,6 +46,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
   }
   @override
   Widget build(BuildContext context) {
+    // print(FirebaseAuth.instance.currentUser);
     final myDay = TimeOfDay.fromDateTime(DateTime.now());
     String greeting() {
       if (myDay.hour > 18) {
@@ -97,6 +99,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
                 case MenuAction.logout:
                   final shouldLogOut = await showLogOutDialog(context);
                   if (shouldLogOut) {
+                    // ignore: use_build_context_synchronously
                     context.read<AuthBloc>().add(
                           const AuthEventLogOut(),
                         );
@@ -139,6 +142,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
           )
         ],),
       body: RefreshIndicator(
+        
         onRefresh: () async {
         },
         child: SingleChildScrollView(

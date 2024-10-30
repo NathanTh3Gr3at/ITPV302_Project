@@ -5,9 +5,10 @@ import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 
 class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
-  final SearchRepo searchRepo;
+  // creates instance of FirebaseSearch from search_domain
+  final SearchRepo searchRepo = FirebaseSearch(); 
 
-  SearchBloc({required this.searchRepo}) : super(SearchInitial()) {
+  SearchBloc() : super(SearchInitial()) {
     on<SelectSearchEvent>((event, emit) async {
       final query = event.search;
       if (query.isEmpty) {

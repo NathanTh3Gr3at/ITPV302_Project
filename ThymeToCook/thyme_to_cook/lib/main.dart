@@ -20,8 +20,11 @@ import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
-import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
+import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 // import 'package:thyme_to_cook/views/home_screen/home_view.dart';
 // import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 // import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietary_selection.dart';
@@ -37,6 +40,7 @@ import 'package:thyme_to_cook/views/main_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  // initializes firebase with current platform
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // initializes firebase with current platform
   
   // Registering all the recipe, instruction and ingredient hives
@@ -47,6 +51,7 @@ void main() async {
 
   // Initilize recipe storage in main so the rest of the application has access to the recipes
   var recipeStorage = await RecipeStorage.getInstance();
+  
   // final searchRepo = FirebaseSearch(); // used for searching
   
   runApp(
@@ -55,21 +60,19 @@ void main() async {
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
         BlocProvider(create: (context) => NavigationBloc()),
         BlocProvider(create: (context) => MeasurementSystemBloc()),
-        BlocProvider(create: (context) => DietaryPreferencesBloc()),
+        BlocProvider(create: (context) => DietaryPreferencesBloc()), 
         // So Recipe Storage is available across our app --> Access to cached recipes 
-        Provider<RecipeStorage>.value(value: recipeStorage),
+        Provider<RecipeStorage>.value(value: recipeStorage), 
         // BlocProvider(create: (context) => SearchBloc(searchRepo: searchRepo)), 
       ],
       child: MaterialApp(
-        builder: (context, child) => ResponsiveWrapper.builder(
-          child, 
-          breakpoints: const [
-            ResponsiveBreakpoint.resize(480, name: MOBILE),
-            ResponsiveBreakpoint.resize(800, name: TABLET),
-            ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-            ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-          ]
-        ),
+        builder: (context, child) =>
+            ResponsiveWrapper.builder(child, breakpoints: const [
+          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.resize(800, name: TABLET),
+          ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+        ]),
         debugShowCheckedModeBanner:
             false, //removes debug label on top-right corner
         title: 'Flutter Demo',
@@ -95,7 +98,6 @@ void main() async {
 }
 
 class HomePage extends StatefulWidget {
-  
   const HomePage({super.key});
 
   @override
@@ -103,14 +105,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late StreamSubscription<InternetStatus> _internetSubscription;  
+  late StreamSubscription<InternetStatus> _internetSubscription;
   bool isFirstTime = true;
   @override
   void initState() {
     super.initState();
 
     // Subscribe to changes in connection status after the initial check
-    _internetSubscription = InternetConnection().onStatusChange.listen((InternetStatus status) {
+    _internetSubscription =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      bool currentlyConnected = (status == InternetStatus.connected);
+      if (currentlyConnected != isFirstTime) {
+        isFirstTime = currentlyConnected;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(currentlyConnected
+                ? "Welcome back online!"
+                : "Device disconnected"),
+            duration: const Duration(seconds: 3),
+          ));
+        });
+      }
+    });
+
+    /* _internetSubscription =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (status == InternetStatus.connected) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +147,7 @@ class _HomePageState extends State<HomePage> {
           );
         }
       });
-    });
+    }); */
 
     _checkInitialConnectionStatus();
   }
@@ -136,17 +155,24 @@ class _HomePageState extends State<HomePage> {
   Future<void> _checkInitialConnectionStatus() async {
     // Check the initial connection status synchronously
     final initialStatus = await Connectivity().checkConnectivity();
-    if (initialStatus == InternetStatus.disconnected) {
+    if (initialStatus == ConnectivityResult.none) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Device disconnected!"),
+            content: Text("Device disconnected from WIFI!"),
             duration: Duration(seconds: 3),
           ),
         );
       });
     }
   }
+
+  // To Handle the UI changes when Connected/Disconnected
+  void _updateUIBasedOnConnectivity(bool isConnected) {
+    if (isConnected) {
+    } else {}
+  }
+
 
   Future<void> inspectHiveBox() async {
   var box = await Hive.openBox<CloudRecipe>('recipes');
@@ -161,9 +187,9 @@ class _HomePageState extends State<HomePage> {
     _internetSubscription.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-  
     context.read<AuthBloc>().add(const AuthEventInitialize());
 
     return BlocConsumer<AuthBloc, AuthState>(
@@ -178,18 +204,41 @@ class _HomePageState extends State<HomePage> {
         }
       },
       builder: (context, state) {
-        //Nathan - add the new user intro section to the nav stuff
-        // Just checking if the hive has stuff
-          inspectHiveBox();
-          return ResponsiveWrapper.builder(
-            const MainNavigation(),
+         Widget child;
+        if (state is AuthStateLoggedIn) {
+          child = const MainNavigation();
+        } else if (state is AuthStateNeedsVerification) {
+          child = const VerifyEmailView();
+        } else if (state is AuthStateForgotPassword) {
+          child = const ForgotPasswordView();
+        } else if (state is AuthStateLoggedOut) {
+          child = const OpenAppView();
+          //OpenAppView is a new screen for the intro to app
+        } else if (state is AuthStateRegistering) {
+          child = const RegisterView();
+          //will need to add the routing to the 3 screens
+        } else {
+          child = const Scaffold(
+            body: CircularProgressIndicator(),
+          );
+        } 
+
+         return ResponsiveWrapper.builder(child, breakpoints: const [
+          ResponsiveBreakpoint.resize(480, name: MOBILE),
+          ResponsiveBreakpoint.resize(800, name: TABLET),
+          ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+        ]);   // starts at HomeView
+
+        //the original
+        /* return ResponsiveWrapper.builder(const MainNavigation(),
             breakpoints: const [
-                ResponsiveBreakpoint.resize(480, name: MOBILE),
-                ResponsiveBreakpoint.resize(800, name: TABLET),
-                ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-                ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-            ]
-          );// starts at HomeView
+              ResponsiveBreakpoint.resize(480, name: MOBILE),
+              ResponsiveBreakpoint.resize(800, name: TABLET),
+              ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+              ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+            ]); */
+
         // if (state is AuthStateLoggedIn) {
         //   return const MainNavigation();
         // } else if (state is AuthStateNeedsVerification) {

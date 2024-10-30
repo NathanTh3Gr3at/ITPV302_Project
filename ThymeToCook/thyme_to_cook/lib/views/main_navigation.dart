@@ -11,6 +11,7 @@ import 'package:thyme_to_cook/navigation/bloc/navigation_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
 
+
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
