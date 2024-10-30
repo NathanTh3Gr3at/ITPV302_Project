@@ -61,7 +61,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                     /* ElevatedButton(
                       onPressed: () => onAllergenSelected('egg'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -74,7 +74,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onAllergenSelected('caffeine'),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: secodaryButtonColor,
+                            backgroundColor: secondaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -86,7 +86,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onAllergenSelected('fish'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -105,7 +105,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onAllergenSelected('milk'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -118,7 +118,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onAllergenSelected('gluten'),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: secodaryButtonColor,
+                            backgroundColor: secondaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -130,7 +130,7 @@ class IngredientsToAvoidSelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onAllergenSelected('mustard'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(

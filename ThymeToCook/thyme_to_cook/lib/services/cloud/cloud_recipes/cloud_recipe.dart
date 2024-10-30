@@ -272,10 +272,42 @@ class CloudRecipe {
       totalTime: "",
       docSnapshot: snapshot,
     ); // Continue handling the error gracefully
-  }
-  }
     
+  }  
+  }
+ }
 }
+
+
+// handles ingredients
+class Ingredient{
+  final String name;
+  final String quantity;
+  final String unit;
+  bool isChecked;
+  
+  Ingredient({required this.name, required this.quantity, required this.unit, this.isChecked = false});
+
+  // handles checking of ingredients in grocery list
+  Ingredient copyWith({bool? isChecked}) {
+    return Ingredient(
+      name: name, 
+      quantity:  quantity, 
+      unit: unit,
+      isChecked: isChecked ?? this.isChecked,
+    );
+  }
+}
+
+// handles getting recipe name
+class GroceryList {
+  final String recipeName;
+  final List<Ingredient> recipeIngredients;
+
+  GroceryList({required this.recipeName, required this.recipeIngredients});
+}
+   
+    
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
@@ -380,4 +412,5 @@ class CloudRecipe {
 //     }
 //   }
 // }
-}
+// }
+

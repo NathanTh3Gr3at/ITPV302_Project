@@ -2,9 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
 
 class RecipeView extends StatefulWidget {
   final CloudRecipe recipe;
@@ -167,22 +171,21 @@ class _RecipeViewState extends State<RecipeView> with SingleTickerProviderStateM
             actions: const [
 
             ],
-            backgroundColor: backgroundColor,
             scrolledUnderElevation: 0,
             flexibleSpace: FlexibleSpaceBar(
               background: _imageArea(),
               ),
             ),
           SliverPersistentHeader(
-  delegate: _SliverAppBarTabBar(
-    TabBar(
-      dividerColor: Colors.transparent,
-      controller: _tabController,
-      indicatorColor: const Color.fromARGB(122, 0, 0, 0),
-      labelColor: const Color.fromARGB(122, 0, 0, 0),
-      unselectedLabelColor: const Color.fromARGB(121, 138, 133, 133),
-      isScrollable: true,
-      tabAlignment: TabAlignment.start,
+       delegate: _SliverAppBarTabBar(
+       TabBar(
+        dividerColor: Colors.transparent,
+        controller: _tabController,
+        indicatorColor: const Color.fromARGB(122, 0, 0, 0),
+        labelColor: const Color.fromARGB(122, 0, 0, 0),
+        unselectedLabelColor: const Color.fromARGB(121, 138, 133, 133),
+        isScrollable: true,
+        tabAlignment: TabAlignment.start,
       tabs: [
         const Tab(
           child: Column(
@@ -256,9 +259,27 @@ class _RecipeViewState extends State<RecipeView> with SingleTickerProviderStateM
                   instructions(),
                   nutritionalInfo()
                 ],
-          )
-      )),
+              ),   
+            ),
+          ),
+    floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                bool addGrocery = await _showGroceryConfirmationDialog(context);
+                if (addGrocery) {
+                  context.read<GroceryListBloc>().add(GroceryListLoadEvent(
+                        recipeName: widget.recipe.recipeName,
+                        ingredients:
+                            widget.recipe.recipeIngredients.cast<Ingredient>(),
+                      ));
+                }
+                // for debugging
+                // print("Sending groceryListLoadEvent with recipe: ${widget.recipe.recipeName}");
+              },
+              child: const Icon(Icons.shopping_bag),
+            ),
+      
     );
+    
   }
   // Column _recipePage() {
   //   return Column(
@@ -559,7 +580,35 @@ Column instructions() {
 //     );
 //   }
 // }
+
+  Future<bool> _showGroceryConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Add to grocery list'),
+              content: const Text('Add this recipe to your grocery list?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, false);
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
 }
+
 class _SliverAppBarTabBar extends SliverPersistentHeaderDelegate {
   _SliverAppBarTabBar(this._tabBar);
 

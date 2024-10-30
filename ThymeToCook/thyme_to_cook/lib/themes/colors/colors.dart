@@ -8,7 +8,7 @@ const Color openAppBackgroundColor= Color(0xffc8ceca);
 // Primary buttons
 const Color primaryButtonColor = Color(0xFF95D2B3);
 // Secondary buttons
-const Color secodaryButtonColor = Color(0xFFD8EFD3);
+const Color secondaryButtonColor = Color(0xFFD8EFD3);
 // Recently Viewed tile
 const Color recentlyViewedTileColor= Color(0xffF3E8D8);
 // Recommended Tile 

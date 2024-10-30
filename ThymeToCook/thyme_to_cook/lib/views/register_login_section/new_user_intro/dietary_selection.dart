@@ -82,7 +82,7 @@ class DietarySelection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onDietSelected('paleo'),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: secodaryButtonColor,
+                            backgroundColor: secondaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -94,7 +94,7 @@ class DietarySelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onDietSelected('keto'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -113,7 +113,7 @@ class DietarySelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onDietSelected('low_carb'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -126,7 +126,7 @@ class DietarySelection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onDietSelected('vegetarian'),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: secodaryButtonColor,
+                            backgroundColor: secondaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -147,7 +147,7 @@ class DietarySelection extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () => onDietSelected('diary_free'),
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: secodaryButtonColor,
+                          backgroundColor: secondaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
@@ -160,7 +160,7 @@ class DietarySelection extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onDietSelected('gluten_free'),
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: secodaryButtonColor,
+                            backgroundColor: secondaryButtonColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(

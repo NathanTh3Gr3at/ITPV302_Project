@@ -6,7 +6,7 @@ import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 
 class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
   // creates instance of FirebaseSearch from search_domain
-  final SearchRepo searchRepo = FirebaseSearch(); 
+  final SearchRepo searchRepo = FirebaseSearch();
 
   SearchBloc() : super(SearchInitial()) {
     on<SelectSearchEvent>((event, emit) async {
@@ -24,12 +24,12 @@ class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
             .where((recipe) => recipe != null)
             .cast<CloudRecipe>()
             .toList();
-        if (recipes.isEmpty) {
+        if (validRecipes.isEmpty) {
           emit(SearchLoaded(const [])); // emit empty list if no results
         } else {
           emit(SearchLoaded(recipes)); // emit recipe results
         }
-        emit(SearchLoaded(validRecipes));
+        // emit(SearchLoaded(validRecipes));
 
         // for debugging
         // for (var recipe in recipes) {
@@ -38,7 +38,8 @@ class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
         //   }
         // }
       } catch (e) {
-        print('Error: $e');
+        // for debugging
+        // print('Error: $e');
         emit(SearchError("Error getting recipes"));
       }
     });
@@ -47,8 +48,7 @@ class SearchBloc extends Bloc<SearchFunctionEvent, SearchState> {
     on<RecipeDetailEvent>((event, emit) async {
       try {
         emit(SearchRecipeDetail(event.recipe));
-
-      }catch (e) {
+      } catch (e) {
         emit(SearchError("Error going to recipe detail screen"));
       }
     });

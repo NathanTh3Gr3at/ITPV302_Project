@@ -14,6 +14,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_system_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
@@ -42,8 +43,6 @@ void main() async {
   // Initilize recipe storage in main so the rest of the application has access to the recipes
   var recipeStorage = await RecipeStorage.getInstance();
   
-  // final searchRepo = FirebaseSearch(); // used for searching
-  
   runApp(
     MultiProvider(
       providers: [
@@ -54,6 +53,7 @@ void main() async {
         // So Recipe Storage is available across our app --> Access to cached recipes 
         Provider<RecipeStorage>.value(value: recipeStorage), 
         BlocProvider(create: (context) => SearchBloc()), 
+        BlocProvider(create: (context) => GroceryListBloc()),
       ],
       child: MaterialApp(
         builder: (context, child) =>
