@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 
 class OpenAppView extends StatefulWidget {
   const OpenAppView({super.key});
@@ -46,11 +48,16 @@ class _OpenAppViewState extends State<OpenAppView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(60.0),
+            padding: const EdgeInsets.only(top:40,bottom:40),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context,MaterialPageRoute(builder:(context)=>const LoginView()));
-                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginView(),
+                  ),
+                );
+
                 /* context.read<AuthBloc>().add(
                       const AuthEventLogOut(),
                     ); */
@@ -69,9 +76,16 @@ class _OpenAppViewState extends State<OpenAppView> {
           ),
           ElevatedButton(
             onPressed: () {
-              context.read<AuthBloc>().add(
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const RegisterView(),
+                ),
+              );
+
+              /* context.read<AuthBloc>().add(
                     const AuthEventShouldRegister(),
-                  );
+                  ); */
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryButtonColor,
@@ -82,6 +96,32 @@ class _OpenAppViewState extends State<OpenAppView> {
                 color: Colors.black,
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:40),
+            child: ElevatedButton(
+              onPressed: () {
+            
+              
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainNavigation(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryButtonColor,
+              ),
+              child: const Text(
+                "Guest",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

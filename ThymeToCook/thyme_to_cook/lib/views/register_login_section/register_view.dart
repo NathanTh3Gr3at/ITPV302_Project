@@ -35,126 +35,131 @@ class _RegisterViewState extends State<RegisterView> {
           }
         }
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: backgroundColor,
-        appBar: AppBar(backgroundColor: backgroundColor,),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Image(
-                image: AssetImage('assets/images/placeholder_image.jpg'),
-                width: 300,
-                height: 300,
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Welcome user!',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                      color: Colors.black,
-                    ),
-                  ),
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: openAppBackgroundColor,
+          appBar: AppBar(
+            backgroundColor: openAppBackgroundColor,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Image(
+                  image: AssetImage('assets/images/thyme_to_cook_logo.png'),
+                  width: 300,
+                  height: 300,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
+                Align(
+                  alignment: Alignment.center,
                   child: RichText(
                     text: const TextSpan(
-                      text: 'Sign Up',
+                      text: 'Welcome user!',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 40,
                         color: Colors.black,
                       ),
                     ),
                   ),
                 ),
-              ),
-              /* Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: TextField(
-                  controller: _email,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  autofocus: true,
-                  keyboardType: TextInputType.text,
-                  decoration:
-                      const InputDecoration(hintText: 'Enter username here'),
-                ),
-              ), */
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: TextField(
-                  controller: _email,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration:
-                      const InputDecoration(hintText: 'Enter your email here'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: TextField(
-                  controller: _password,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter your password here'),
-                ),
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, bottom: 20),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final email = _email.text;
-                          final password = _password.text;
-                          context.read<AuthBloc>().add(
-                                AuthEventRegister(
-                                  email,
-                                  password,
-                                ),
-                              );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryButtonColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30))),
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: const TextSpan(
+                        text: 'Sign Up',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.black,
                         ),
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventLogOut(),
-                            );
-                      },
-                      child: const Text(
-                        'Already registered? Login here',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                /* Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: TextField(
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    autofocus: true,
+                    keyboardType: TextInputType.text,
+                    decoration:
+                        const InputDecoration(hintText: 'Enter username here'),
+                  ),
+                ), */
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: TextField(
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your email here'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: TextField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your password here'),
+                  ),
+                ),
+                Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30, bottom: 20),
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final email = _email.text;
+                            final password = _password.text;
+                            context.read<AuthBloc>().add(
+                                  AuthEventRegister(
+                                    email,
+                                    password,
+                                  ),
+                                );
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryButtonColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30))),
+                          child: const Text(
+                            'Register',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(
+                                const AuthEventLogOut(),
+                              );
+                        },
+                        child: const Text(
+                          'Already registered? Login here',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

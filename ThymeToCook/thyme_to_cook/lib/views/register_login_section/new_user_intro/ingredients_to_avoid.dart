@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 
-class IngredientsToAvoidSelection extends StatefulWidget {
-  const IngredientsToAvoidSelection({super.key});
+class IngredientsToAvoidSelection extends StatelessWidget {
+  final Function(String) onAllergenSelected;
+  const IngredientsToAvoidSelection({
+    super.key,
+    required this.onAllergenSelected,
+  });
 
-  @override
-  State<IngredientsToAvoidSelection> createState() =>
-      _IngredientsToAvoidSelectionState();
-}
-
-class _IngredientsToAvoidSelectionState
-    extends State<IngredientsToAvoidSelection> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: backgroundColor,
+    return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        bottom: const PreferredSize(
+       /*  bottom: const PreferredSize(
           preferredSize: Size.fromHeight(4.0),
           child: LinearProgressIndicator(
             value: 0.3,
             backgroundColor: Colors.grey,
             valueColor: AlwaysStoppedAnimation(Colors.blue),
           ),
-        ),
+        ), */
       ),
       body: Stack(
         children: [
@@ -50,8 +49,17 @@ class _IngredientsToAvoidSelectionState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {},
+                    ListTile(
+                        title: Text('Eggs'),
+                        leading: Radio(
+                          value: 'eggs',
+                          groupValue: null,
+                          onChanged: (value) {
+                            onAllergenSelected(value!);
+                          },
+                        )),
+                    /* ElevatedButton(
+                      onPressed: () => onAllergenSelected('egg'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -60,11 +68,11 @@ class _IngredientsToAvoidSelectionState
                         'Egg',
                         style: TextStyle(color: Colors.black),
                       ),
-                    ),
+                    ), */
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onAllergenSelected('caffeine'),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: secodaryButtonColor,
                             shape: RoundedRectangleBorder(
@@ -76,7 +84,7 @@ class _IngredientsToAvoidSelectionState
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onAllergenSelected('fish'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -95,7 +103,7 @@ class _IngredientsToAvoidSelectionState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onAllergenSelected('milk'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -108,7 +116,7 @@ class _IngredientsToAvoidSelectionState
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onAllergenSelected('gluten'),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: secodaryButtonColor,
                             shape: RoundedRectangleBorder(
@@ -120,7 +128,7 @@ class _IngredientsToAvoidSelectionState
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onAllergenSelected('mustard'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
