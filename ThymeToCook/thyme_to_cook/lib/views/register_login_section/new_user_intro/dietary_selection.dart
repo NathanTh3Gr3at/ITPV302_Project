@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 
-class DietarySelection extends StatefulWidget {
-  const DietarySelection({super.key});
+class DietarySelection extends StatelessWidget {
+  final Function(String) onDietSelected;
+  const DietarySelection({
+    super.key,
+    required this.onDietSelected,
+  });
 
-  @override
-  State<DietarySelection> createState() => _DietarySelectionState();
-}
-
-class _DietarySelectionState extends State<DietarySelection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,14 +56,19 @@ class _DietarySelectionState extends State<DietarySelection> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<DietaryPreferencesBloc>()
-                            .add(SelectDietaryPreference(1));
-                      },
+                    ListTile(
+                      title: Text('none'),
+                      leading: Radio(
+                        value: 'none',
+                        groupValue: null,
+                        onChanged: (value) {
+                          onDietSelected(value!);
+                        },
+                      ),
+                    ),
+                    /* ElevatedButton(
+                      onPressed: () =>onDietSelected('vegan'),
                       style: ElevatedButton.styleFrom(
-                          
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
@@ -69,11 +76,11 @@ class _DietarySelectionState extends State<DietarySelection> {
                         'Vegan',
                         style: TextStyle(color: Colors.black),
                       ),
-                    ),
+                    ), */
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onDietSelected('paleo'),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: secodaryButtonColor,
                             shape: RoundedRectangleBorder(
@@ -85,7 +92,7 @@ class _DietarySelectionState extends State<DietarySelection> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onDietSelected('keto'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -104,7 +111,7 @@ class _DietarySelectionState extends State<DietarySelection> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onDietSelected('low_carb'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -117,7 +124,7 @@ class _DietarySelectionState extends State<DietarySelection> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onDietSelected('vegetarian'),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: secodaryButtonColor,
                             shape: RoundedRectangleBorder(
@@ -138,7 +145,7 @@ class _DietarySelectionState extends State<DietarySelection> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => onDietSelected('diary_free'),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: secodaryButtonColor,
                           shape: RoundedRectangleBorder(
@@ -151,7 +158,7 @@ class _DietarySelectionState extends State<DietarySelection> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => onDietSelected('gluten_free'),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: secodaryButtonColor,
                             shape: RoundedRectangleBorder(

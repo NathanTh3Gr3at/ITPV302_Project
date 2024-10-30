@@ -53,7 +53,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
   }
   @override
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser);
+    
     final myDay = TimeOfDay.fromDateTime(DateTime.now());
     String greeting() {
       if (myDay.hour > 18) {

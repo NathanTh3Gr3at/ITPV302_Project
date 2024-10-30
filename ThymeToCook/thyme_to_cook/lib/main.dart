@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:provider/src/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/features/search/firebase_search.dart';
 import 'package:thyme_to_cook/features/search/search_domain.dart';
 import 'package:thyme_to_cook/firebase_options.dart';
@@ -25,6 +26,7 @@ import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/new_user_preference_selection.dart';
 import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
@@ -83,6 +85,7 @@ void main() async {
           useMaterial3: true,
         ),
         home: const HomePage(),
+        routes: {'/preferences': (context) => PreferencesScreen()},
       ),
     ),
   );
@@ -175,7 +178,7 @@ class _HomePageState extends State<HomePage> {
     context.read<AuthBloc>().add(const AuthEventInitialize());
 
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.isLoading) {
           LoadingScreen().show(
             context: context,
@@ -184,9 +187,30 @@ class _HomePageState extends State<HomePage> {
         } else {
           LoadingScreen().hide();
         }
+        if (state is AuthStateNeedsVerification) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => VerifyEmailView()),
+          );
+        } else if (state is AuthStateLoggedIn) {
+          final prefs = await SharedPreferences.getInstance();
+          bool preferencesSet = prefs.getBool('preferences_set') ?? false;
+          if (!preferencesSet) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PreferencesScreen()),
+            );
+          } else {
+            
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MainNavigation()),
+            );
+          }
+        }
       },
       builder: (context, state) {
-         Widget child;
+        Widget child;
         if (state is AuthStateLoggedIn) {
           child = const MainNavigation();
         } else if (state is AuthStateNeedsVerification) {
@@ -203,14 +227,14 @@ class _HomePageState extends State<HomePage> {
           child = const Scaffold(
             body: CircularProgressIndicator(),
           );
-        } 
+        }
 
-         return ResponsiveWrapper.builder(child, breakpoints: const [
+        return ResponsiveWrapper.builder(child, breakpoints: const [
           ResponsiveBreakpoint.resize(480, name: MOBILE),
           ResponsiveBreakpoint.resize(800, name: TABLET),
           ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
           ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-        ]);   // starts at HomeView
+        ]); // starts at HomeView
 
         //the original
         /* return ResponsiveWrapper.builder(const MainNavigation(),

@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
-class MeasurementSystemSelection extends StatefulWidget {
-  const MeasurementSystemSelection({super.key});
+class MeasurementSystemSelection extends StatelessWidget {
+  final Function(String) onMeasurementSelected;
+  const MeasurementSystemSelection(
+      {super.key, required this.onMeasurementSelected,  });
 
-  @override
-  State<MeasurementSystemSelection> createState() =>
-      _MeasurementSystemSelectionState();
-}
-
-// Zanele - Add the bloc stuff for the measurement system thing
-class _MeasurementSystemSelectionState
-    extends State<MeasurementSystemSelection> {
-  int _selectedMeasurementSystem = 1; // 1 for Metric, 2 for Imperial
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,32 +41,20 @@ class _MeasurementSystemSelectionState
               const SizedBox(
                 height: 80,
               ),
-              ListTile(
-                title: const Text('Metric'),
-                leading: Radio<int>(
-                  value: 1,
-                  groupValue: _selectedMeasurementSystem,
-                  onChanged: (int? value) {
-                    setState(() {
-                      _selectedMeasurementSystem = value!;
-                    });
-                  },
-                  activeColor: Colors.blue,
-                ),
-              ),
-              ListTile(
-                title: const Text('Imperial'),
-                leading: Radio<int>(
-                  value: 2,
-                  groupValue: _selectedMeasurementSystem,
-                  onChanged: (int? value) {
-                    setState(() {
-                      _selectedMeasurementSystem = value!;
-                    });
-                  },
-                  activeColor: Colors.blue,
-                ),
-              ),
+              ListView(
+                children: [
+                  ListTile(
+                    title: const Text('Metric'),
+                    leading:Radio(value:'metric',
+                    groupValue: null,onChanged: (value){onMeasurementSelected(value!);},)
+                    //onTap: () => onMeasurementSelected('metric'),
+                  ),
+                  ListTile(
+                    title: const Text('Imperial'),
+                    onTap: () => onMeasurementSelected('imperial'),
+                  )
+                ],
+              )
             ],
           ),
           Align(
@@ -99,4 +80,5 @@ class _MeasurementSystemSelectionState
           ),
         ]));
   }
+  
 }
