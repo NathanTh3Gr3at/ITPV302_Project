@@ -16,6 +16,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_system_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
@@ -25,23 +26,12 @@ import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.
 import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
-// import 'package:thyme_to_cook/views/home_screen/home_view.dart';
-// import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
-// import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietary_selection.dart';
-// import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
-// import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
-// import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
-// import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
-// import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
-// import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
-// import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
-// import 'package:thyme_to_cook/views/save_screen/save_view.dart';
-// import 'package:thyme_to_cook/views/search_screen/search_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  // initializes firebase with current platform
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  // initializes firebase with current platform
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  
+  // Already initialized in Firebase Auth
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  
   
   // Registering all the recipe, instruction and ingredient hives
   await Hive.initFlutter();
@@ -63,7 +53,7 @@ void main() async {
         BlocProvider(create: (context) => DietaryPreferencesBloc()), 
         // So Recipe Storage is available across our app --> Access to cached recipes 
         Provider<RecipeStorage>.value(value: recipeStorage), 
-        // BlocProvider(create: (context) => SearchBloc(searchRepo: searchRepo)), 
+        BlocProvider(create: (context) => SearchBloc()), 
       ],
       child: MaterialApp(
         builder: (context, child) =>

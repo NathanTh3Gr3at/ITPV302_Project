@@ -73,6 +73,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
       ),
       backgroundColor: backgroundColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(
           greeting(),
           style: const TextStyle(
@@ -81,7 +82,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
               fontWeight: FontWeight.bold,
         )
       ),
-      backgroundColor: const Color.fromARGB(255, 230, 236, 221),
+      backgroundColor: backgroundColor,
       actions: [
           // pop menu
           PopupMenuButton<MenuAction>(
@@ -141,8 +142,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView> with TickerProvider
             },
           )
         ],),
-      body: RefreshIndicator(
-        
+      body: RefreshIndicator(       
         onRefresh: () async {
         },
         child: SingleChildScrollView(

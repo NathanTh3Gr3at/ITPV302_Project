@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 
 class GlutenFreeTabView extends StatefulWidget {
 
@@ -53,10 +55,23 @@ class _GlutenFreeTabViewState extends State<GlutenFreeTabView> {
                       elevation: 2,
                       child: Stack(
                         children: [
-                        InkWell(
+                        GestureDetector(
                           onTap: () {
-                            log("Tapped");
-                          },
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResponsiveWrapper.builder(
+                                  RecipeView(recipe: recipe),
+                                  breakpoints: const [
+                                  ResponsiveBreakpoint.resize(480, name: MOBILE),
+                                  ResponsiveBreakpoint.resize(800, name: TABLET),
+                                  ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+                                  ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                                  ],
+                            )
+                            )
+                          );
+                        },
                           child: Stack(
                             children: [
                             Image.network(

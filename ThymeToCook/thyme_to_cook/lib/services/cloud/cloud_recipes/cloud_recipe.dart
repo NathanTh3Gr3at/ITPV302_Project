@@ -1,7 +1,7 @@
 // For checking purposes 
 // import 'dart:developer';
 import 'dart:developer';
-
+import 'package:decimal/decimal.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
 import 'package:fraction/fraction.dart';
 import 'package:hive/hive.dart';
@@ -32,7 +32,7 @@ class RecipeIngredient {
       quantity = Fraction.fromString(map["quantity"] as String).toDouble();
       // log(quantity.toString());
     } catch (e) {
-      quantity = 0.0; 
+      quantity = 1.0; 
       // log(quantity.toString());
     }
     return RecipeIngredient(
@@ -49,14 +49,38 @@ class RecipeIngredient {
       "unit": unit
     };
   }
-  // Method to get convert our values back to human readable fractions so our numbers have a consistent feel and we have a more user-centric design
-  String getQuantityAsFraction() {
-    if (quantity != null) {
-      return Fraction.fromDouble(quantity!).toMixedFraction().toString();
-    }
-    return '0';
-  }
+  // No complex fractions
+String simplifyFraction(Decimal number) {
+  Decimal threshold = Decimal.parse('0.1');
+  Decimal threeQuarters = Decimal.parse('0.75');
+  Decimal half = Decimal.parse('0.5');
+  Decimal oneThird = Decimal.parse('0.3333');
+  Decimal quarter = Decimal.parse('0.25');
 
+  if ((number - Decimal.one).abs() < threshold) {
+    return '1';
+  } else if ((number - threeQuarters).abs() < threshold) {
+    return '3/4';
+  } else if ((number - half).abs() < threshold) {
+    return '1/2';
+  } else if ((number - oneThird).abs() < threshold) {
+    return '1/3';
+  } else if ((number - quarter).abs() < threshold) {
+    return '1/4';
+  }
+  // If it doesn't fit well, just rounding it to the nearest whole number or fraction
+  return number.round().toString();
+}
+// Method to get convert our values back to readable fractions so our numbers have a consistent feel and we have a more user-centric design
+String getQuantityAsFraction() {
+  if (quantity == 0) {
+    return '1';
+  } else if (quantity != null) {
+    Decimal quantityDecimal = Decimal.parse(quantity!.toString());
+    return simplifyFraction(quantityDecimal);
+  }
+  return '';
+}
 }
 @HiveType(typeId: 2)
 class RecipeInstructions {

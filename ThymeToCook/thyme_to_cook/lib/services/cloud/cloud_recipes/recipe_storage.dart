@@ -1,6 +1,7 @@
 // FirebaseCloudStorage class
 import 'dart:async';
-import 'dart:developer' as DevTools;
+// ignore: library_prefixes
+import 'dart:developer' as devTools;
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_storage/firebase_storage.dart";
@@ -19,16 +20,16 @@ class RecipeStorage {
   void _initializeStream() {
     _recipeController.add(_recipeBox.values.toList());
     _recipeBox.watch().listen((event) {
-      DevTools.log('Updated cache length: ${_recipeBox.values.length}');
+      devTools.log('Updated cache length: ${_recipeBox.values.length}');
       _recipeController.add(_recipeBox.values.toList()); //--> mitting the updated list
     });
   }
 
   Future<void> fetchAndCacheRecipes({int limit = 250, int startAfter = 0}) async {
     List<CloudRecipe> fetchedRecipes = await fetchRecipes(limit: limit);
-    DevTools.log('Fetched recipes count: ${fetchedRecipes.length}');
+    devTools.log('Fetched recipes count: ${fetchedRecipes.length}');
     await cacheRecipes(fetchedRecipes);
-    DevTools.log('Cached recipes count: ${_recipeBox.length}');
+    devTools.log('Cached recipes count: ${_recipeBox.length}');
   }
 
   // Cache recipes after we get them from the database
@@ -87,8 +88,6 @@ Future<List<CloudRecipe>> fetchRecipes({
     List<CloudRecipe?> allRecipes = await Future.wait(recipeFutures);
     return allRecipes.where((recipe) => recipe != null).cast<CloudRecipe>().toList();
   }  
-  
-
 
   // Getting all recipes from the database --> Limited to 200
   Stream<List<CloudRecipe>> getAllRecipes({int limit = 20}) {
@@ -103,11 +102,23 @@ Future<List<CloudRecipe>> fetchRecipes({
       );
       return allRecipes;
     } catch (e) {
-      DevTools.log("Error fetching recipes: $e");
+      devTools.log("Error fetching recipes: $e");
       return [];
     }
   });
 }
+
+// So we have to check for similar results 
+
+// Stream<List<CloudRecipe>> getRecipeByName ({String searchString = ""}) {
+
+// }
+
+// Future<bool> checkIfRecipeName ({String searchString = "", String recipeName = ""}) {
+//   if (searchString.contains(recipeName)) {
+//     return true;
+//   }
+// }
 
 //   Stream<Iterable<CloudRecipe>> getAllKaggleRecipes({int limit = 10}) {
 //   return recipes.where(identifierFieldName, isEqualTo: "kaggle")
@@ -354,7 +365,7 @@ Future<List<CloudRecipe>> fetchRecipes({
       String  downloadUrl = await storage.ref("recipe_images/$imageName").getDownloadURL();
       return downloadUrl;
     } catch(e) {
-      DevTools.log("There was an error fetching the URL: $imageName");
+      devTools.log("There was an error fetching the URL: $imageName");
       return null;
     }
   }
