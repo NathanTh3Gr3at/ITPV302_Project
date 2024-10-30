@@ -23,33 +23,39 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         title: const Text('Verify email'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             const Text(
-                "We've sent you an email verification. Please open it to verify your account."),
+                "We've sent you an email verification.\n Please open it to verify your account."),
+            const SizedBox(height:20),
             const Text(
-                "If you have'nt received a verification email yet, press the button below."),
-            ElevatedButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(
-                      const AuthEventSendEmailVerification(),
-                    );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryButtonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                "If you haven't received a verification email yet, press the button below."),
+            Padding(
+              padding: const EdgeInsets.only(top:16.0,bottom:30),
+              child: ElevatedButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                        const AuthEventSendEmailVerification(),
+                      );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryButtonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
+                child: const Text('Resend email verification'),
               ),
-              child: const Text('Send email verification'),
             ),
             ElevatedButton(
               onPressed: () async {
-                
-                context.read<AuthBloc>().add(
-                      const AuthEventLogOut(),
-                    );
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MainNavigation(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryButtonColor,
@@ -57,7 +63,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text('Restart'),
+              child: const Text('Continue'),
             )
           ],
         ),

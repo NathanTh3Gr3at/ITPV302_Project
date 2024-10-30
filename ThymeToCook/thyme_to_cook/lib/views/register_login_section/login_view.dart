@@ -36,111 +36,114 @@ class _LoginViewState extends State<LoginView> {
           }
         }
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: backgroundColor,
-        ),
-        backgroundColor: backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Image(
-                image: AssetImage('assets/images/placeholder_image.jpg'),
-                width: 300,
-                height: 300,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Welcome Back!!',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
-                      color: Colors.black,
+      child: GestureDetector(
+        onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: openAppBackgroundColor,
+          ),
+          backgroundColor: openAppBackgroundColor,
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Image(
+                  image: AssetImage('assets/images/thyme_to_cook_logo.png'),
+                  width: 300,
+                  height: 300,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: 'Welcome Back!!',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Log In',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: RichText(
+                    text: const TextSpan(
+                      text: 'Log In',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              TextField(
-                controller: _email,
-                enableSuggestions: false,
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration:
-                    const InputDecoration(hintText: 'Enter your email here'),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: TextField(
-                  controller: _password,
-                  obscureText: true,
+                TextField(
+                  controller: _email,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                      hintText: 'Enter your password here'),
+                  keyboardType: TextInputType.emailAddress,
+                  decoration:
+                      const InputDecoration(hintText: 'Enter your email here'),
                 ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
-                          const AuthEventForgotPassword(),
-                        );
-                  },
-                  child: const Text('Forgot Password?'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final email = _email.text;
-                    final password = _password.text;
-                    context.read<AuthBloc>().add(
-                          AuthEventLogIn(
-                            email,
-                            password,
-                          ),
-                        );
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryButtonColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30))),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.black),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: TextField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                        hintText: 'Enter your password here'),
                   ),
                 ),
-              ),
-              GestureDetector(
-                child: TextButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
-                          const AuthEventShouldRegister(),
-                        );
-                  },
-                  child: const Text("Don't have an account? Sign up"),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                            const AuthEventForgotPassword(),
+                          );
+                    },
+                    child: const Text('Forgot Password?'),
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 40.0),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      context.read<AuthBloc>().add(
+                            AuthEventLogIn(
+                              email,
+                              password,
+                            ),
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryButtonColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30))),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child: TextButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                            const AuthEventShouldRegister(),
+                          );
+                    },
+                    child: const Text("Don't have an account? Sign up"),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
