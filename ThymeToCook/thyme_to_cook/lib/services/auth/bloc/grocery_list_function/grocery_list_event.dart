@@ -15,7 +15,7 @@ class GroceryListInitialize extends GroceryListEvent {
 // Adding to grocery list
 class GroceryListLoadEvent extends GroceryListEvent {
   final String recipeName;
-  final List<Ingredient> ingredients;
+  final List<RecipeIngredient> ingredients;
 
   const GroceryListLoadEvent({required this.recipeName, required this.ingredients});
 

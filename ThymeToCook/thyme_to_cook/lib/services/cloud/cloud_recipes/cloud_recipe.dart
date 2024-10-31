@@ -10,19 +10,43 @@ import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_storage_constan
 part "cloud_recipe.g.dart";
 
 @HiveType(typeId: 1)
-class RecipeIngredient {
+class RecipeIngredient{
   @HiveField(0)
   final String? ingredientName;
   @HiveField(1)
   final double? quantity;
   @HiveField(2)
   final String? unit;
+  final bool isChecked;   // added for grocery list
 
+  
   RecipeIngredient({
     required this.ingredientName,
     required this.quantity,
     required this.unit,
+    this.isChecked = false,   // added for grocery list
   });
+
+  // for grocery list
+  Ingredient toIngredient() {
+    return Ingredient(
+      name: ingredientName, 
+      quantity: quantity, 
+      unit: unit,
+      isChecked: isChecked,
+    );
+
+  }
+
+   RecipeIngredient copyWith({bool? isChecked}) {
+    return RecipeIngredient(
+      ingredientName: ingredientName, 
+      quantity:  quantity, 
+      unit: unit,
+      isChecked: isChecked ?? this.isChecked,
+    );
+  }
+  
   // Mapping data from the database to the our class model 
   // Conerting our string values from the database to doubles so we can perform calculations on them
   factory RecipeIngredient.fromMap(Map<String, dynamic> map) {
@@ -281,9 +305,9 @@ class CloudRecipe {
 
 // handles ingredients
 class Ingredient{
-  final String name;
-  final String quantity;
-  final String unit;
+  final String? name;
+  final double? quantity;
+  final String? unit;
   bool isChecked;
   
   Ingredient({required this.name, required this.quantity, required this.unit, this.isChecked = false});
@@ -302,7 +326,7 @@ class Ingredient{
 // handles getting recipe name
 class GroceryList {
   final String recipeName;
-  final List<Ingredient> recipeIngredients;
+  final List<RecipeIngredient> recipeIngredients;
 
   GroceryList({required this.recipeName, required this.recipeIngredients});
 }

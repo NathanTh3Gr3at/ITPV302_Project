@@ -115,6 +115,7 @@ class _GroceryListViewState extends State<GroceryListView> {
           child: BlocBuilder<GroceryListBloc, GroceryListState>(
             builder: (context, state) {
               if (state is GroceryListLoaded) {
+                
                 if (state.recipes.isEmpty) {
                   return const Center(
                     child: Text("No groceries added"),
@@ -181,9 +182,11 @@ class _GroceryListViewState extends State<GroceryListView> {
               final ingredientIndex =
                   recipe.recipeIngredients.indexOf(ingredient);
 
+              final convertedIngredient = ingredient.toIngredient();
+
               return ListTile(
                 title: Text(
-                  "${ingredient.name} ${ingredient.quantity} ${ingredient.unit}",
+                  "${convertedIngredient.name} ${convertedIngredient.quantity} ${convertedIngredient.unit}",
                   style: TextStyle(
                     decoration: ingredient.isChecked
                         ? TextDecoration.lineThrough

@@ -51,7 +51,7 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
         final updateRecipe = List<GroceryList>.from(currentState.recipes);
         final recipe = updateRecipe[event.recipeIndex];
         final updateIngredient =
-            List<Ingredient>.from(recipe.recipeIngredients);
+            List<RecipeIngredient>.from(recipe.recipeIngredients);
         final ingredient = updateIngredient[event.ingredientIndex];
 
         updateIngredient[event.ingredientIndex] =

@@ -269,7 +269,7 @@ class _RecipeViewState extends State<RecipeView> with SingleTickerProviderStateM
                   context.read<GroceryListBloc>().add(GroceryListLoadEvent(
                         recipeName: widget.recipe.recipeName,
                         ingredients:
-                            widget.recipe.recipeIngredients.cast<Ingredient>(),
+                            widget.recipe.recipeIngredients.cast<RecipeIngredient>(),
                       ));
                 }
                 // for debugging
