@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:thyme_to_cook/firebase_options.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
@@ -23,25 +25,25 @@ import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/new_user_preference_selection.dart';
+import 'package:thyme_to_cook/views/register_login_section/new_user_intro/preferences_screen.dart';
 import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  
-  // Already initialized in Firebase Auth
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  
+   //await Firebase.initializeApp(options: DefaultFirebaseOptions.android);  
+   //Already initialized in Firebase Auth
+   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  
   
   // Registering all the recipe, instruction and ingredient hives
-  await Hive.initFlutter();
+ /*  await Hive.initFlutter();
   Hive.registerAdapter(CloudRecipeAdapter());
   Hive.registerAdapter(RecipeIngredientAdapter());
-  Hive.registerAdapter(RecipeInstructionsAdapter());
+  Hive.registerAdapter(RecipeInstructionsAdapter()); */
 
   // Initilize recipe storage in main so the rest of the application has access to the recipes
-  var recipeStorage = await RecipeStorage.getInstance();
+  //var recipeStorage = await RecipeStorage.getInstance();
   
   runApp(
     MultiProvider(
@@ -51,7 +53,7 @@ void main() async {
         BlocProvider(create: (context) => MeasurementSystemBloc()),
         BlocProvider(create: (context) => DietaryPreferencesBloc()), 
         // So Recipe Storage is available across our app --> Access to cached recipes 
-        Provider<RecipeStorage>.value(value: recipeStorage), 
+        //Provider<RecipeStorage>.value(value: recipeStorage), 
         BlocProvider(create: (context) => SearchBloc()), 
         BlocProvider(create: (context) => GroceryListBloc()),
       ],
@@ -119,26 +121,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    /* _internetSubscription =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (status == InternetStatus.connected) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Welcome back online!"),
-              duration: Duration(seconds: 3),
-            ),
-          );
-        } else if (status == InternetStatus.disconnected) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Device disconnected!"),
-              duration: Duration(seconds: 3),
-            ),
-          );
-        }
-      });
-    }); */
+    
 
     _checkInitialConnectionStatus();
   }
@@ -165,14 +148,14 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  Future<void> inspectHiveBox() async {
+  /* Future<void> inspectHiveBox() async {
   var box = await Hive.openBox<CloudRecipe>('recipes');
   log('Hive box length: ${box.length}');
   for (var recipe in box.values) {
     log('Recipe: ${recipe.recipeName}');
   }
   }
-
+ */
   @override
   void dispose() {
     _internetSubscription.cancel();
@@ -181,9 +164,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     context.read<AuthBloc>().add(const AuthEventInitialize());
+    
 
     return BlocConsumer<AuthBloc, AuthState>(
+      
       listener: (context, state) async {
         if (state.isLoading) {
           LoadingScreen().show(
@@ -216,6 +202,7 @@ class _HomePageState extends State<HomePage> {
         }
       },
       builder: (context, state) {
+        print(state);
         Widget child;
         if (state is AuthStateLoggedIn) {
           child = const MainNavigation();
@@ -231,7 +218,7 @@ class _HomePageState extends State<HomePage> {
           //will need to add the routing to the 3 screens
         } else {
           child = const Scaffold(
-            body: CircularProgressIndicator(),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
