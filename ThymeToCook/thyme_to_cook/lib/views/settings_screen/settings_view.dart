@@ -9,6 +9,8 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/settings_forgot_password_view.dart';
 
 class SettingsView extends StatefulWidget {
   static const routeName = '/settings';
@@ -20,6 +22,7 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   String _selectedUnit = 'Metric';
+  
   String? _selectedMeasurementUnit;
   //need to fix overflow error (bottom overflow)
   final Map<String, bool> _ingredients = {
@@ -150,7 +153,7 @@ class _SettingsViewState extends State<SettingsView> {
                   value: MenuAction.logout,
                   child: Text("Log Out"),
                 )
-                // User profile text
+                
               ];
             },
           )
@@ -177,9 +180,10 @@ class _SettingsViewState extends State<SettingsView> {
                 subtitle: const Text('Update your password'),
                 trailing: TextButton(
                   onPressed: () {
-                    context.read()<AuthBloc>().add(
+                    /* context.read()<AuthBloc>().add(
                           const AuthEventForgotPassword(),
-                        );
+                        ); */
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=>const SettingsForgotPasswordView()));
                   },
                   child: const Text('Forgot Password?'),
                 ),
@@ -260,8 +264,4 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 }
- /*  Column _settings() {
-    return 
-  }
-}
- */
+ 

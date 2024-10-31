@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 typedef DialogOptionBuilder<T> = Map<String, T?> Function();
 Future<T?> showGenericDialog<T>({
@@ -7,13 +6,15 @@ Future<T?> showGenericDialog<T>({
   required String title,
   required String content,
   required DialogOptionBuilder optionBuilder,
+  Color? backgroundColor,
+  Icon? dialogIcon,
 }) {
   final options = optionBuilder();
   return showDialog<T>(
     context: context,
     builder: (context) {
       return AlertDialog(
-        backgroundColor: errorMessagesAndAlertsColor,
+        backgroundColor: backgroundColor ??Colors.teal[50],
         title: Text(title),
         content: Text(content),
         actions: options.keys.map(

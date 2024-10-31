@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 typedef CloseDialog = void Function();
 CloseDialog showLoadingDialog({
@@ -6,6 +7,8 @@ CloseDialog showLoadingDialog({
   required String text,
 }) {
   final dialog = AlertDialog(
+    backgroundColor: loadingDialogColor,
+    icon: const Icon(Icons.hourglass_full_rounded),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [

@@ -36,3 +36,13 @@ const Color loadingScreenColor=Colors.black;
 // Search Screen Mini Tiles
 const Color miniTileColor=Color(0xfff3e8d8);
 const Color miniTileColor2=Color(0xffe8d8f3);
+// Info Message - Loading Dialog
+const Color loadingDialogColor=Color(0xff9fa8da);
+// Logout Dialog
+const Color logoutDialogColor=Color(0xffb39ddb);
+// No internet connection dialog
+const Color noInternetConnectionDialogColor=Color(0xff90a4ae);
+// Password Reset Dialog color
+const Color passwordResetDialogColor=Color(0xff82b1ff);
+
+

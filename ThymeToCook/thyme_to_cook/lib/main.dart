@@ -15,9 +15,9 @@ import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
-import 'package:thyme_to_cook/services/auth/bloc/dietary_preferences/dietary_preferences_bloc.dart';
+
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
-import 'package:thyme_to_cook/services/auth/bloc/measurement_system/measurement_system_bloc.dart';
+
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
@@ -37,23 +37,22 @@ void main() async {
    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);  
   
   // Registering all the recipe, instruction and ingredient hives
- /*  await Hive.initFlutter();
+   await Hive.initFlutter();
   Hive.registerAdapter(CloudRecipeAdapter());
   Hive.registerAdapter(RecipeIngredientAdapter());
-  Hive.registerAdapter(RecipeInstructionsAdapter()); */
+  Hive.registerAdapter(RecipeInstructionsAdapter()); 
 
   // Initilize recipe storage in main so the rest of the application has access to the recipes
-  //var recipeStorage = await RecipeStorage.getInstance();
+  var recipeStorage = await RecipeStorage.getInstance();
   
   runApp(
     MultiProvider(
       providers: [
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
         BlocProvider(create: (context) => NavigationBloc()),
-        BlocProvider(create: (context) => MeasurementSystemBloc()),
-        BlocProvider(create: (context) => DietaryPreferencesBloc()), 
+        
         // So Recipe Storage is available across our app --> Access to cached recipes 
-        //Provider<RecipeStorage>.value(value: recipeStorage), 
+        Provider<RecipeStorage>.value(value: recipeStorage), 
         BlocProvider(create: (context) => SearchBloc()), 
         BlocProvider(create: (context) => GroceryListBloc()),
       ],
@@ -148,14 +147,14 @@ class _HomePageState extends State<HomePage> {
   }
 
 
-  /* Future<void> inspectHiveBox() async {
+   Future<void> inspectHiveBox() async {
   var box = await Hive.openBox<CloudRecipe>('recipes');
   log('Hive box length: ${box.length}');
   for (var recipe in box.values) {
     log('Recipe: ${recipe.recipeName}');
   }
   }
- */
+ 
   @override
   void dispose() {
     _internetSubscription.cancel();
@@ -203,7 +202,7 @@ class _HomePageState extends State<HomePage> {
       },
       builder: (context, state) {
         print(state);
-        Widget child;
+        /* Widget child;
         if (state is AuthStateLoggedIn) {
           child = const MainNavigation();
         } else if (state is AuthStateNeedsVerification) {
@@ -227,16 +226,16 @@ class _HomePageState extends State<HomePage> {
           ResponsiveBreakpoint.resize(800, name: TABLET),
           ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
           ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-        ]); // starts at HomeView
+        ]); */ // starts at HomeView
 
         //the original
-        /* return ResponsiveWrapper.builder(const MainNavigation(),
+         return ResponsiveWrapper.builder(const MainNavigation(),
             breakpoints: const [
               ResponsiveBreakpoint.resize(480, name: MOBILE),
               ResponsiveBreakpoint.resize(800, name: TABLET),
               ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
               ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-            ]); */
+            ]); 
 
         // if (state is AuthStateLoggedIn) {
         //   return const MainNavigation();
