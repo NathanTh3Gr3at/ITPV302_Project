@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
@@ -16,21 +17,32 @@ class MealPannerView extends StatefulWidget {
   State<MealPannerView> createState() => _MealPannerViewState();
 }
 
-class _MealPannerViewState extends State<MealPannerView>
-    with SingleTickerProviderStateMixin {
+class _MealPannerViewState extends State<MealPannerView> {
+  DateTime selectedDate = DateTime.now();
   late TabController _tabController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController = TabController(length: 7, vsync: this);
+  }
+
+  void _previousDay() {
+    setState(() {
+      selectedDate = selectedDate.subtract(Duration(days: 1));
+    });
+  }
+
+  void _nextDay() {
+    setState(() {
+      selectedDate = selectedDate.add(Duration(days: 1));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: AppBar(
+        backgroundColor: backgroundColor,
+        appBar: AppBar(
           backgroundColor: backgroundColor,
           title: const Text(
             "Meal Planner",
@@ -97,20 +109,57 @@ class _MealPannerViewState extends State<MealPannerView>
               },
             )
           ],
-          bottom: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            tabs: [
-              Tab(text: 'Mon'),
-              Tab(text: 'Tue'),
-              Tab(text: 'Wed'),
-              Tab(text: 'Thu'),
-              Tab(text: 'Fri'),
-              Tab(text: 'Sat'),
-              Tab(text: 'Sun'),
-            ],
-          )),
-     // body: TabBarView(controller: _tabController, children: List.generate(7,index){return ListView(children:[ExpansionTile(title:Text('Breakfast'),children:[ListTile(title:Text('Meal 1')),ListTile(title:Text('Meal 2'))],),ExpansionTile]);}),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(50),
+            child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: _previousDay),
+                  Text(
+                    DateFormat('EEEE,MMM d,yyyy').format(selectedDate),
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  IconButton(
+                    onPressed: _nextDay,
+                    icon: const Icon(Icons.arrow_forward),
+                  )
+                ],
+              );
+            }),
+          ),
+        ),
+        body: _buildMealList());
+  }
+
+  Widget _buildMealList() {
+    return ListView(
+      children: const [
+        ExpansionTile(
+          title: Text('BreakFast'),
+          children: [
+            ListTile(title: Text('meal1')),
+            ListTile(title: Text('meal2')),
+          ],
+        ),
+        ExpansionTile(
+          title: Text('Lunch'),
+          children: [
+            ListTile(title: Text('meal1')),
+            ListTile(title: Text('meal2')),
+          ],
+        ),
+        ExpansionTile(
+          title: Text('Dinner'),
+          children: [
+            ListTile(title: Text('meal1')),
+            ListTile(title: Text('meal2')),
+          ],
+        )
+      ],
     );
   }
 }
