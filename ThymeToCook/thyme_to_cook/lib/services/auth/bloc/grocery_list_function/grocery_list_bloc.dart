@@ -32,10 +32,6 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
         emit(GroceryListLoaded(
           recipes: recipes,
         ));
-
-        // emit(GroceryListLoaded(
-        //   recipeName: event.recipeName,
-        //   ingredients: event.ingredients,),);
       } catch (e) {
         emit(GroceryListError("Failed to load ingredients"));
         // for debugging

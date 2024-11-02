@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/models/recipe_model.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class SaveView extends StatefulWidget {
@@ -14,30 +17,59 @@ class SaveView extends StatefulWidget {
 }
 
 class _SaveViewState extends State<SaveView> {
-  List<RecipeModel> recipes = [];
+  List<CloudRecipe> recipes = [];
   Set<String> selectedFilter = {};
+  // late SaveRecipeCubit saveRecipeCubit;
 
-  void _getRecipes() {
-    recipes = RecipeModel.getRecipe();
-  }
+  // void _getRecipes() {
+  //   recipes = RecipeModel.getRecipe();
+  // }
 
   @override
   void initState() {
     super.initState();
-    _getRecipes();
+    // _getRecipes();
+    // initializes the save_cubit
+    // saveRecipeCubit = SaveRecipeCubit();
   }
 
   @override
   Widget build(BuildContext context) {
     // _getInitial();
     return GestureDetector(
-      onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: backgroundColor,
         appBar: appBar(),
-        body: ListView(
+        body: Column(
           children: [
-            _likedRecipes(),
+            _searchField(),
+            const SizedBox(
+              height: 5,
+            ),
+            _filterTabs(),
+            const SizedBox(
+              height: 5,
+            ),
+            // using cubit to fill tiles
+            Expanded(
+              child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                  builder: (context, likedRecipes) {
+                if (likedRecipes.isEmpty) {
+                  return const Center(
+                      child: Text(
+                    "No recipes saved yet",
+                    style: TextStyle(fontSize: 20),
+                  ));
+                } 
+                // else {
+                  // return ListView.builder(
+                  //      itemCount: likedRecipes.length,
+                  //      itemBuilder: (context, index) {
+                  return _likedRecipes(likedRecipes);
+                // }
+              }),
+            )
           ],
         ),
       ),
@@ -58,7 +90,7 @@ class _SaveViewState extends State<SaveView> {
     );
   }
 
-  Column _likedRecipes() {
+  Column _likedRecipes(List<CloudRecipe> likedRecipes) {
     return Column(children: [
       const SizedBox(
         height: 2,
@@ -85,8 +117,9 @@ class _SaveViewState extends State<SaveView> {
               ),
             ),
           ),
-          // const SizedBox(height: 10,
-          // ),
+          const SizedBox(
+            height: 10,
+          ),
           SizedBox(
             height: 350,
             // width: 400,
@@ -101,33 +134,33 @@ class _SaveViewState extends State<SaveView> {
               ),
 
               shrinkWrap: true, // wraps list content
-
+              itemCount: likedRecipes.length,
               itemBuilder: (context, index) {
+                CloudRecipe recipe = likedRecipes[index];
                 return InkWell(
                   onTap: () {
-                    setState(() {});
+                    // setState(() {});
                   },
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
-                      color: recipes[index].liked
-                          ? const Color.fromARGB(255, 240, 240, 240)
-                          : Colors.transparent,
+                      color:
+                          //   recipes[index].liked
+                          // ? const Color.fromARGB(255, 240, 240, 240)
+                          Colors.green,
                       border: Border.all(
                         color: const Color.fromARGB(255, 232, 232, 232),
                       ),
                       borderRadius: BorderRadius.circular(15),
-                      boxShadow: recipes[index].liked
-                          ? [
-                              BoxShadow(
-                                color: const Color.fromARGB(235, 217, 217, 217)
-                                    .withOpacity(0.5),
-                                offset: const Offset(0, 9),
-                                blurRadius: 20,
-                                spreadRadius: 0,
-                              )
-                            ]
-                          : [],
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(235, 217, 217, 217)
+                              .withOpacity(0.5),
+                          offset: const Offset(0, 9),
+                          blurRadius: 20,
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -144,16 +177,21 @@ class _SaveViewState extends State<SaveView> {
 
                               IconButton(
                                 onPressed: () {
-                                  setState(
-                                    () {
-                                      recipes[index].liked =
-                                          !recipes[index].liked;
-                                    },
-                                  );
+                                  // unliking recipe
+                                  context
+                                      .read<SaveRecipeCubit>()
+                                      .unlike(recipe.recipeId);
+
+                                  // recipes[index].liked =
+                                  //     !recipes[index].liked;
                                 },
-                                icon: Icon(recipes[index].liked
-                                    ? Icons.keyboard_control
-                                    : Icons.keyboard_control),
+                                // icon: Icon(recipes[index].liked
+                                //     ? Icons.keyboard_control
+                                //     : Icons.keyboard_control),
+                                icon: const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                ),
                               ),
                             ],
                           ),
@@ -164,14 +202,14 @@ class _SaveViewState extends State<SaveView> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  recipes[index].name,
+                                  recipe.recipeName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                       fontSize: 20),
                                 ),
                                 Text(
-                                  '${recipes[index].nutrition} ${recipes[index].duration}',
+                                  '${recipe.cuisinePath} ${recipe.nutritionalInfo}',
                                   style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -182,14 +220,14 @@ class _SaveViewState extends State<SaveView> {
                           ),
 
                           // positioning of image
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 20),
                             // recipe image
-                            child: Image.asset(
-                              recipes[index].iconPath,
-                              width: 100,
-                              height: 100,
-                            ),
+                            // child: Image.asset(
+                            //   recipe[index].iconPath,
+                            //   width: 100,
+                            //   height: 100,
+                            // ),
                           ),
                         ],
                       ),
@@ -197,8 +235,6 @@ class _SaveViewState extends State<SaveView> {
                   ),
                 );
               },
-
-              itemCount: recipes.length,
             ),
           ),
         ],

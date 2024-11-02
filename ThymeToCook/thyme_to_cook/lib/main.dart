@@ -17,6 +17,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
@@ -55,6 +56,7 @@ void main() async {
         Provider<RecipeStorage>.value(value: recipeStorage), 
         BlocProvider(create: (context) => SearchBloc()), 
         BlocProvider(create: (context) => GroceryListBloc()),
+        BlocProvider(create: (context) => SaveRecipeCubit()),
       ],
       child: MaterialApp(
         builder: (context, child) =>
