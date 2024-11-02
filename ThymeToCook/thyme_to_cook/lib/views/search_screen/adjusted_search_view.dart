@@ -133,7 +133,7 @@ class _AdjustedSearchViewState extends State<AdjustedSearchView> {
                       crossAxisSpacing: 0,
                       childAspectRatio: 0.75,
                     ),
-                    itemCount: recipes.length,
+                    itemCount: 5,
                     itemBuilder: (context, index) {
                       CloudRecipe recipe = recipes[index];
                       return Card(

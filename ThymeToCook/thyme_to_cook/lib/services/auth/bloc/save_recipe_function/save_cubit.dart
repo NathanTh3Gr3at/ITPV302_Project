@@ -10,7 +10,7 @@ class SaveRecipeCubit extends Cubit<List<CloudRecipe>> {
 
   // adds recipe to saved list
   void likeRecipe(CloudRecipe recipe) {
-    print("Liking recipe: ${recipe.recipeId}");
+    
     if(!state.any((r) => r.recipeId == recipe.recipeId)) {
       final updateList = List<CloudRecipe>.from(state); 
       updateList.add(recipe);
@@ -22,15 +22,19 @@ class SaveRecipeCubit extends Cubit<List<CloudRecipe>> {
     // if(!isRecipeLiked(recipe.recipeId)) {
     //   final updatedList = List<CloudRecipe>.from(state)..add(recipe);
     //   emit(updatedList);
-       print("Recipe list updated: ${updateList}");
+
+    // for debugging
+    //  print("Liking recipe: ${recipe.recipeId}");
+    //  print("Recipe list updated: ${updateList}");
     }
   }
 
   void unlike(String recipeId) {
-    print("Recipe unliked: ${recipeId}");
      final updatedList = state.where((recipe) => recipe.recipeId != recipeId).toList();
      emit(updatedList);
-    print("Recipe list updated: ${updatedList}");
+    // for debugging
+    // print("Recipe unliked: ${recipeId}");
+    // print("Recipe list updated: ${updatedList}");
   } 
 
   bool isRecipeLiked(String recipeId) {

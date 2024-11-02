@@ -8,6 +8,7 @@ import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 
 class SaveView extends StatefulWidget {
   const SaveView({super.key});
@@ -92,17 +93,6 @@ class _SaveViewState extends State<SaveView> {
 
   Column _likedRecipes(List<CloudRecipe> likedRecipes) {
     return Column(children: [
-      const SizedBox(
-        height: 2,
-      ),
-      _searchField(),
-      const SizedBox(
-        height: 5,
-      ),
-      _filterTabs(),
-      const SizedBox(
-        height: 10,
-      ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -133,21 +123,23 @@ class _SaveViewState extends State<SaveView> {
                 childAspectRatio: 1 / 1.5,
               ),
 
-              shrinkWrap: true, // wraps list content
               itemCount: likedRecipes.length,
               itemBuilder: (context, index) {
                 CloudRecipe recipe = likedRecipes[index];
                 return InkWell(
                   onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => RecipeView(recipe: recipe)));
                     // setState(() {});
                   },
                   child: Container(
                     height: 100,
                     decoration: BoxDecoration(
+                      // colour or image of tile
                       color:
                           //   recipes[index].liked
                           // ? const Color.fromARGB(255, 240, 240, 240)
-                          Colors.green,
+                          const Color.fromARGB(255, 240, 240, 240),
                       border: Border.all(
                         color: const Color.fromARGB(255, 232, 232, 232),
                       ),
@@ -208,13 +200,15 @@ class _SaveViewState extends State<SaveView> {
                                       color: Colors.black,
                                       fontSize: 20),
                                 ),
-                                Text(
-                                  '${recipe.cuisinePath} ${recipe.nutritionalInfo}',
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
-                                ),
+                                
+                              
+                                // Text(
+                                //   '${recipe.recipeDescription}',
+                                //   style: const TextStyle(
+                                //       color: Colors.black,
+                                //       fontSize: 14,
+                                //       fontWeight: FontWeight.w300),
+                                // ),
                               ],
                             ),
                           ),
@@ -222,6 +216,11 @@ class _SaveViewState extends State<SaveView> {
                           // positioning of image
                           const Padding(
                             padding: EdgeInsets.only(bottom: 20),
+                          //  child: 
+                          //  Image.network(recipe.imageSrc ?? recipe.imageUrl ?? "",
+                          //   width: 100,
+                          //   height: 100,
+                          //  )
                             // recipe image
                             // child: Image.asset(
                             //   recipe[index].iconPath,
