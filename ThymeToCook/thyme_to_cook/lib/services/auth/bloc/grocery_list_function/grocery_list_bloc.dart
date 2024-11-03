@@ -19,11 +19,20 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
             ? List<GroceryList>.from((state as GroceryListLoaded).recipes)
             : <GroceryList>[];
 
+        final existingRecipe = recipes.indexWhere((recipe) => recipe.recipeName == event.recipeName);
+
+        if(existingRecipe != -1) {
+          emit(GroceryListError("Recipe already added to you grocery list"));
+        }
+
+        else {
+
         // adding recipes to list
         recipes.add(GroceryList(
           recipeName: event.recipeName,
           recipeIngredients: event.ingredients,
         ));
+      }
         // ?List<Ingredient>.from((state as GroceryListLoaded).ingredients)
         // :<Ingredient>[];
         //   ingredients.addAll(event.ingredients);
@@ -48,6 +57,7 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
         final recipe = updateRecipe[event.recipeIndex];
         final updateIngredient =
             List<RecipeIngredient>.from(recipe.recipeIngredients);
+            // List<Ingredient>.from(recipe.recipeIngredients);
         final ingredient = updateIngredient[event.ingredientIndex];
 
         updateIngredient[event.ingredientIndex] =

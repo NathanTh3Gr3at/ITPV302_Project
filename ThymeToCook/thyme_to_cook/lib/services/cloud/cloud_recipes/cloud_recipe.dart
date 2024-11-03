@@ -31,7 +31,7 @@ class RecipeIngredient{
   Ingredient toIngredient() {
     return Ingredient(
       name: ingredientName, 
-      quantity: quantity, 
+      quantity: getQuantityAsFraction(), 
       unit: unit,
       isChecked: isChecked,
     );
@@ -306,7 +306,7 @@ class CloudRecipe {
 // handles ingredients
 class Ingredient{
   final String? name;
-  final double? quantity;
+  final String? quantity;
   final String? unit;
   bool isChecked;
   

@@ -183,10 +183,12 @@ class _GroceryListViewState extends State<GroceryListView> {
                   recipe.recipeIngredients.indexOf(ingredient);
 
               final convertedIngredient = ingredient.toIngredient();
+              // displays quantity as fraction
+              String formattedQuantity = ingredient.getQuantityAsFraction();
 
               return ListTile(
                 title: Text(
-                  "${convertedIngredient.name} ${convertedIngredient.quantity} ${convertedIngredient.unit}",
+                  " $formattedQuantity  ${convertedIngredient.unit ?? ''} ${convertedIngredient.name}",
                   style: TextStyle(
                     decoration: ingredient.isChecked
                         ? TextDecoration.lineThrough
