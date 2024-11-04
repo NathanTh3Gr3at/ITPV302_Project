@@ -169,7 +169,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("EGG_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isEggSelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isEggSelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -188,7 +188,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                             Provider.of<UserProvider>(context, listen: false).updateAllergens("PEANUT_FREE");
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: isPeanutsSelected ? secodaryButtonColor : Colors.white,
+                              backgroundColor: isPeanutsSelected ? secondaryButtonColor : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30))),
                           child: const Text(
@@ -206,7 +206,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("FISH_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isFishSelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isFishSelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -230,7 +230,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("MILK_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isMilkSelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isMilkSelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -248,7 +248,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                             Provider.of<UserProvider>(context, listen: false).updateAllergens("GLUTEN_FREE");
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: isGlutenSelected ? secodaryButtonColor : Colors.white,
+                              backgroundColor: isGlutenSelected ? secondaryButtonColor : Colors.white,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30))),
                           child: const Text(
@@ -265,7 +265,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("MUSTARD_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isMustardSelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isMustardSelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -289,7 +289,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("ALCOHOL_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isAlcoholSelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isAlcoholSelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))),
                         child: const Text(
@@ -306,7 +306,7 @@ class _IngredientsToAvoidSelectionState extends State<IngredientsToAvoidSelectio
                           Provider.of<UserProvider>(context, listen: false).updateAllergens("DAIRY_FREE");
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: isDairySelected ? secodaryButtonColor : Colors.white,
+                            backgroundColor: isDairySelected ? secondaryButtonColor : Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30))
                               ),

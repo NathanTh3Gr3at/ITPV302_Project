@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 
-
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
 
@@ -67,7 +66,8 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: backgroundColor,
+    return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
         title: const Text('Preferences'),
@@ -130,7 +130,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MainNavigation()));
+                          builder: (context) => const MainNavigation(
+                                isLoggedIn: true,
+                              )));
                 });
               },
               child: const Text('Save'),
