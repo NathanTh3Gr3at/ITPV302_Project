@@ -17,6 +17,8 @@ import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
@@ -60,6 +62,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
         BlocProvider(create: (context) => NavigationBloc()),
+        BlocProvider(create: (context) => GroceryListBloc()),
+        BlocProvider(create: (context) => SaveRecipeCubit()),
        
         Provider<RecipeStorage>.value(value: recipeStorage),
       ],

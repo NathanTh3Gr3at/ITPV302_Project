@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_state.dart';
@@ -544,15 +545,30 @@ void fetchMoreRecipes({int pageIndex = 0}) {
                                           ),
                                           padding: const EdgeInsets.all(
                                               0), // Adjusted padding
-                                          child: IconButton(
-                                            onPressed: () {},
+                                          child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                                        builder: (context, likedRecipes) {
+                                          final isLiked = likedRecipes.any((liked) => liked.recipeId == recipe.recipeId);
+                                          return IconButton(
+                                            onPressed: () {
+                                              // setState(() {
+                                                final saveRecipe = context
+                                                    .read<SaveRecipeCubit>();
+
+                                                if(isLiked) {
+                                                  saveRecipe.unlike(recipe.recipeId);
+                                                }
+                                                else {
+                                                  saveRecipe.likeRecipe(recipe);
+                                                }
+                                            },
                                             icon: Icon(
-                                              MdiIcons.heartOutline,
-                                              color: const Color.fromARGB(
-                                                  255, 153, 142, 160),
+                                              isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                                              color: isLiked ? Colors.red :Colors.grey 
                                             ),
-                                          ),
+                                          );
+                                        }
                                         ),
+                                      ),
                                       ),
                                     ],
                                   ),
