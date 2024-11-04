@@ -8,9 +8,7 @@ import "package:firebase_storage/firebase_storage.dart";
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
-import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_storage_constants.dart';
 
 class RecipeStorage {
   RecipeStorage._privateConstructor(this._recipeBox) {
@@ -99,19 +97,79 @@ class RecipeStorage {
   Stream<List<CloudRecipe>> getCachedRecipesStream() {
     return _recipeController.stream;
   }
+  // to fetch all recipes 
+
+//   Future<void> fetchAndStoreRecipesInHive() async {
+//   log("Fetching and storing recipes in Hive...");
+//   var box = await Hive.openBox<CloudRecipe>('recipes');
+//   bool hasMoreRecipes = true;
+//   QueryDocumentSnapshot<Map<String, dynamic>>? lastDoc;
+
+//   while (hasMoreRecipes) {
+//     QuerySnapshot<Map<String, dynamic>> snapshot;
+//     if (lastDoc == null) {
+//       snapshot = await FirebaseFirestore.instance.collection('recipes').limit(50).get();
+//     } else {
+//       snapshot = await FirebaseFirestore.instance.collection('recipes')
+//           .startAfterDocument(lastDoc)
+//           .limit(50)
+//           .get();
+//     }
+
+//     for (var doc in snapshot.docs) {
+//       var recipe = CloudRecipe.fromSnapshot(doc);
+
+//       // Fetch the image URL
+//       String? imageUrl = await getImageUrl(recipe.imageSrc);
+
+//       // Store the image URL in the recipe
+//       recipe = recipe.copyWith(imageSrc: imageUrl);
+
+//       // Log the recipe before storing it
+//       devTools.log("Storing recipe: ${recipe.recipeName} with image URL: ${recipe.imageSrc}");
+
+//       // Store the recipe in Hive
+//       await box.put(recipe.recipeId, recipe);
+//     }
+
+//     if (snapshot.docs.isNotEmpty) {
+//       lastDoc = snapshot.docs.last;
+//     }
+
+//     hasMoreRecipes = snapshot.docs.length == 50;  // Continue fetching if the snapshot is full
+//   }
+
+//   log("Recipes stored in Hive successfully.");
+// }
+
+
+  // To fetch a limited amount
 
   Future<void> fetchAndStoreRecipesInHive() async {
-    log("Fetching and storing recipes in Hive...");
+    devTools.log("Fetching and storing recipes in Hive...");
     var box = await Hive.openBox<CloudRecipe>('recipes');
-    if (box.isEmpty) {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('recipes').limit(50).get();
-      for (var doc in snapshot.docs) {
-        var recipe = CloudRecipe.fromSnapshot(doc as QueryDocumentSnapshot<Map<String, dynamic>>);
-        await box.put(recipe.recipeId, recipe);
-      }
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('recipes').get();
+    devTools.log("Fetched ${snapshot.docs.length} recipes from Firestore.");
+
+    for (var doc in snapshot.docs) {
+      var recipe = CloudRecipe.fromSnapshot(doc as QueryDocumentSnapshot<Map<String, dynamic>>);
+
+      // Fetch the image URL
+      String? imageUrl = await getImageUrl(recipe.imageSrc);
+      devTools.log("Fetched image URL: $imageUrl for recipe: ${recipe.recipeId}");
+
+      // Store the image URL in the recipe
+      recipe = recipe.copyWith(imageSrc: imageUrl);
+
+      // Store the recipe in Hive
+      await box.put(recipe.recipeId, recipe);
+      devTools.log("Stored recipe: ${recipe.recipeId} in Hive.");
     }
-    log("Recipes stored in Hive successfully.");
+
+    devTools.log("Recipes stored in Hive successfully. Total recipes: ${box.length}");
   }
+
 
   String convertRating(String rating) {
     if (rating.contains("stars")) {
@@ -128,7 +186,7 @@ class RecipeStorage {
   }
 
 Future<List<CloudRecipe>> fetchRecipes({
-  int limit = 20,
+  int limit = 500,
   int pageIndex = 0,
   DocumentSnapshot? startAfterDocument,
   String searchQuery = '',
@@ -471,10 +529,10 @@ Future<List<CloudRecipe>> fetchRecipesFromWeb({
   Future<String?> getImageUrl(String? imageName) async {
     if (imageName == null || imageName.isEmpty) return null;
     try {
-      String  downloadUrl = await storage.ref("recipe_images/$imageName").getDownloadURL();
+      String downloadUrl = await storage.ref("recipe_images/$imageName").getDownloadURL();
       devTools.log("fetching the URL: $downloadUrl");
       return downloadUrl;
-    } catch(e) {
+    } catch (e) {
       devTools.log("There was an error fetching the URL: $imageName");
       return null;
     }

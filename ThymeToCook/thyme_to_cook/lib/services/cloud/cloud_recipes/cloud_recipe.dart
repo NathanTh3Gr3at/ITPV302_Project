@@ -155,6 +155,53 @@ class CloudRecipe {
   String? totalTime;
   @HiveField(19)
   List<String> recipeSearchKeywords = const [];
+
+  CloudRecipe copyWith({
+    String? recipeId,
+    String? cookingTime,
+    DateTime? createDate,
+    int? calories,
+    String? imageSrc,
+    Map<String, dynamic>? tags,
+    String? recipeDescription,
+    List<RecipeIngredient>? recipeIngredients,
+    List<RecipeInstructions>? recipeInstructions,
+    List<String>? nutritionalInfo,
+    String? recipeName,
+    int? recipeServings,
+    DateTime? updateDate,
+    List<String>? cuisinePath,
+    String? imageUrl,
+    String? identifier,
+    String? prepTime,
+    String? rating,
+    String? totalTime,
+    List<String>? recipeSearchKeywords,
+  }) {
+    return CloudRecipe(
+      recipeId: recipeId ?? this.recipeId,
+      cookingTime: cookingTime ?? this.cookingTime,
+      createDate: createDate ?? this.createDate,
+      calories: calories ?? this.calories,
+      imageSrc: imageSrc ?? this.imageSrc,
+      tags: tags ?? this.tags,
+      recipeDescription: recipeDescription ?? this.recipeDescription,
+      recipeIngredients: recipeIngredients ?? this.recipeIngredients,
+      recipeInstructions: recipeInstructions ?? this.recipeInstructions,
+      nutritionalInfo: nutritionalInfo ?? this.nutritionalInfo,
+      recipeName: recipeName ?? this.recipeName,
+      recipeServings: recipeServings ?? this.recipeServings,
+      updateDate: updateDate ?? this.updateDate,
+      cuisinePath: cuisinePath ?? this.cuisinePath,
+      imageUrl: imageUrl ?? this.imageUrl,
+      identifier: identifier ?? this.identifier,
+      prepTime: prepTime ?? this.prepTime,
+      rating: rating ?? this.rating,
+      totalTime: totalTime ?? this.totalTime,
+      recipeSearchKeywords: recipeSearchKeywords ?? this.recipeSearchKeywords,
+    );
+  }
+  
   
   DocumentSnapshot<Map<String, dynamic>>? docSnapshot;
 
