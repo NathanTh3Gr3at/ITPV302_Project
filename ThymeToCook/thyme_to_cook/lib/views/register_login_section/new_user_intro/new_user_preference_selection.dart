@@ -89,7 +89,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MainNavigation()));
+                          builder: (context) => MainNavigation(isLoggedIn: true,)));
                 });
               },
               child: const Text('Save'),

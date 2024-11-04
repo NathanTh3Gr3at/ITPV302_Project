@@ -9,12 +9,17 @@ import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_event.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/guest_user_screens/grocery_list_guest.dart';
+import 'package:thyme_to_cook/views/guest_user_screens/home_view_guest.dart';
+import 'package:thyme_to_cook/views/guest_user_screens/planner_guest.dart';
+import 'package:thyme_to_cook/views/guest_user_screens/saved_guest.dart';
 import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
 import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
 
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final bool isLoggedIn;
+  const MainNavigation({super.key, required this.isLoggedIn});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
@@ -80,27 +85,63 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
+        // Depending on the state of the user, change the screens shown 
+        final myscreens = widget.isLoggedIn
+          ? [
+              ResponsiveWrapper.builder(
+                const AdjustedHomeView(),
+                breakpoints: const [
+                  ResponsiveBreakpoint.resize(480, name: MOBILE),
+                  ResponsiveBreakpoint.resize(800, name: TABLET),
+                  ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+                  ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                ],
+              ),
+              screens[1],
+              const AdjustedSearchView(),
+              screens[3],
+              screens[4],
+            ]
+          : [
+              ResponsiveWrapper.builder(
+                const HomeGuestView(),
+                breakpoints: const [
+                  ResponsiveBreakpoint.resize(480, name: MOBILE),
+                  ResponsiveBreakpoint.resize(800, name: TABLET),
+                  ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+                  ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                ],
+              ),
+              const SavedGuestView(),
+              const AdjustedSearchView(),
+              const PlannerGuestView(),
+              const GroceryListGuestView()
+            ];
         return WillPopScope(
           onWillPop: _onWillPop,
           child: Scaffold(
-            body: IndexedStack(
-              index: state.selectedTabIndex,
+            body: Stack(
               children: [
-                ResponsiveWrapper.builder(
-                  const AdjustedHomeView(),
-                  breakpoints: const [
-                    ResponsiveBreakpoint.resize(480, name: MOBILE),
-                    ResponsiveBreakpoint.resize(800, name: TABLET),
-                    ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-                    ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-                  ],
+                IndexedStack(
+                index: state.selectedTabIndex,
+                children: myscreens,
+              ),
+              widget.isLoggedIn ? Positioned(
+                right: 16.0,
+                bottom: 20.0,
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: const Color.fromARGB(255, 162, 206, 100),
+                  shape: const CircleBorder(),
+                  elevation: 20,
+                  child: Icon(
+                    MdiIcons.plus,
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    size: 30,
+                  ),
                 ),
-                screens[1],
-                const AdjustedSearchView(),
-                // screens[2],
-                screens[3],
-                screens[4],
-              ],
+              ) : const Text(""),
+              ]
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: state.selectedTabIndex,

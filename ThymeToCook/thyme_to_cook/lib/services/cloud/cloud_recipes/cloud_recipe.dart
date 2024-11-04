@@ -123,7 +123,6 @@ class CloudRecipe {
   DateTime createDate;
   @HiveField(3)
   int? calories;
-  // For the jpg not the actual url
   @HiveField(4)
   String? imageSrc;
   @HiveField(5)
@@ -131,11 +130,11 @@ class CloudRecipe {
   @HiveField(6)
   String? recipeDescription;
   @HiveField(7)
-  List<RecipeIngredient> recipeIngredients;
+  List<RecipeIngredient> recipeIngredients = const [];
   @HiveField(8)
-  List<RecipeInstructions> recipeInstructions;
+  List<RecipeInstructions> recipeInstructions = const [];
   @HiveField(9)
-  List<String> nutritionalInfo;
+  List<String> nutritionalInfo = const [];
   @HiveField(10)
   String recipeName;
   @HiveField(11)
@@ -143,7 +142,7 @@ class CloudRecipe {
   @HiveField(12)
   DateTime updateDate;
   @HiveField(13)
-  List<String>? cuisinePath;
+  List<String>? cuisinePath = const [];
   @HiveField(14)
   String? imageUrl;
   @HiveField(15)
@@ -153,7 +152,9 @@ class CloudRecipe {
   @HiveField(17)
   String? rating;
   @HiveField(18)
-  String? totalTime; 
+  String? totalTime;
+  @HiveField(19)
+  List<String> recipeSearchKeywords = const [];
   
   DocumentSnapshot<Map<String, dynamic>>? docSnapshot;
 
@@ -165,20 +166,21 @@ class CloudRecipe {
     required this.imageSrc, 
     required this.tags, 
     required this.recipeDescription, 
-    required this.recipeIngredients, 
-    required this.recipeInstructions, 
+    this.recipeIngredients = const [],
+    this.recipeInstructions = const [], 
     required this.recipeName, 
     required this.recipeServings, 
     required this.updateDate, 
     required this.calories, 
-    required this.nutritionalInfo, 
+    this.nutritionalInfo = const [], 
     required this.cuisinePath, 
     required this.imageUrl, 
     required this.identifier, 
     required this.prepTime, 
     required this.rating, 
     required this.totalTime, 
-    this.docSnapshot,
+    required this.recipeSearchKeywords,
+    this.docSnapshot,  
 });
 
   factory CloudRecipe.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -226,6 +228,12 @@ class CloudRecipe {
       cuisinePath = [cuisinePathField];
     }
 
+    List<String> searchKeywords = [];
+      var searchKeywordsField = data[searchKeywordsFieldName];
+      if (searchKeywordsField is List) {
+        searchKeywords = List<String>.from(searchKeywordsField);
+    }
+
     return CloudRecipe(
       recipeId: snapshot.id,
       cookingTime: data[cookingTimeFieldName]?.toString(),
@@ -246,6 +254,7 @@ class CloudRecipe {
       prepTime: data[prepTimeFieldName] as String? ?? "",
       rating: data[ratingFieldName] as String? ?? "",
       totalTime: data[totalTimeFieldName] as String? ?? "",
+      recipeSearchKeywords: searchKeywords,
       docSnapshot: snapshot, // Not stored in Hive
     );
   } catch (e) {
@@ -270,6 +279,7 @@ class CloudRecipe {
       prepTime: "",
       rating: "",
       totalTime: "",
+      recipeSearchKeywords: [],
       docSnapshot: snapshot,
     ); // Continue handling the error gracefully
   }

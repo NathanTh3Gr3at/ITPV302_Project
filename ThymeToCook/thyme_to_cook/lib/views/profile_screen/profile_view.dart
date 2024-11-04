@@ -21,70 +21,32 @@ class ProfileView extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Profile"),
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsView(),
+                    ),
+                  );
+              }, 
+              icon: Icon(
+                MdiIcons.cog,
+                size: 30,
+              )
+            )
+          ]
+        ),
         backgroundColor: backgroundColor,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(), 
           icon: Icon(MdiIcons.chevronLeft),
           iconSize: 30,
         ),
-        actions: [
-          // pop menu
-          PopupMenuButton<MenuAction>(
-            icon: const Icon(Icons.menu),
-            onSelected: (value) async {
-              switch (value) {
-                //handles logging out
-                case MenuAction.logout:
-                  final shouldLogOut = await showLogOutDialog(context);
-                  if (shouldLogOut) {
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  }
-                // added menu action to go to profile view
-                case MenuAction.profile:
-                  if (ModalRoute.of(context)?.settings.name !=
-                      ProfileView.routeName) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProfileView(),
-                          settings:
-                              const RouteSettings(name: ProfileView.routeName)),
-                    );
-                  }
-                  break;
-
-                //added a settings page
-                case MenuAction.settings:
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsView(),
-                    ),
-                  );
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.profile,
-                  child: Text("User Profile"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.settings,
-                  child: Text("Settings"),
-                ),
-                const PopupMenuItem<MenuAction>(
-                  value: MenuAction.logout,
-                  child: Text("Log Out"),
-                )
-                // User profile text
-              ];
-            },
-          )
-        ],
       ),
       body: _profilePage(),
     );

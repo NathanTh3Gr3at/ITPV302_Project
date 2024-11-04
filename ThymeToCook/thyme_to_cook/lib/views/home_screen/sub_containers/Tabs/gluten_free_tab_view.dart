@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +21,10 @@ class _GlutenFreeTabViewState extends State<GlutenFreeTabView> {
   Widget build(BuildContext context) {
   final recipeStorage = Provider.of<RecipeStorage>(context);
   var isLiked = false;
+  int limit = 10;
     return StreamBuilder(
       // Getting vegan recipes
-      stream: recipeStorage.getAllRecipes(),
+      stream: recipeStorage.getCachedRecipesStream(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -32,11 +32,16 @@ class _GlutenFreeTabViewState extends State<GlutenFreeTabView> {
           case ConnectionState.active:
             if (snapshot.hasData) {
               final allRecipes = snapshot.data as Iterable<CloudRecipe>;
+              if (allRecipes.isEmpty) {
+                return const Center(child: Text("No Recipes available"));
+              }
+              // Limiting the number of recipes shown to the user 
+              final displayRecipes = allRecipes.take(limit).toList();
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: allRecipes.length, 
+                itemCount: displayRecipes.length, 
                 itemBuilder: (context, index) {
-                  final recipe = allRecipes.elementAt(index);
+                  final recipe = displayRecipes[index];
                   String? imageUrl;
                   if (recipe.identifier == "kaggle") {
                     imageUrl = recipe.imageSrc;

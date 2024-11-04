@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thyme_to_cook/enums/menu_action.dart';
-import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
-import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
-import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
-import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
+import 'package:intl/intl.dart';
 
 class MealPannerView extends StatefulWidget {
   const MealPannerView({super.key});
@@ -17,12 +10,42 @@ class MealPannerView extends StatefulWidget {
 }
 
 class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProviderStateMixin{
-  late TabController _tabController;
+   DateTime _currentDate = DateTime.now();
+
+  String get _displayWeek {
+    final today = DateTime.now();
+    final startOfWeek = today.subtract(Duration(days: today.weekday - 1));
+    final endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    final currentStartOfWeek = _currentDate.subtract(Duration(days: _currentDate.weekday - 1));
+    final currentEndOfWeek = currentStartOfWeek.add(const Duration(days: 6));
+
+    if (currentStartOfWeek.isAtSameMomentAs(startOfWeek)) {
+      return 'This Week';
+    } else if (currentStartOfWeek.isAtSameMomentAs(startOfWeek.subtract(const Duration(days: 7)))) {
+      return 'Last Week';
+    } else {
+      final formatter = DateFormat('dd MMM');
+      return '${formatter.format(currentStartOfWeek)} - ${formatter.format(currentEndOfWeek)}';
+    }
+  }
+
+   void _previousWeek() {
+    setState(() {
+      _currentDate = _currentDate.subtract(const Duration(days: 7));
+    });
+  }
+
+  void _nextWeek() {
+    setState(() {
+      _currentDate = _currentDate.add(const Duration(days: 7));
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _tabController=TabController(length:3,vsync:this);
   }
   @override
   Widget build(BuildContext context) {
@@ -37,64 +60,30 @@ class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProvi
             fontSize: 25,
             fontWeight: FontWeight.bold,
           ),
-        // ),actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.share),
-        //     onPressed: () {
-        //       //add functionality
-        //     },
-        //   ),
-        //   // pop menu
-        //   PopupMenuButton<MenuAction>(
-        //     icon: const Icon(Icons.menu),
-        //     onSelected: (value) async {
-        //       switch (value) {
-        //         //handles logging out
-        //         case MenuAction.logout:
-        //           final shouldLogOut = await showLogOutDialog(context);
-        //           if (shouldLogOut) {
-        //             context.read<AuthBloc>().add(
-        //                   const AuthEventLogOut(),
-        //                 );
-        //           }
-        //         // added menu action to go to profile view
-        //         case MenuAction.profile:
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => const ProfileView(),
-        //             ),
-        //           );
-        //         //added a settings page
-        //         case MenuAction.settings:
-        //           Navigator.push(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (context) => const SettingsView(),
-        //             ),
-        //           );
-        //       }
-        //     },
-        //     itemBuilder: (context) {
-        //       return [
-        //         const PopupMenuItem<MenuAction>(
-        //           value: MenuAction.profile,
-        //           child: Text("User Profile"),
-        //         ),
-        //         const PopupMenuItem<MenuAction>(
-        //           value: MenuAction.settings,
-        //           child: Text("Settings"),
-        //         ),
-        //         const PopupMenuItem<MenuAction>(
-        //           value: MenuAction.logout,
-        //           child: Text("Log Out"),
-        //         )
-        //         // User profile text
-        //       ];
-        //     },
-        //   )
-        // ],bottom:TabBar(controller:_tabController,isScrollable: true,tabs:[Tab(text: 'Moday')],)
-      )
+      ),
+      bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_left),
+                onPressed: _previousWeek,
+              ),
+              Text(
+                _displayWeek,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: const Icon(Icons.arrow_right),
+                onPressed: _nextWeek,
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: const Center(
+        child: Text('Meal Planner Body Here'),
       ),
     );
   }

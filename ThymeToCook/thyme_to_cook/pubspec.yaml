@@ -52,6 +52,7 @@ dependencies:
   shared_preferences: ^2.3.2
   connectivity_plus: ^6.1.0
   fluttertoast: ^8.2.8
+  # This conflicts with our searches !! Don't bring back yet
   internet_connection_checker_plus: ^2.5.2
   firebase_app_check: ^0.3.1+4
   google_api_availability: ^5.0.0
@@ -62,6 +63,9 @@ dependencies:
   hive_generator: ^2.0.1
   provider: ^6.1.2
   decimal: ^3.0.2
+  rxdart: ^0.28.0
+  intl: ^0.19.0
+  # algolia: ^1.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,6 +90,8 @@ flutter:
   assets:
     - assets/images/placeholder_image.jpg
     - assets/images/thyme_to_cook_logo.png
+    - assets/images/sad_image.png
+    - assets/ingredients/uniqueIngredient.txt
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -5,91 +5,451 @@ import 'dart:developer' as devTools;
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:firebase_storage/firebase_storage.dart";
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_storage_constants.dart';
 
 class RecipeStorage {
-  final Box<CloudRecipe> _recipeBox;
-  // Controller responsible for getting the recipes displayed in a stream
+  RecipeStorage._privateConstructor(this._recipeBox) {
+    _initializeStream();
+  }
+
+  static RecipeStorage? _instance;
+  final Box<CloudRecipe>? _recipeBox;
   final StreamController<List<CloudRecipe>> _recipeController = StreamController.broadcast();
   final recipes = FirebaseFirestore.instance.collection("recipes");
   FirebaseStorage storage = FirebaseStorage.instance;
-  // Getting Kaggle Recipes 
+  DocumentSnapshot? _lastDocument;
 
-  // Initialize the streamController 
+  static Future<RecipeStorage> getInstance() async {
+    _instance ??= await _createRecipeStorage();
+    return _instance!;
+  }
+
+  Box<CloudRecipe>? get recipeBox => _recipeBox;
+
+  static Future<RecipeStorage> _createRecipeStorage() async {
+    Box<CloudRecipe>? recipeBox;
+
+    if (!kIsWeb) {
+      log('Initializing Hive...');
+      await Hive.initFlutter();
+      Hive.registerAdapter(CloudRecipeAdapter());
+      Hive.registerAdapter(RecipeIngredientAdapter());
+      Hive.registerAdapter(RecipeInstructionsAdapter());
+      log('Opening Hive box...');
+      recipeBox = await Hive.openBox<CloudRecipe>("recipes");
+      log('Box length after opening: ${recipeBox.length}');
+    }
+
+    return RecipeStorage._privateConstructor(recipeBox);
+  }
+
   void _initializeStream() {
-    _recipeController.add(_recipeBox.values.toList());
-    _recipeBox.watch().listen((event) {
-      devTools.log('Updated cache length: ${_recipeBox.values.length}');
-      _recipeController.add(_recipeBox.values.toList()); //--> mitting the updated list
-    });
+    if (_recipeBox != null) {
+      _recipeController.add(_recipeBox.values.toList());
+      _recipeBox.watch().listen((event) {
+        log('Updated cache length: ${_recipeBox.values.length}');
+        _recipeController.add(_recipeBox.values.toList());
+      });
+    }
   }
 
-  Future<void> fetchAndCacheRecipes({int limit = 250, int startAfter = 0}) async {
-    List<CloudRecipe> fetchedRecipes = await fetchRecipes(limit: limit);
-    devTools.log('Fetched recipes count: ${fetchedRecipes.length}');
+  Stream<List<CloudRecipe>> get recipeStream => _recipeController.stream;
+
+  List<String> generateSearchKeywords(String term) {
+    final List<String> keywords = [];
+    for (int i = 1; i <= term.length; i++) {
+      keywords.add(term.substring(0, i));
+    }
+    return keywords;
+  }
+
+  void updateRecipeDocument(DocumentReference document, Map<String, dynamic> data) {
+    List<String> nameKeywords = generateSearchKeywords(data['recipeName'].toLowerCase());
+    data['searchKeywords'] = nameKeywords;
+    document.set(data);
+  }
+
+  Future<void> fetchAndCacheRecipes({int limit = 500, int startAfter = 0}) async {
+    log('Fetching and caching recipes...');
+    List<CloudRecipe> fetchedRecipes = await fetchRecipes(startAfterDocument: _lastDocument);
+    log('Fetched recipes count: ${fetchedRecipes.length}');
     await cacheRecipes(fetchedRecipes);
-    devTools.log('Cached recipes count: ${_recipeBox.length}');
+    log('Cached recipes count: ${_recipeBox!.length}');
   }
 
-  // Cache recipes after we get them from the database
- Future<void> cacheRecipes(List<CloudRecipe> newRecipes) async {
-    // Get current recipes from the box
-    List<CloudRecipe> currentRecipes = _recipeBox.values.toList();
+  Future<void> cacheRecipes(List<CloudRecipe> newRecipes) async {
+    log('Caching recipes...');
+    List<CloudRecipe> currentRecipes = _recipeBox!.values.toList();
 
-    // Add new recipes ensuring no duplicates
     for (var recipe in newRecipes) {
       if (!currentRecipes.any((r) => r.recipeId == recipe.recipeId)) {
         await _recipeBox.add(recipe);
       }
     }
 
-    // Update the stream
     _recipeController.add(_recipeBox.values.toList());
+    log('Recipes cached successfully. Total count: ${_recipeBox.length}');
   }
 
   Stream<List<CloudRecipe>> getCachedRecipesStream() {
     return _recipeController.stream;
   }
 
+  Future<void> fetchAndStoreRecipesInHive() async {
+    log("Fetching and storing recipes in Hive...");
+    var box = await Hive.openBox<CloudRecipe>('recipes');
+    if (box.isEmpty) {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('recipes').limit(50).get();
+      for (var doc in snapshot.docs) {
+        var recipe = CloudRecipe.fromSnapshot(doc as QueryDocumentSnapshot<Map<String, dynamic>>);
+        await box.put(recipe.recipeId, recipe);
+      }
+    }
+    log("Recipes stored in Hive successfully.");
+  }
+
+  String convertRating(String rating) {
+    if (rating.contains("stars")) {
+      return "${rating.replaceAll("stars", "").trim()}.0";
+    }
+    return rating;
+  }
+
+  String toHiveFormat(String input) {
+    return input
+        .trim()
+        .toUpperCase()
+        .replaceAll(' ', '_');
+  }
 
 Future<List<CloudRecipe>> fetchRecipes({
-    int limit = 250,
-    DocumentSnapshot? startAfterDocument,
-    String? searchQuery,
-  }) async {
-    Query<Map<String, dynamic>> query = recipes.limit(limit);
+  int limit = 20,
+  int pageIndex = 0,
+  DocumentSnapshot? startAfterDocument,
+  String searchQuery = '',
+  List<String>? diets,
+  List<String>? ingredients,
+  List<String>? mealTypes,
+  List<String>? ratings,
+  List<String>? prepTimes,
+  List<String>? cookingTimes,
+  List<String>? totalTimes,
+  List<String>? health,
+}) async {
+  List<CloudRecipe> filteredRecipes = [];
 
-    if (startAfterDocument != null) {
-      query = query.startAfterDocument(startAfterDocument);
+  if (kIsWeb) {
+    filteredRecipes = await fetchRecipesFromWeb(
+      limit: limit,
+      startAfterDocument: startAfterDocument,
+      searchQuery: searchQuery,
+      diets: diets,
+      ingredients: ingredients,
+      mealTypes: mealTypes,
+      ratings: ratings,
+      prepTimes: prepTimes,
+      cookingTimes: cookingTimes,
+      totalTimes: totalTimes,
+      health: health,
+    );
+  } else {
+    await fetchAndStoreRecipesInHive();
+    final box = Hive.box<CloudRecipe>('recipes');
+
+    filteredRecipes = box.values.where((recipe) {
+      bool matches = true;
+      String searchKeyword = searchQuery.toLowerCase();
+      
+      if (searchQuery.isNotEmpty) {
+        matches = matches && recipe.recipeSearchKeywords.contains(searchKeyword);
+      }
+      if (ratings != null) {
+        ratings = ratings!.map((rating) => convertRating(rating)).toList();
+      }
+
+    // Convert health filters to Hive format
+    if (health != null) {
+      health = health!.map((item) => toHiveFormat(item)).toList();
+      }
+      
+      List<String> combinedDietsAndHealth = [];
+      if (diets != null) combinedDietsAndHealth.addAll(diets.map((diet) => toHiveFormat(diet)));
+      if (health != null) combinedDietsAndHealth.addAll(health!);
+      
+      if (combinedDietsAndHealth.isNotEmpty) {
+        bool labelMatch = (recipe.tags['diet_labels'] as List<dynamic>?)?.any((label) => combinedDietsAndHealth.contains(label)) == true ||
+                          (recipe.tags['health_labels'] as List<dynamic>?)?.any((label) => combinedDietsAndHealth.contains(label)) == true;
+        matches = matches && labelMatch;
+      }
+
+      if (ingredients != null && ingredients.isNotEmpty) {
+        matches = matches && ingredients.every((ingredient) => recipe.recipeIngredients.any((item) => item.ingredientName?.toLowerCase() == ingredient.toLowerCase()));
+      }
+
+      if (mealTypes != null && mealTypes.isNotEmpty) {
+        matches = matches && (recipe.cuisinePath?.any((type) => mealTypes.contains(type)) == true);
+      }
+
+      if (ratings != null && ratings!.isNotEmpty) {
+        matches = matches && ratings!.contains(recipe.rating);
+      }
+
+      if (prepTimes != null && prepTimes.isNotEmpty) {
+        matches = matches && prepTimes.contains(recipe.prepTime);
+      }
+
+      if (cookingTimes != null && cookingTimes.isNotEmpty) {
+        matches = matches && cookingTimes.contains(recipe.cookingTime);
+      }
+
+      if (totalTimes != null && totalTimes.isNotEmpty) {
+        matches = matches && totalTimes.contains(recipe.totalTime);
+      }
+      
+      return matches;
+    }).toList();
+  }
+
+  int start = pageIndex * limit;
+  int end = start + limit;
+  if (start >= filteredRecipes.length) {
+    return [];
+  }
+
+  List<CloudRecipe> displayedRecipes = filteredRecipes.sublist(start, end > filteredRecipes.length ? filteredRecipes.length : end);
+  return displayedRecipes;
+}
+
+//   Future<List<CloudRecipe>> fetchRecipes({
+//   int limit = 500,
+//   int pageIndex = 0,
+//   DocumentSnapshot? startAfterDocument,
+//   String searchQuery = '',
+//   List<String>? diets,
+//   List<String>? ingredients,
+//   List<String>? mealTypes,
+//   List<String>? ratings,
+//   List<String>? prepTimes,
+//   List<String>? cookingTimes,
+//   List<String>? totalTimes,
+//   List<String>? health,
+// }) async {
+//   // Check if theres recipes first
+//   await fetchAndStoreRecipesInHive();
+
+//   final box = Hive.box<CloudRecipe>('recipes');
+  
+//   // Check if there's a search query
+//   searchQuery = searchQuery.trim();
+//   String searchKeyword = searchQuery.toLowerCase();
+//   log("Searching for keyword: $searchKeyword");
+//   if (ratings != null) {
+//     ratings = ratings.map((rating) => convertRating(rating)).toList();
+//   }
+
+//   // Convert health filters to Hive format
+//   if (health != null) {
+//     health = health.map((item) => toHiveFormat(item)).toList();
+//   }
+//   log("Health filters: $health");
+//   // Search the Hive cache with filters
+//   List<CloudRecipe> filteredRecipes = box.values.where((recipe) {
+//     bool matches = true;
+//     // log("Recipe ID: ${recipe.recipeId}, Tags: ${recipe.tags}");
+
+//   List<String> combinedDietsAndHealth = [];
+//   if (diets != null) combinedDietsAndHealth.addAll(diets.map((diet) => toHiveFormat(diet)));
+//   if (health != null) combinedDietsAndHealth.addAll(health);
+//   log("Combined Filters: $combinedDietsAndHealth");
+
+//     if (searchQuery.isNotEmpty) {
+//       matches = matches && recipe.recipeSearchKeywords.contains(searchKeyword);
+//     }
+
+//     // Filter using combined diets and health labels
+//     if (combinedDietsAndHealth.isNotEmpty) {
+//       bool labelMatch = (recipe.tags['dietLabels'] as List<dynamic>?)?.any((label) => combinedDietsAndHealth.contains(label)) == true ||
+//                         (recipe.tags['health_labels'] as List<dynamic>?)?.any((label) => combinedDietsAndHealth.contains(label)) == true;
+//       matches = matches && labelMatch;
+//     }
+
+//     if (ingredients != null && ingredients.isNotEmpty) {
+//       matches = matches && ingredients.every((ingredient) => recipe.recipeIngredients.any((item) => item.ingredientName?.toLowerCase() == ingredient.toLowerCase()));
+//     }
+
+//     if (mealTypes != null && mealTypes.isNotEmpty) {
+//       matches = matches && (recipe.cuisinePath?.any((type) => mealTypes.contains(type)) == true);
+//     }
+
+//     if (ratings != null && ratings.isNotEmpty) {
+//       matches = matches && ratings.contains(recipe.rating);
+//     }
+
+//     if (prepTimes != null && prepTimes.isNotEmpty) {
+//       matches = matches && prepTimes.contains(recipe.prepTime);
+//     }
+
+//     if (cookingTimes != null && cookingTimes.isNotEmpty) {
+//       matches = matches && cookingTimes.contains(recipe.cookingTime);
+//     }
+
+//     if (totalTimes != null && totalTimes.isNotEmpty) {
+//       matches = matches && totalTimes.contains(recipe.totalTime);
+//     }
+
+//     // if (health != null && health.isNotEmpty) {
+//     //   bool healthMatch = (recipe.tags['health_labels'] as List<dynamic>?)?.any((label) {
+//     //     log('Label: $label, Matches: ${health!.contains(label)}');
+//     //     return health.contains(label);
+//     //   }) == true;
+//     //   matches = matches && healthMatch;
+//     // }
+    
+//     return matches;
+//   }).toList();
+
+//   // If found in cache, return the cached recipes
+//   // if (filteredRecipes.isNotEmpty) {
+//   //   log('Found ${filteredRecipes.length} recipes in the cache matching filters.');
+//   //   return filteredRecipes.skip(startIndex).take(limit).toList();
+//   // }
+//   // log(filteredRecipes[1].rating!);
+//   // Implement pagination using slice
+//   log('Found ${filteredRecipes.length} recipes in the cache matching filters.');
+
+//   // Ensure image URLs are fetched for filtered recipes
+//   for (var recipe in filteredRecipes) {
+//     if (recipe.imageSrc == null || recipe.imageSrc!.isEmpty) {
+//       recipe.imageSrc = await getImageUrl(recipe.imageSrc);
+//     }
+//   }
+
+//   // Implement pagination using slice
+//   int start = pageIndex * limit;
+//   int end = start + limit;
+//   if (start >= filteredRecipes.length) {
+//     return [];
+//   }
+//   List<CloudRecipe> displayedRecipes = filteredRecipes.sublist(start, end > filteredRecipes.length ? filteredRecipes.length : end);
+
+//   return displayedRecipes;
+// }
+
+
+// Searching one 
+Future<List<CloudRecipe>> fetchRecipesFromWeb({
+  int limit = 20,
+  DocumentSnapshot? startAfterDocument,
+  String searchQuery = '',
+  List<String>? diets,
+  List<String>? ingredients,
+  List<String>? mealTypes,
+  List<String>? ratings,
+  List<String>? prepTimes,
+  List<String>? cookingTimes,
+  List<String>? totalTimes,
+  List<String>? health,
+}) async {
+  // Check if there's a search query
+  String searchKeyword = searchQuery.toLowerCase();
+  log("Searching for keyword: $searchKeyword");
+
+  // Initialize Firestore query
+  Query<Map<String, dynamic>> query = recipes;
+  if (searchQuery.isNotEmpty) {
+    query = query.where('searchKeywords', arrayContains: searchKeyword);
+  }
+
+  if (diets != null && diets.isNotEmpty) {
+    for (String diet in diets) {
+      query = query.where('tags.diet_labels', arrayContains: diet);
     }
+  }
 
-    if (searchQuery != null && searchQuery.isNotEmpty) {
-      query = query.where('recipe_name', isGreaterThanOrEqualTo: searchQuery)
-                   .where('recipe_name', isLessThanOrEqualTo: '$searchQuery\uf8ff');
+  if (health != null && health.isNotEmpty) {
+    for (String healthItem in health) {
+      query = query.where('tags.health_labels', arrayContains: healthItem);
     }
+  }
 
-    QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
+  if (ingredients != null && ingredients.isNotEmpty) {
+    // Handle ingredients filter (you might need to adjust according to your Firestore structure)
+    for (String ingredient in ingredients) {
+      query = query.where('recipe_ingredients', arrayContains: ingredient.toLowerCase());
+    }
+  }
 
-    List<Future<CloudRecipe?>> recipeFutures = snapshot.docs.map((doc) async {
-      try {
-        CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
-        if (recipe.calories == 0 || recipe.recipeName == "Unknown Recipe") {
-          return null;
-        }
-        recipe.imageSrc = await getImageUrl(recipe.imageSrc);
-        return recipe;
-      } catch (e) {
-        log('Error processing recipe: $e');
+  if (mealTypes != null && mealTypes.isNotEmpty) {
+    query = query.where('cuisine_path', arrayContainsAny: mealTypes);
+  }
+
+  if (ratings != null && ratings.isNotEmpty) {
+    query = query.where('rating', whereIn: ratings);
+  }
+
+  if (prepTimes != null && prepTimes.isNotEmpty) {
+    query = query.where('prep_time', whereIn: prepTimes);
+  }
+
+  if (cookingTimes != null && cookingTimes.isNotEmpty) {
+    query = query.where('cooking_time', whereIn: cookingTimes);
+  }
+
+  if (totalTimes != null && totalTimes.isNotEmpty) {
+    query = query.where('total_time', whereIn: totalTimes);
+  }
+
+  if (startAfterDocument != null) {
+    query = query.startAfterDocument(startAfterDocument);
+  }
+
+  // Execute query and get snapshot
+  QuerySnapshot<Map<String, dynamic>> snapshot = await query.where("identifier", isEqualTo: "kaggle").limit(limit).get();
+  _lastDocument = snapshot.docs.isNotEmpty ? snapshot.docs.last : null;
+
+  log("Fetched recipes count from Firestore: ${snapshot.size}");
+
+  // Process documents into CloudRecipe objects
+  List<Future<CloudRecipe?>> recipeFutures = snapshot.docs.map((doc) async {
+    try {
+      CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
+      if (recipe.recipeName == "Unknown Recipe") {
         return null;
       }
-    }).toList();
 
-    List<CloudRecipe?> allRecipes = await Future.wait(recipeFutures);
-    return allRecipes.where((recipe) => recipe != null).cast<CloudRecipe>().toList();
-  }  
+      if (recipe.imageSrc != null && recipe.imageSrc!.isNotEmpty) {
+        recipe.imageSrc = await getImageUrl(recipe.imageSrc);
+      }
 
-  // Getting all recipes from the database --> Limited to 200
+      log('Image URL: ${recipe.imageUrl}');
+      return recipe;
+    } catch (e) {
+      log('Error processing recipe: $e');
+      return null;
+    }
+  }).toList();
+
+  // Await all futures and filter out nulls
+  List<CloudRecipe?> allRecipes = await Future.wait(recipeFutures);
+  List<CloudRecipe> finalRecipes = allRecipes.where((recipe) => recipe != null).cast<CloudRecipe>().toList();
+
+  return finalRecipes;
+}
+
+
+
+  Future<void> fetchMoreRecipes({int limit = 25, String searchQuery = ''}) async {
+    List<CloudRecipe> fetchedRecipes = await fetchRecipes(startAfterDocument: _lastDocument, searchQuery: searchQuery);
+    await cacheRecipes(fetchedRecipes);
+    log('Fetched more recipes count: ${fetchedRecipes.length}');
+    log('Total cached recipes count: ${_recipeBox!.length}');
+  }
+  // Getting all recipes from the database --> Limited to 20
   Stream<List<CloudRecipe>> getAllRecipes({int limit = 20}) {
   return recipes.limit(limit).snapshots().asyncMap((snapshot) async {
     try {
@@ -108,261 +468,11 @@ Future<List<CloudRecipe>> fetchRecipes({
   });
 }
 
-// So we have to check for similar results 
-
-// Stream<List<CloudRecipe>> getRecipeByName ({String searchString = ""}) {
-
-// }
-
-// Future<bool> checkIfRecipeName ({String searchString = "", String recipeName = ""}) {
-//   if (searchString.contains(recipeName)) {
-//     return true;
-//   }
-// }
-
-//   Stream<Iterable<CloudRecipe>> getAllKaggleRecipes({int limit = 10}) {
-//   return recipes.where(identifierFieldName, isEqualTo: "kaggle")
-//       .limit(limit)
-//       .snapshots()
-//       .asyncMap((snapshot) async {
-//     try {
-//       List<CloudRecipe> allRecipes = await Future.wait(
-//         snapshot.docs.map((doc) async {
-//           CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
-//           recipe.imageSrc = await getImageUrl(recipe.imageSrc);
-//           return recipe;
-//         }).toList(),
-//       );
-//       return allRecipes;
-//     } catch (e) {
-//       DevTools.log("Error fetching Kaggle recipes: $e");
-//       return [];
-//     }
-//   });
-// }
-
-  // Stream<Iterable<CloudRecipe>> getRecipeByName ({String? recipeName}) {
-  //   if (recipeName != null) {
-  //     return recipes.where(
-        
-  //     )
-  //   } else {
-
-  //   }
-  // }
-
-  // Getting the vegan recipes
-//   Stream<Iterable<CloudRecipe>> getVeganRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.health_labels", arrayContains: "VEGAN"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allVeganRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe veganRecipe = CloudRecipe.fromSnapshot(doc);
-//         veganRecipe.imageSrc = await getImageUrl(veganRecipe.imageSrc);
-//         return veganRecipe; 
-//       }));
-//       return allVeganRecipes;
-//     });
-//   }
-
-//   Stream<Iterable<CloudRecipe>> getDessertRecipes ({int limit = 1}) {
-//     return recipes.where(
-//       recipeNameFieldName, isEqualTo: "ice"
-//     )
-//     .where(identifierFieldName, isEqualTo: "allRecipes")
-//     .limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allDessertRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
-//         return recipe;
-//       }));
-
-//       return allDessertRecipes;
-//     });
-//   }
-
-//  Future<Iterable<CloudRecipe>> filterCategories(
-//     String searchCategory,
-//     int itemCount,
-//     Iterable<CloudRecipe> cloudRecipe) async {
-  
-//   List<CloudRecipe> myCloudRecipes = [];
-
-//   for (int index = 0; index < itemCount; index++) {
-//     // Get the cuisine path list for the current recipe
-//     List<dynamic>? cuisinePathList = cloudRecipe.elementAt(index).cuisinePath;
-
-//     // Check if cuisinePathList is not null
-//     if (cuisinePathList != null) {
-//       // Check if any item in the cuisinePathList contains the search category
-//       if (cuisinePathList.any((cuisine) => cuisine.toString().toLowerCase().contains(searchCategory.toLowerCase()))) {
-//         // If a match is found, add the recipe to the filtered list
-//         myCloudRecipes.add(cloudRecipe.elementAt(index));
-//       }
-//     }
-//   }
-
-//   // Return the filtered recipes as an Iterable
-//   return myCloudRecipes;
-// }
-
-
-
-//   Stream<Iterable<CloudRecipe>> getAllOnlineRecipes({int limit = 10}) {
-//   return recipes.where(identifierFieldName, isEqualTo: "allRecipes")
-//       .limit(limit)
-//       .snapshots()
-//       .asyncMap((snapshot) async {
-//     try {
-//       List<CloudRecipe> allRecipes = await Future.wait(
-//         snapshot.docs.map((doc) async {
-//           CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
-//           return recipe;
-//         }).toList(),
-//       );
-//       return allRecipes;
-//     } catch (e) {
-//       DevTools.log("Error fetching Kaggle recipes: $e");
-//       return [];
-//     }
-//   });
-// }
-
-
-
-//   // Getting the vegetarian recipes
-//   Stream<Iterable<CloudRecipe>> getVegetarianRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.health_labels", arrayContains: "VEGETARIAN"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allVegetarianRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe vegetarianRecipe = CloudRecipe.fromSnapshot(doc);
-//         vegetarianRecipe.imageSrc = await getImageUrl(vegetarianRecipe.imageSrc);
-//         return vegetarianRecipe;
-//       }));
-//       return allVegetarianRecipes;
-//     });
-//   }
-//   // Getting the paleo recipes 
-//     Stream<Iterable<CloudRecipe>> getPaleoRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.health_labels", arrayContains: "PALEO"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allPaleoRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe paleoRecipe = CloudRecipe.fromSnapshot(doc);
-//         paleoRecipe.imageSrc = await getImageUrl(paleoRecipe.imageSrc);
-//         return paleoRecipe;
-//       }));
-//       return allPaleoRecipes;
-//     });
-//   }
-//   // Getting the keto recipes 
-//   Stream<Iterable<CloudRecipe>> getKetoRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.health_labels", arrayContains: "KETO_FRIENDLY"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allKetoRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe ketoRecipe = CloudRecipe.fromSnapshot(doc);
-//         ketoRecipe.imageSrc = await getImageUrl(ketoRecipe.imageSrc);
-//         return ketoRecipe;
-//       }));
-//       return allKetoRecipes;
-//     });
-//   }
-//   // Getting Gluten Free Recipes
-
-
-
-// // Getting Gluten-Free Recipes with Randomization
-// Stream<Iterable<CloudRecipe>> getGlutenFreeRecipes({int limit = 12}) {
-//   return recipes
-//       .limit(limit)
-//       .snapshots()
-//       .asyncMap((snapshot) async {
-//         List<CloudRecipe> filteredRecipes = snapshot.docs.map((doc) {
-//           CloudRecipe glutenFreeRecipe = CloudRecipe.fromSnapshot(doc);
-//           List<String>? cautions = glutenFreeRecipe.tags["cautions"]?.cast<String>();
-
-//           if (cautions == null || !cautions.contains("GLUTEN")) {
-//             return glutenFreeRecipe;
-//           }
-//           return null; 
-//         }).where((recipe) => recipe != null).cast<CloudRecipe>().toList();
-
-//         List<CloudRecipe> allGlutenFreeRecipes = await Future.wait(
-//           filteredRecipes.map((recipe) async {
-//             recipe.imageSrc = await getImageUrl(recipe.imageSrc);
-//             return recipe;
-//           }).toList(),
-//         );
-
-//         allGlutenFreeRecipes.shuffle(Random());
-
-//         return allGlutenFreeRecipes;
-//       });
-// }
-
-//   // Getting Pescatarian Recipes
-//   Stream<Iterable<CloudRecipe>> getPescatarianRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.health_labels", arrayContains: "PESCATARIAN"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allPescatarianRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe pescatarianRecipe = CloudRecipe.fromSnapshot(doc);
-//         pescatarianRecipe.imageSrc = await getImageUrl(pescatarianRecipe.imageSrc);
-//         return pescatarianRecipe;
-//       }));
-//       return allPescatarianRecipes;
-//     });
-//   }
-//   //Fixxxxx!!!
-//     // Getting Low carb recipes
-//   Stream<Iterable<CloudRecipe>> getLowCarbRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.diet_labels", arrayContains: "LOW_CARB"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allPescatarianRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe pescatarianRecipe = CloudRecipe.fromSnapshot(doc);
-//         pescatarianRecipe.imageSrc = await getImageUrl(pescatarianRecipe.imageSrc);
-//         return pescatarianRecipe;
-//       }));
-//       return allPescatarianRecipes;
-//     });
-//   }
-
-//   // Getting low sodium recipes
-//   Stream<Iterable<CloudRecipe>> getLowSodiumRecipes ({int limit = 12}) {
-//     return recipes.where(
-//       "$tagsFieldName.diet_labels", arrayContains: "LOW_SODIUM"
-//     ).limit(limit)
-//     .snapshots()
-//     .asyncMap((snapshot) async {
-//       List<CloudRecipe> allPescatarianRecipes = await Future.wait(snapshot.docs.map((doc) async {
-//         CloudRecipe pescatarianRecipe = CloudRecipe.fromSnapshot(doc);
-//         pescatarianRecipe.imageSrc = await getImageUrl(pescatarianRecipe.imageSrc);
-//         return pescatarianRecipe;
-//       }));
-//       return allPescatarianRecipes;
-//     });
-//   }
-
   Future<String?> getImageUrl(String? imageName) async {
     if (imageName == null || imageName.isEmpty) return null;
     try {
       String  downloadUrl = await storage.ref("recipe_images/$imageName").getDownloadURL();
+      devTools.log("fetching the URL: $downloadUrl");
       return downloadUrl;
     } catch(e) {
       devTools.log("There was an error fetching the URL: $imageName");
@@ -374,17 +484,70 @@ Future<List<CloudRecipe>> fetchRecipes({
   // factory RecipeStorage() => _shared;
 
 
-  // New singleton implementing our hive
-  RecipeStorage._privateConstructor(this._recipeBox) {
-    _initializeStream();
-  }
-  static RecipeStorage? _instance;
+  
   // Opening the Hive Box once recipeStorage is initializd so reicpes are cached immediately upon entry
-  static Future<RecipeStorage> getInstance() async {
-    if (_instance == null) {
-      var recipeBox = await Hive.openBox<CloudRecipe>("recipes");
-      _instance = RecipeStorage._privateConstructor(recipeBox);
-    }
-    return _instance!;
-  }
+  // Box<CloudRecipe>? get recipeBox => _recipeBox;
 }
+
+// initial fetch
+// Future<List<CloudRecipe>> fetchRecipes({
+//   int limit = 200,
+//   DocumentSnapshot? startAfterDocument,
+//   String? searchQuery,
+// }) async {
+//   final box = Hive.box<CloudRecipe>('recipes');
+
+//   // Check if there's a search query
+//   if (searchQuery != null && searchQuery.isNotEmpty) {
+//     String searchKeyword = searchQuery.toLowerCase();
+//     log("Searching for keyword: $searchKeyword");
+
+//     // Search the Hive cache
+//     List<CloudRecipe> cachedRecipes = box.values.where((recipe) {
+//       return recipe.recipeSearchKeywords.contains(searchKeyword);
+//     }).toList();
+
+//     // If found in cache, return the cached recipes
+//     if (cachedRecipes.isNotEmpty) {
+//       return cachedRecipes;
+//     }
+//   }
+
+//   // If not found in cache or there's no search query, query Firestore
+//   Query<Map<String, dynamic>> query = recipes.limit(limit);
+//   if (searchQuery != null && searchQuery.isNotEmpty) {
+//     String searchKeyword = searchQuery.toLowerCase();
+//     query = query.where('searchKeywords', arrayContains: searchKeyword);
+//   }
+
+//   if (startAfterDocument != null) {
+//     query = query.startAfterDocument(startAfterDocument);
+//   }
+
+//   QuerySnapshot<Map<String, dynamic>> snapshot = await query.get();
+//   _lastDocument = snapshot.docs.isNotEmpty ? snapshot.docs.last : null;
+
+//   List<Future<CloudRecipe?>> recipeFutures = snapshot.docs.map((doc) async {
+//     try {
+//       CloudRecipe recipe = CloudRecipe.fromSnapshot(doc);
+//       if (recipe.recipeName == "Unknown Recipe") {
+//         return null;
+//       }
+//       recipe.imageSrc = await getImageUrl(recipe.imageSrc);
+//       return recipe;
+//     } catch (e) {
+//       log('Error processing recipe: $e');
+//       return null;
+//     }
+//   }).toList();
+
+//   List<CloudRecipe?> allRecipes = await Future.wait(recipeFutures);
+//   List<CloudRecipe> finalRecipes = allRecipes.where((recipe) => recipe != null).cast<CloudRecipe>().toList();
+
+//   // Cache the new recipes
+//   for (var recipe in finalRecipes) {
+//     box.put(recipe.recipeId, recipe);
+//   }
+
+//   return finalRecipes;
+// }

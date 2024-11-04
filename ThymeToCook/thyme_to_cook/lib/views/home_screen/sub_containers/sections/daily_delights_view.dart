@@ -12,7 +12,10 @@ class DailyDelightsView extends StatefulWidget {
 
 class _DailyDelightsViewState extends State<DailyDelightsView> {
   final recipeCategories = [
-    "Desserts", "Dinner", "Snacks", "Drinks", "Breakfast", "Lunch", "Healthy",  "Soups", "Salads" 
+    "Desserts", "European Cuisine", "Snacks", "Drinks", "Breakfast", "Bread", "Meaty",  "Soups", "Salads" 
+  ];
+  final actualCategoryName = [
+    "Desserts", "European", "Appetizers and Snacks", "Drinks Recipes", "Breakfast and Brunch", "Bread", "Meat and Poultry",  "Soups", "Salad" 
   ];
   final recipeCategoryImages = [
     "https://www.allrecipes.com/thmb/B4ncMNu-G9XgfqtyIKYiT6TcWd0=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/277000-easy-vanilla-cake-ddmfs-3X4-0103-09ae059661e5407599625222c5ac7d3b.jpg",
@@ -50,7 +53,7 @@ class _DailyDelightsViewState extends State<DailyDelightsView> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ResponsiveWrapper.builder(
-                                  GenericSearchView(cuisine: recipeCategories.elementAt(index)),
+                                  GenericSearchView(cuisine: actualCategoryName.elementAt(index)),
                                   breakpoints: const [
                                   ResponsiveBreakpoint.resize(480, name: MOBILE),
                                   ResponsiveBreakpoint.resize(800, name: TABLET),
@@ -66,8 +69,8 @@ class _DailyDelightsViewState extends State<DailyDelightsView> {
                             Image.network(
                                   recipeCategoryImages.elementAt(index),
                                   // recipeImages[index],
-                                  width: 210,
-                                  fit: BoxFit.cover,
+                                  width: 210,                                  fit: BoxFit.cover,
+
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
                                       color: Colors.grey,

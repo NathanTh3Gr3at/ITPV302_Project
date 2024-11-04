@@ -16,3 +16,4 @@ const totalTimeFieldName = "total_time";
 const ratingFieldName = "rating";
 const cuisinePathFieldName = "cuisine_path";
 const identifierFieldName = "identifier";
+const searchKeywordsFieldName = "searchKeywords";

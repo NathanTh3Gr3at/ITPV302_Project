@@ -116,13 +116,14 @@ class CloudRecipeAdapter extends TypeAdapter<CloudRecipe> {
       prepTime: fields[16] as String?,
       rating: fields[17] as String?,
       totalTime: fields[18] as String?,
+      recipeSearchKeywords: (fields[19] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, CloudRecipe obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.recipeId)
       ..writeByte(1)
@@ -160,7 +161,9 @@ class CloudRecipeAdapter extends TypeAdapter<CloudRecipe> {
       ..writeByte(17)
       ..write(obj.rating)
       ..writeByte(18)
-      ..write(obj.totalTime);
+      ..write(obj.totalTime)
+      ..writeByte(19)
+      ..write(obj.recipeSearchKeywords);
   }
 
   @override

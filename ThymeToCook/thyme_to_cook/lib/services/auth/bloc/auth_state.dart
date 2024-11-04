@@ -12,18 +12,68 @@ abstract class AuthState {
   });
 }
 
+class AuthStateLogin extends AuthState {
+  final Exception? exception;
+  
+  const AuthStateLogin({this.exception, required super.isLoading});
+}
+
+class AuthStateNeedsVerification extends AuthState {
+  const AuthStateNeedsVerification({required super.isLoading});
+}
+
+class AuthStateError extends AuthState {
+  final String message;
+
+  const AuthStateError({required this.message, required super.isLoading});
+}
+
+
 class AuthStateUninitialized extends AuthState {
   const AuthStateUninitialized({required super.isLoading});
 }
 
-class AuthStateRegistering extends AuthState {
+class AuthStateRegisterEmailAndPassword extends AuthState {
   final Exception? exception;
-  const AuthStateRegistering({
+  const AuthStateRegisterEmailAndPassword({
     required this.exception,
     required super.isLoading,
   });
 }
 
+class AuthStateRegisterUsername extends AuthState {
+  const AuthStateRegisterUsername({required super.isLoading});
+}
+
+class AuthStaterRegisterIngredientsToAvoid extends AuthState {
+  const AuthStaterRegisterIngredientsToAvoid({required super.isLoading});
+}
+
+class AuthStateRegisterDiets extends AuthState {
+  const AuthStateRegisterDiets({required super.isLoading});
+}
+
+class AuthStateRegisterMeasurementSystem extends AuthState {
+  const AuthStateRegisterMeasurementSystem({required super.isLoading});
+}
+
+class AuthStateShouldRegister extends AuthState {
+  final Exception? exception;
+  const AuthStateShouldRegister({
+    required this.exception,
+    required super.isLoading,
+  });
+}
+
+class AuthStateLoggingIn extends AuthState {
+  const AuthStateLoggingIn({required super.isLoading});
+}
+
+class AuthStateRegistered extends AuthState {
+  final AuthUser user;
+  AuthStateRegistered(this.user, {required super.isLoading});
+
+}
 
 class AuthStateForgotPassword extends AuthState {
   final Exception? exception;
@@ -43,8 +93,11 @@ class AuthStateLoggedIn extends AuthState {
   });
 }
 
-class AuthStateNeedsVerification extends AuthState {
-  const AuthStateNeedsVerification({required super.isLoading});
+class AuthStateRegistering extends AuthState {
+  final Exception? exception;
+
+  const AuthStateRegistering({required this.exception, required super.isLoading});
+
 }
 
 class AuthStateLoggedOut extends AuthState with EquatableMixin {

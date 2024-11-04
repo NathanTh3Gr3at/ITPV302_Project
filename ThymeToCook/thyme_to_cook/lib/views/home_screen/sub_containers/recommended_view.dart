@@ -20,36 +20,32 @@ class RecommendedView extends StatefulWidget {
 class _RecommendedViewState extends State<RecommendedView> {
   @override
   Widget build(BuildContext context) {
-  // Checking purposes --> for when database goes down
-  //   final List<String> recipeImages = [
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2Fdads-trinidadian-curried-chicken.jpg?alt=media&token=9ac64437-bb2b-4b10-9df5-d1db13c01081",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-bloody-mary-tomato-toast-with-celery-and-horseradish-56389813.jpg?alt=media&token=c7b2df2a-f9b2-4116-8d86-dec9a3eb6a4e",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-burnt-carrots-and-parsnips-56390131.jpg?alt=media&token=efa38af2-4c5a-485e-a26e-4cb2f5c51a43",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-candy-corn-frozen-citrus-cream-pops-368770.jpg?alt=media&token=dbfb9d14-1c32-4a59-a14e-c03a9da141b9",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-candy-corn-pumpkin-blondies-51254510.jpg?alt=media&token=d270e8d6-62ae-4530-9617-18246702b1b2",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-chickpea-barley-and-feta-salad-51239040.jpg?alt=media&token=3352a946-74e4-4b17-a743-faac83870190",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-em-ba-em-s-ultimate-lobster-rolls-51169080.jpg?alt=media&token=99ae6608-57f6-4dc2-be49-970982cca1d8",
-  //   "https://firebasestorage.googleapis.com/v0/b/thymetocook-8d0f3.appspot.com/o/recipe_images%2F-em-gourmet-live-em-s-first-birthday-cake-367789.jpg?alt=media&token=04a02ab0-20fe-46d3-9c62-9cdb2c236d61"
-  // ];
   final recipeStorage = Provider.of<RecipeStorage>(context);
   var isLiked = false;
+  int limit = 10;
+
     return StreamBuilder(
       // Getting all recipes
-      stream: recipeStorage.getAllRecipes(),
+      stream: recipeStorage.getCachedRecipesStream(),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
             return const Center(child: CircularProgressIndicator());
           case ConnectionState.active:
             if (snapshot.hasData) {
-            // if (true) {
-              final allRecipes = snapshot.data as Iterable<CloudRecipe>;
+            final allRecipes = snapshot.data as Iterable<CloudRecipe>;
+              log(allRecipes.length.toString());
+              if (allRecipes.isEmpty) {
+                return const Center(child: Text("No Recipes available"));
+              }
+              // Limiting the number of recipes shown to the user 
+              final displayRecipes = allRecipes.take(limit).toList();
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: allRecipes.length, 
+                itemCount: displayRecipes.length, 
                 // itemCount: recipeImages.length,
                 itemBuilder: (context, index) {
-                  final recipe = allRecipes.elementAt(index);
+                  final recipe = displayRecipes[index];
                   return SizedBox(
                     height: double.infinity,
                     width: 210,

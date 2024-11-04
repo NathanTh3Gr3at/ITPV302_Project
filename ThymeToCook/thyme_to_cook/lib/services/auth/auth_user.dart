@@ -5,6 +5,7 @@ class AuthUser {
   final String id;
   final String email;
   final bool isEmailVerified;
+  String username;
   DateTime createDate;
   DateTime updateDate;
   String role;
@@ -18,6 +19,7 @@ class AuthUser {
     required this.updateDate,
     required this.role,
     required this.userPreferences,
+    required this.username,
   });
 
   factory AuthUser.fromFirebase(User user, Map<String, dynamic> userData) {
@@ -25,16 +27,25 @@ class AuthUser {
       id: user.uid,
       email: user.email!,
       isEmailVerified: user.emailVerified,
-      createDate: (userData['createDate'] as Timestamp).toDate(),
-      updateDate: (userData['updateDate'] as Timestamp).toDate(),
-      role: userData['role'],
-      userPreferences: Map<String, dynamic>.from(userData['userPreferences']),
+      createDate: (userData['createDate'] != null)
+          ? (userData['createDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      updateDate: (userData['updateDate'] != null)
+          ? (userData['updateDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      role: userData['role'] ?? 'user',
+      userPreferences: userData['userPreferences'] != null
+          ? Map<String, dynamic>.from(userData['userPreferences'])
+          : {},
+      username: userData['username'] ?? 'No username',
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'email': email,
+      'username': username,
       'isEmailVerified': isEmailVerified,
       'createDate': createDate,
       'updateDate': updateDate,
