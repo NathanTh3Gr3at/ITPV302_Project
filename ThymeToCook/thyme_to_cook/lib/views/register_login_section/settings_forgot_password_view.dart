@@ -3,19 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
-
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
 import 'package:thyme_to_cook/utilities/dialogs/password_reset_dialog.dart';
 
-class ForgotPasswordView extends StatefulWidget {
-  const ForgotPasswordView({super.key});
+class SettingsForgotPasswordView extends StatefulWidget {
+  const SettingsForgotPasswordView({super.key});
 
   @override
-  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+  State<SettingsForgotPasswordView> createState() => _SettingsForgotPasswordViewState();
 }
 
-class _ForgotPasswordViewState extends State<ForgotPasswordView> {
+class _SettingsForgotPasswordViewState extends State<SettingsForgotPasswordView> {
   late final TextEditingController _controller;
   @override
   void initState() {
@@ -88,23 +87,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     child: const Text('Send me password reset link'),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      context.read<AuthBloc>().add(
-                            const AuthEventLogOut(),
-                          );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryButtonColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text('Back to login page'),
-                  ),
-                ),
+                
               ],
             ),
           ),

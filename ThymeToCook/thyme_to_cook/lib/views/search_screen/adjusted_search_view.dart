@@ -285,7 +285,8 @@ void showFilterBottomSheet (BuildContext context, {String? filterLabel}) async {
 }
 
   void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
       fetchMoreRecipes();
     }
   }

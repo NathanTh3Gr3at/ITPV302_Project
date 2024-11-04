@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/main.dart';
 import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
@@ -10,6 +11,8 @@ import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
+import 'package:thyme_to_cook/views/register_login_section/settings_forgot_password_view.dart';
 
 class SettingsView extends StatefulWidget {
   static const routeName = '/settings';
@@ -21,6 +24,8 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   String _selectedUnit = 'Metric';
+  
+  String? _selectedMeasurementUnit;
   //need to fix overflow error (bottom overflow)
   final Map<String, bool> _ingredients = {
     'Egg': false,
@@ -40,6 +45,46 @@ class _SettingsViewState extends State<SettingsView> {
     'Gluten free': false
   };
   @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    //load measurement
+    _selectedMeasurementUnit = prefs.getString('measurement_preference');
+    //load Diet
+    String? dietsString = prefs.getString('diet_preferences');
+    if (dietsString != null) {
+      List<String> savedDiets = dietsString.split(',');
+      _diets.updateAll((key, value) => savedDiets.contains(key));
+    }
+    //load Allergens
+    String? allergenString = prefs.getString('allergen_preferences');
+    if (allergenString != null) {
+      List<String> savedAllergens = allergenString.split(',');
+      _ingredients.updateAll((key, value) => savedAllergens.contains(key));
+    }
+    setState(() {});
+  }
+
+  Future<void> _savePreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('measurement_preference', _selectedMeasurementUnit!);
+    List<String> selectedDiets = _diets.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    await prefs.setString('diet_preferences', selectedDiets.join(','));
+    List<String> selectedAllergens = _ingredients.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    await prefs.setString('allergen_preferences', selectedAllergens.join(','));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -48,7 +93,7 @@ class _SettingsViewState extends State<SettingsView> {
         backgroundColor: backgroundColor,
         title: const Text("Settings"),
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(), 
+          onPressed: () => Navigator.of(context).pop(),
           icon: Icon(MdiIcons.chevronLeft),
           iconSize: 30,
         ),
@@ -74,15 +119,16 @@ class _SettingsViewState extends State<SettingsView> {
                 subtitle: const Text('Update your password'),
                 trailing: TextButton(
                   onPressed: () {
-                    context.read()<AuthBloc>().add(
+                    /* context.read()<AuthBloc>().add(
                           const AuthEventForgotPassword(),
-                        );
+                        ); */
+                        Navigator.push(context,MaterialPageRoute(builder: (context)=>const SettingsForgotPasswordView()));
                   },
                   child: const Text('Forgot Password?'),
                 ),
               ),
               const Divider(),
-          
+
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
@@ -98,16 +144,17 @@ class _SettingsViewState extends State<SettingsView> {
                 title: const Text('Measurement Units'),
                 subtitle: const Text('Select your preferred units'),
                 trailing: DropdownButton<String>(
-                  value: _selectedUnit,
+                  value: _selectedMeasurementUnit,
                   onChanged: (String? newValue) {
                     setState(
                       () {
-                        _selectedUnit = newValue!;
+                        _selectedMeasurementUnit = newValue!;
                       },
                     );
+                    _savePreferences();
                   },
-                  items:
-                      <String>['Metric', 'Imperial'].map<DropdownMenuItem<String>>(
+                  items: <String>['Metric', 'Imperial']
+                      .map<DropdownMenuItem<String>>(
                     (String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -128,6 +175,7 @@ class _SettingsViewState extends State<SettingsView> {
                       setState(() {
                         _diets[key] = value!;
                       });
+                      _savePreferences();
                     },
                   );
                 }).toList(),
@@ -143,6 +191,7 @@ class _SettingsViewState extends State<SettingsView> {
                       setState(() {
                         _ingredients[key] = value!;
                       });
+                      _savePreferences();
                     },
                   );
                 }).toList(),
@@ -175,8 +224,4 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 }
- /*  Column _settings() {
-    return 
-  }
-}
- */
+ 

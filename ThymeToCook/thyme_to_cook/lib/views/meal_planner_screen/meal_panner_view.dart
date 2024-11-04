@@ -47,6 +47,7 @@ class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProvi
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,3 +89,4 @@ class _MealPannerViewState extends State<MealPannerView> with  SingleTickerProvi
     );
   }
 }
+
