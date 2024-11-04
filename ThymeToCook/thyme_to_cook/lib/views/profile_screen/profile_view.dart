@@ -10,6 +10,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
+import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 
 class ProfileView extends StatelessWidget {
@@ -21,40 +22,37 @@ class ProfileView extends StatelessWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text("Profile"),
-            IconButton(
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("Profile"),
+          IconButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingsView(),
-                    ),
-                  );
-              }, 
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsView(),
+                  ),
+                );
+              },
               icon: Icon(
                 MdiIcons.cog,
                 size: 30,
-              )
-            )
-          ]
-        ),
+              ))
+        ]),
         backgroundColor: backgroundColor,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(), 
+          onPressed: () => Navigator.of(context).pop(),
           icon: Icon(MdiIcons.chevronLeft),
           iconSize: 30,
         ),
       ),
-      body: _profilePage(),
+      body: _profilePage(context),
     );
   }
 
-  Column _profilePage() {
+  Column _profilePage(context) {
     return Column(children: [
-      _profileSection(),
+      _profileSection(context),
       const SizedBox(
         height: 20,
       ), // distance from searchbar
@@ -66,7 +64,7 @@ class ProfileView extends StatelessWidget {
         );
   }
 
-  Column _profileSection() {
+  Column _profileSection(context) {
     return Column(
       children: [
         Padding(
@@ -86,7 +84,7 @@ class ProfileView extends StatelessWidget {
                         width: 80,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          
+
                           //user profile image
                           image: DecorationImage(
                             fit: BoxFit.cover,
@@ -97,10 +95,17 @@ class ProfileView extends StatelessWidget {
                       ),
 
                       // spacing edit profile button
+                     
                       SizedBox(
                         height: 35,
-                        child: TextButton(
-                          onPressed: () {},
+                         child:TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingsView()));
+                          },
                           // styles the button
                           style: TextButton.styleFrom(
                             side: const BorderSide(color: Colors.black),
@@ -115,9 +120,8 @@ class ProfileView extends StatelessWidget {
                     ],
                   ),
                   // section for user details, must fill in
-                  
+
                   const Text("User"),
-                  
                 ],
               ),
             ],
@@ -133,41 +137,43 @@ class ProfileView extends StatelessWidget {
         Column(
           children: [
             DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    // tab sections
-                    TabBar(
-                      tabs: [
-                        Tab(
-                          child: Text("Kitchen Activity"),
+              length: 2,
+              child: Column(
+                children: [
+                  // tab sections
+                  TabBar(
+                    tabs: [
+                      Tab(
+                        child: Text("Kitchen Activity"),
+                      ),
+                      Tab(
+                        child: Text("Recipes Created"),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 300,
+                    child: TabBarView(
+                      // text under each tab
+                      children: [
+                        Card(
+                          // color: Color.fromARGB(255, 252, 253, 242),
+                          // elevation: 5,
+                          child: Center(
+                            child: Text("Kitchen Activity"),
+                          ),
                         ),
-                        Tab(
-                          child: Text("Recipes Created"),
+                        Card(
+                          child: Center(
+                            child: Text("Recipes Created"),
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 300,
-                      child: TabBarView(
-                          // text under each tab
-                          children: [
-                            Card(
-                              // color: Color.fromARGB(255, 252, 253, 242),
-                              // elevation: 5,
-                              child: Center(
-                                child: Text("Kitchen Activity"),
-                              ),
-                            ),
-                            Card(
-                              child: Center(
-                                child: Text("Recipes Created"),
-                              ),
-                            ),
-                          ],),
-                    )
-                  ],
-                ),)
+                  )
+                ],
+              ),
+            )
           ],
         )
       ],
