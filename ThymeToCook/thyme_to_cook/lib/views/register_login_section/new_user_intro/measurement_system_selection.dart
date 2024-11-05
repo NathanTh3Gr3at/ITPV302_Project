@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -10,7 +8,6 @@ import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
-import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/services/auth/user_provider.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
@@ -21,39 +18,45 @@ class MeasurementSystemSelection extends StatefulWidget {
   const MeasurementSystemSelection({super.key});
 
   @override
-  State<MeasurementSystemSelection> createState() => _MeasurementSystemSelectionState();
+  State<MeasurementSystemSelection> createState() =>
+      _MeasurementSystemSelectionState();
 }
 
-class _MeasurementSystemSelectionState extends State<MeasurementSystemSelection> {
+class _MeasurementSystemSelectionState
+    extends State<MeasurementSystemSelection> {
   String? _groupValue = 'metric';
 
   @override
   Widget build(BuildContext context) {
-     UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
 
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is AuthStateRegistering) {
           if (state.exception is GenericAuthException) {
-            await showErrorDialog(context,"Failed to complete registration",);
+            await showErrorDialog(
+              context,
+              "Failed to complete registration",
+            );
           }
         } else if (state is AuthStateLoggedIn) {
-      // Navigate to the main app screen when login is successful
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainNavigation(isLoggedIn: true),
-        ),
-      );
-    } else if (state is AuthStateNeedsVerification) {
-      // Navigate to the email verification screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const VerifyEmailView(),
-        ),
-      );
-    }
+          // Navigate to the main app screen when login is successful
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainNavigation(isLoggedIn: true),
+            ),
+          );
+        } else if (state is AuthStateNeedsVerification) {
+          // Navigate to the email verification screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const VerifyEmailView(),
+            ),
+          );
+        }
       },
       child: Scaffold(
         backgroundColor: backgroundColor,
@@ -74,7 +77,8 @@ class _MeasurementSystemSelectionState extends State<MeasurementSystemSelection>
             child: LinearProgressIndicator(
               value: 4 / 4,
               backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation(Color.fromARGB(255, 162, 206, 100)),
+              valueColor:
+                  AlwaysStoppedAnimation(Color.fromARGB(255, 162, 206, 100)),
             ),
           ),
         ),
@@ -131,39 +135,39 @@ class _MeasurementSystemSelectionState extends State<MeasurementSystemSelection>
             ],
           ),
           Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () async {
-                UserModel user = userProvider.user;
-  context.read<AuthBloc>().add(
-    AuthEventRegister(
-      user.email!,
-      user.username!,
-      user.userPreferences!,
-    ),
-  );
-  Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
-      );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryButtonColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  UserModel user = userProvider.user;
+                  context.read<AuthBloc>().add(
+                        AuthEventRegister(
+                          user.email!,
+                          user.username!,
+                          user.userPreferences!,
+                        ),
+                      );
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryButtonColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
-              ),
-              child: const Text(
-                'Done',
-                style: TextStyle(color: Colors.black),
+                child: const Text(
+                  'Done',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
           ),
-        ),
         ]),
       ),
     );

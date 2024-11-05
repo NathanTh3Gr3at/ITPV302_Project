@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart' show immutable;
-import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 
 
 abstract class SearchFunctionEvent extends Equatable {

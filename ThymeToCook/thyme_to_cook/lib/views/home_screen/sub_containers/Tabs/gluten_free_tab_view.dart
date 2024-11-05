@@ -1,11 +1,11 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
-import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 
 class GlutenFreeTabView extends StatefulWidget {

@@ -1,16 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:thyme_to_cook/enums/menu_action.dart';
-import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
-import 'package:thyme_to_cook/services/auth/auth_user.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
-
 import 'package:thyme_to_cook/themes/colors/colors.dart';
-import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
-import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 
 class ProfileView extends StatelessWidget {

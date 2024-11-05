@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 
-class PreferencesScreen extends StatefulWidget {
+/* class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
 
   @override
@@ -143,3 +143,4 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     );
   }
 }
+ */

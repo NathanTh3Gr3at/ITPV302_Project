@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:thyme_to_cook/views/home_screen/effects/shimmer.dart';
 
 class ShimmerLoading extends StatefulWidget {
   const ShimmerLoading({

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:thyme_to_cook/main.dart';
 import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
@@ -10,9 +8,7 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/user_provider.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
-import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/username_choice.dart';
 
 class RegisterView extends StatefulWidget {

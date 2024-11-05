@@ -1,31 +1,19 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
-import 'package:thyme_to_cook/enums/menu_action.dart';
-import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
-import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
-import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/gluten_free_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/Tabs/low_carb_tab_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/recommended_view.dart';
 import 'package:thyme_to_cook/views/home_screen/sub_containers/sections/daily_delights_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/sections/five_minute_recipes.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
-import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
-import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 
 
 class HomeGuestView extends StatefulWidget {

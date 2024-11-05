@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
-import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
-import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
-import 'package:thyme_to_cook/views/home_screen/sub_containers/sections/daily_delights_view.dart';
 import 'package:thyme_to_cook/views/meal_planner_screen/meal_panner_view.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/save_screen/save_view.dart';
 import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 import 'package:thyme_to_cook/views/web_views/laptop.dart';
-import 'package:thyme_to_cook/views/web_views/web_home_page.dart';
 
 class DesktopScaffold extends StatefulWidget {
   const DesktopScaffold({super.key});

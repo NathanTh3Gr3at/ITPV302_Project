@@ -1,14 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
-import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
 
 class RecipeView extends StatefulWidget {
   final CloudRecipe recipe;
@@ -293,7 +289,7 @@ class _RecipeViewState extends State<RecipeView>
                     Text("${widget.recipe.recipeName} added to grocery list"),
               ),
             );
-          } 
+          }
           // for debugging
           // print("Sending groceryListLoadEvent with recipe: ${widget.recipe.recipeName}");
         },
@@ -507,82 +503,6 @@ class _RecipeViewState extends State<RecipeView>
     return const Column(
         children: [Text("This is the nutritional information")]);
   }
-
-//   Column _instructions() {
-//     return Column(
-//       children: [
-//         Column(
-//           children: [
-//             DefaultTabController(
-//               length: 2,
-//               child: Column(
-//                 children: [
-//                   // tab sections
-//                   const TabBar(
-//                     tabs: [
-//                       Tab(
-//                         child: Text("Ingredients"),
-//                       ),
-//                       Tab(
-//                         child: Text("Instructions"),
-//                       ),
-//                     ],
-//                   ),
-//                   SizedBox(
-//                     height: 250,
-//                     child: TabBarView(
-//                       // text under each tab
-//                       children: [
-//                         Card(
-//                           color: backgroundColor,
-//                           // color: Color.fromARGB(255, 252, 253, 242),
-//                           // elevation: 5,
-//                           child: Center(
-//                             child: ListView.builder(
-//                               itemBuilder: (context, index) {
-//                                 final ingredients =
-//                                     widget.recipe.recipeIngredients[index];
-//                                 return ListTile(
-//                                   title: Text(
-//                                     ('${ingredients.ingredientName} ${ingredients.quantity} ${ingredients.unit}'),
-//                                     // widget.recipe.recipeIngredients[index].toString(),
-//                                   ),
-//                                 );
-//                               },
-//                               itemCount: widget.recipe.recipeIngredients.length,
-//                             ),
-//                           ),
-//                         ),
-//                         Card(
-//                           color: backgroundColor,
-//                           child: Center(
-//                             child: ListView.builder(
-//                               itemBuilder: (context, index) {
-//                                 final instructions =
-//                                     widget.recipe.recipeInstructions[index];
-//                                 return ListTile(
-//                                   title: Text(
-//                                     '$instructions',
-//                                   ),
-//                                 );
-//                               },
-//                               itemCount:
-//                                   widget.recipe.recipeInstructions.length,
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             )
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
 
   Future<bool> _showGroceryConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(

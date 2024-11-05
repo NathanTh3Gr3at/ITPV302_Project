@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietary_selection.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 
 class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});

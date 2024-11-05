@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
@@ -6,7 +7,6 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/username_choice.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});

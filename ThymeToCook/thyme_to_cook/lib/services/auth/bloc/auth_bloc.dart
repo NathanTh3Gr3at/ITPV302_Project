@@ -6,37 +6,37 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider)
       : super(const AuthStateUninitialized(isLoading: true)) {
-
-    Future<void> onInitialize(AuthEventInitialize event, Emitter<AuthState> emit) async {
-    await provider.refreshUser();
-    final user = provider.currentUser;
-    if (user == null) {
-      emit(const AuthStateLoggedOut(exception: null, isLoading: false));
-    } else if (!user.isEmailVerified) {
-      emit(const AuthStateNeedsVerification(isLoading: false));
-    } else {
-      emit( AuthStateLoggedIn(
-        user: user,
-        isLoading: false,
-      ));
+    Future<void> onInitialize(
+        AuthEventInitialize event, Emitter<AuthState> emit) async {
+      await provider.refreshUser();
+      final user = provider.currentUser;
+      if (user == null) {
+        emit(const AuthStateLoggedOut(exception: null, isLoading: false));
+      } else if (!user.isEmailVerified) {
+        emit(const AuthStateNeedsVerification(isLoading: false));
+      } else {
+        emit(AuthStateLoggedIn(
+          user: user,
+          isLoading: false,
+        ));
+      }
     }
-  }
-  on<AuthEventInitialize>(onInitialize);
-    
-  on<AuthEventRegisterEmailAndPassword>((event, emit) async {
+
+    on<AuthEventInitialize>(onInitialize);
+
+    on<AuthEventRegisterEmailAndPassword>(
+      (event, emit) async {
         emit(const AuthStateLoggedOut(
-        exception: null,
-        isLoading: true,
-        loadingText: 'Please wait while we register you',
-      ));
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait while we register you',
+        ));
         final email = event.email;
         final password = event.password;
-        
+
         try {
-          await provider.registerUser(
-            email: email, 
-            password: password);
-            emit(const AuthStateRegisterUsername(isLoading: false)) ;  
+          await provider.registerUser(email: email, password: password);
+          emit(const AuthStateRegisterUsername(isLoading: false));
         } on Exception catch (e) {
           emit(AuthStateRegisterEmailAndPassword(
             exception: e,
@@ -57,13 +57,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthEventShouldLogin>((event, emit) async {
       emit(const AuthStateLoggingIn(isLoading: false));
     });
-    
-on<AuthEventRegister>((event, emit) async {
+
+    on<AuthEventRegister>(
+      (event, emit) async {
         emit(const AuthStateLoggedOut(
-        exception: null,
-        isLoading: true,
-        loadingText: 'Please wait',
-      ));
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait',
+        ));
         final email = event.email;
         final username = event.username;
         final userPreferences = event.userPreferences;
@@ -82,35 +83,35 @@ on<AuthEventRegister>((event, emit) async {
           ));
         }
       },
-  );
-    
-  on<AuthEventLogIn>(
-  (event, emit) async {
-    emit(const AuthStateLoggedOut(
-      exception: null,
-      isLoading: true,
-      loadingText: 'Please wait while we log you in',
-    ));
-    final email = event.email;
-    final password = event.password;
-    try {
-      final user = await provider.logIn(email: email, password: password);
-      if (!user.isEmailVerified) {
-        emit(const AuthStateNeedsVerification(isLoading: false));
-      } else {
-        emit(AuthStateLoggedIn(
-          user: user,
-          isLoading: false,
+    );
+
+    on<AuthEventLogIn>(
+      (event, emit) async {
+        emit(const AuthStateLoggedOut(
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait while we log you in',
         ));
-      }
-    } on Exception catch (e) {
-      emit(AuthStateLoggedOut(
-        exception: e,
-        isLoading: false,
-      ));
-    }
-  },
-);
+        final email = event.email;
+        final password = event.password;
+        try {
+          final user = await provider.logIn(email: email, password: password);
+          if (!user.isEmailVerified) {
+            emit(const AuthStateNeedsVerification(isLoading: false));
+          } else {
+            emit(AuthStateLoggedIn(
+              user: user,
+              isLoading: false,
+            ));
+          }
+        } on Exception catch (e) {
+          emit(AuthStateLoggedOut(
+            exception: e,
+            isLoading: false,
+          ));
+        }
+      },
+    );
     on<AuthEventForgotPassword>(
       (event, emit) async {
         emit(const AuthStateForgotPassword(
@@ -142,10 +143,10 @@ on<AuthEventRegister>((event, emit) async {
     on<AuthEventLogOut>(
       (event, emit) async {
         emit(const AuthStateLoggedOut(
-      exception: null,
-      isLoading: true,
-      loadingText: 'Please wait while we log you out',
-    ));
+          exception: null,
+          isLoading: true,
+          loadingText: 'Please wait while we log you out',
+        ));
         try {
           await provider.logOut();
           emit(

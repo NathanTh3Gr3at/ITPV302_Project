@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:thyme_to_cook/main.dart';
 import 'package:thyme_to_cook/services/auth/user_provider.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/new_user_preference_selection.dart';
 
 class UsernameChoiceView extends StatefulWidget {
   const UsernameChoiceView({super.key});

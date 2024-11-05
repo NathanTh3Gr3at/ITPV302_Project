@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:thyme_to_cook/main.dart';
 import 'package:thyme_to_cook/services/auth/auth_exceptions.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/error_dialog.dart';
-import 'package:thyme_to_cook/views/guest_user_screens/home_view_guest.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
@@ -58,44 +56,44 @@ class _LoginViewState extends State<LoginView> {
       final email = _email.text;
       final password = _password.text;
       context.read<AuthBloc>().add(
-        AuthEventLogIn(
-          email,
-          password,
-        ),
-      );
+            AuthEventLogIn(
+              email,
+              password,
+            ),
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-  listener: (context, state) async {
-    if (state is AuthStateLoggedOut) {
-      if (state.exception is InvalidCredentialsAuthException) {
-        await showErrorDialog(context, "Invalid Credentials");
-      } else if (state.exception is InvalidEmailAuthException) {
-        await showErrorDialog(context, "Invalid Email");
-      } else if (state.exception is GenericAuthException) {
-        await showErrorDialog(context, "Authentication error");
-      }
-    } else if (state is AuthStateLoggedIn) {
-      // Navigate to the main app screen when login is successful
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainNavigation(isLoggedIn: true),
-        ),
-      );
-    } else if (state is AuthStateNeedsVerification) {
-      // Navigate to the email verification screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const VerifyEmailView(),
-        ),
-      );
-    }
-  },
+      listener: (context, state) async {
+        if (state is AuthStateLoggedOut) {
+          if (state.exception is InvalidCredentialsAuthException) {
+            await showErrorDialog(context, "Invalid Credentials");
+          } else if (state.exception is InvalidEmailAuthException) {
+            await showErrorDialog(context, "Invalid Email");
+          } else if (state.exception is GenericAuthException) {
+            await showErrorDialog(context, "Authentication error");
+          }
+        } else if (state is AuthStateLoggedIn) {
+          // Navigate to the main app screen when login is successful
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainNavigation(isLoggedIn: true),
+            ),
+          );
+        } else if (state is AuthStateNeedsVerification) {
+          // Navigate to the email verification screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const VerifyEmailView(),
+            ),
+          );
+        }
+      },
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
@@ -109,7 +107,8 @@ class _LoginViewState extends State<LoginView> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainNavigation(isLoggedIn: false),
+                    builder: (context) =>
+                        const MainNavigation(isLoggedIn: false),
                   ),
                 );
               },
@@ -131,17 +130,6 @@ class _LoginViewState extends State<LoginView> {
                   width: 300,
                   height: 300,
                 ),
-                // const Padding(
-                //   padding: EdgeInsets.only(bottom: 10.0),
-                //   child: Text(
-                //     'Welcome Back!',
-                //     style: TextStyle(
-                //       fontWeight: FontWeight.bold,
-                //       fontSize: 40,
-                //       color: Colors.black,
-                //     ),
-                //   ),
-                // ),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -160,7 +148,8 @@ class _LoginViewState extends State<LoginView> {
                     controller: _email,
                     decoration: InputDecoration(
                       labelText: 'Email Address',
-                      errorText: !_isEmailValid ? 'Please enter your email' : null,
+                      errorText:
+                          !_isEmailValid ? 'Please enter your email' : null,
                       errorStyle: const TextStyle(
                         color: errorMessagesAndAlertsColor,
                       ),
@@ -181,7 +170,9 @@ class _LoginViewState extends State<LoginView> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      errorText: !_isPasswordValid ? 'Please enter your password' : null,
+                      errorText: !_isPasswordValid
+                          ? 'Please enter your password'
+                          : null,
                       errorStyle: const TextStyle(
                         color: errorMessagesAndAlertsColor,
                       ),
@@ -199,8 +190,8 @@ class _LoginViewState extends State<LoginView> {
                   child: TextButton(
                     onPressed: () {
                       context.read<AuthBloc>().add(
-                        const AuthEventForgotPassword(),
-                      );
+                            const AuthEventForgotPassword(),
+                          );
                     },
                     child: const Text('Forgot Password?'),
                   ),
@@ -224,11 +215,11 @@ class _LoginViewState extends State<LoginView> {
                 TextButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(
-                      const AuthEventShouldRegister(),
-                    );
+                          const AuthEventShouldRegister(),
+                        );
                     Navigator.pushReplacement(
                       context,
-                        MaterialPageRoute(
+                      MaterialPageRoute(
                         builder: (context) => const RegisterView(),
                       ),
                     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:intl/intl.dart';
+import 'package:thyme_to_cook/themes/colors/colors.dart';
 
 class MealPannerView extends StatefulWidget {
   const MealPannerView({super.key});
