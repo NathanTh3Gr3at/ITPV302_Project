@@ -32,7 +32,7 @@ import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietar
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/username_choice.dart';
-import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
+// import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 import 'package:thyme_to_cook/views/web_views/home_screen.dart';
@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         BlocProvider(create: (context) => AuthBloc(FirebaseAuthProvider())),
         BlocProvider(create: (context) => NavigationBloc()),
+        // handles bloc provider error usually
         BlocProvider(create: (context) => GroceryListBloc()),
         BlocProvider(create: (context) => SaveRecipeCubit()),
        

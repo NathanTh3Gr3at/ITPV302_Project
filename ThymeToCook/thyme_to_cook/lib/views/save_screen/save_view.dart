@@ -44,7 +44,7 @@ class _SaveViewState extends State<SaveView> {
         appBar: appBar(),
         body: Column(
           children: [
-            _searchField(),
+            // _searchField(),
             const SizedBox(
               height: 5,
             ),
@@ -96,20 +96,20 @@ class _SaveViewState extends State<SaveView> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 20),
-            child: Text(
-              "Recipes",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+          // const Padding(
+          //   padding: EdgeInsets.only(left: 10, bottom: 20),
+          //   child: Text(
+          //     "Recipes",
+          //     style: TextStyle(
+          //       color: Colors.black,
+          //       fontSize: 20,
+          //       fontWeight: FontWeight.w600,
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
           SizedBox(
             height: 350,
             // width: 400,
@@ -174,6 +174,20 @@ class _SaveViewState extends State<SaveView> {
                                       .read<SaveRecipeCubit>()
                                       .unlike(recipe.recipeId);
 
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text("${recipe.recipeName} was removed from your saved list" ),
+                                    // must be tested
+                                    duration: const Duration(seconds: 3),
+                                    action: SnackBarAction(
+                                      label: 'Undo', 
+                                      onPressed: () {
+                                        context.read<SaveRecipeCubit>().likeRecipe(recipe);
+                                        },
+                                      ),
+
+                                    ),
+                                  );
+
                                   // recipes[index].liked =
                                   //     !recipes[index].liked;
                                 },
@@ -213,7 +227,7 @@ class _SaveViewState extends State<SaveView> {
                             ),
                           ),
 
-                          // positioning of image
+                          // positioning of image (must still fix displaying of images)
                           const Padding(
                             padding: EdgeInsets.only(bottom: 20),
                           //  child: 
@@ -241,43 +255,43 @@ class _SaveViewState extends State<SaveView> {
     ]);
   }
 
-  Container _searchField() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-              color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
-              blurRadius: 40,
-              spreadRadius: 0.0)
-        ],
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: searchbarBackgroundColor,
-          contentPadding: const EdgeInsets.all(15),
-          prefixIcon: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.search),
-          ),
-          hintText: "Search Saved Recipes",
-          hintStyle: const TextStyle(
-            color: Color.fromARGB(122, 0, 0, 0),
-            fontSize: 12,
-          ),
-          suffixIcon: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.filter_alt_rounded),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
+  // Container _searchField() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+  //     decoration: BoxDecoration(
+  //       boxShadow: [
+  //         BoxShadow(
+  //             color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
+  //             blurRadius: 40,
+  //             spreadRadius: 0.0)
+  //       ],
+  //     ),
+  //     child: TextField(
+  //       decoration: InputDecoration(
+  //         filled: true,
+  //         fillColor: searchbarBackgroundColor,
+  //         contentPadding: const EdgeInsets.all(15),
+  //         prefixIcon: const Padding(
+  //           padding: EdgeInsets.all(16.0),
+  //           child: Icon(Icons.search),
+  //         ),
+  //         hintText: "Search Saved Recipes",
+  //         hintStyle: const TextStyle(
+  //           color: Color.fromARGB(122, 0, 0, 0),
+  //           fontSize: 12,
+  //         ),
+  //         suffixIcon: const Padding(
+  //           padding: EdgeInsets.all(16.0),
+  //           child: Icon(Icons.filter_alt_rounded),
+  //         ),
+  //         border: OutlineInputBorder(
+  //           borderRadius: BorderRadius.circular(15),
+  //           borderSide: BorderSide.none,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
 // filter section
   Column _filterTabs() {
