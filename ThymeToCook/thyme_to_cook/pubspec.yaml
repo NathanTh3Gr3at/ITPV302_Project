@@ -65,6 +65,8 @@ dependencies:
   decimal: ^3.0.2
   rxdart: ^0.28.0
   intl: ^0.19.0
+  sqflite: ^2.4.0
+  path: ^1.9.0
   # algolia: ^1.1.2
 dev_dependencies:
   flutter_test:

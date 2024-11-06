@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 // import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:thyme_to_cook/firebase_options.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
@@ -19,18 +16,13 @@ import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
-
 // import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/services/auth/user_provider.dart';
-import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/dietary_selection.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/ingredients_to_avoid.dart';
-import 'package:thyme_to_cook/views/register_login_section/new_user_intro/measurement_system_selection.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/username_choice.dart';
 // import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
