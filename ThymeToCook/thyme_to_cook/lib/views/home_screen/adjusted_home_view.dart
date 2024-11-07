@@ -1,10 +1,13 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_row_column.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:thyme_to_cook/services/auth/auth_user.dart';
+import 'package:thyme_to_cook/services/auth/auth_user_storage.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
@@ -14,7 +17,6 @@ import 'package:thyme_to_cook/views/home_screen/sub_containers/sections/daily_de
 import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
-import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 
 class AdjustedHomeView extends StatefulWidget {
   const AdjustedHomeView({super.key});
@@ -37,12 +39,34 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
   late SearchBloc searchBloc;
   final List<CloudRecipe> _recipes = [];
   List<CloudRecipe> inifiteRecipes = [];
+  late String firstLetter;
 
   void onScroll() {
     if (exploreController.position.pixels ==
         exploreController.position.maxScrollExtent) {
       pageIndex += 1;
       fetchMoreRecipes();
+    }
+  }
+
+  List<String> userDiet = [];
+
+  fetchBasedOnPreferences({int pageIndex = 0}) {
+    if (_recipeStorage != null) {
+      _recipeStorage!.fetchRecipes(
+        limit: pageSize,
+        pageIndex: pageIndex,
+        totalTimes: ["30 mins"],
+      ).then((recipes) {
+        log("Fetched recipes count: ${recipes.length}");
+        setState(() {
+          _recipes.addAll(recipes);
+          searchBloc.add(const SearchWithFilters(
+            searchText: "",
+            totalTimes: ["30 mins"],
+          ));
+        });
+      });
     }
   }
 
@@ -82,9 +106,33 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
     }
   }
 
+  final AuthUserStorage _authUserStorage = AuthUserStorage();
+  String? username;
+
+  Future<void> _fetchUsername() async {
+    try {
+      String fetchedUsername = await _authUserStorage.getUsername();
+      setState(() {
+        username = fetchedUsername;
+      });
+    } catch (e) {
+      // Handle error
+      setState(() {
+        username = "Error fetching username";
+      });
+    }
+  }
+    @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final authUser = Provider.of<AuthUser>(context); 
+    firstLetter = authUser.username.isNotEmpty ? authUser.username[0].toUpperCase() : '';
+  }
+
   @override
   void initState() {
     super.initState();
+    _fetchUsername();
     _recipeStorage = Provider.of<RecipeStorage>(context, listen: false);
     searchBloc = SearchBloc(_recipeStorage!);
     exploreController.addListener(onScroll);
@@ -100,10 +148,6 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
 
   @override
   Widget build(BuildContext context) {
-    final recipeStorage = Provider.of<RecipeStorage>(context);
-    var isLiked = false;
-    int limit = 15;
-
     final myDay = TimeOfDay.fromDateTime(DateTime.now());
     String greeting() {
       if (myDay.hour > 18) {
@@ -142,7 +186,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                   ),
                 );
               },
-              icon: Icon(MdiIcons.account, size: 30, color: Colors.white),
+              icon: Center(child: Text( firstLetter, style: const TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold, ), )),
             ),
           )
         ]),
@@ -173,6 +217,164 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                     height: 20,
                   ),
                 ),
+                                ResponsiveRowColumnItem(
+                  child: Container(
+                    height: 310,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 246, 247, 245),
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                    ),
+                    child: Column(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Text(
+                                "Recommended",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 0, 0, 0)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding:
+                                const EdgeInsets.only(bottom: 25, left: 16),
+                            child: inifiteRecipes.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : ListView.builder(
+                                    controller: scrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 15,
+                                    itemBuilder: (context, index) {
+                                      final displayRecipes =
+                                          inifiteRecipes.take(15).toList();
+                                      final recipe = displayRecipes[index];
+                                      final imageUrl =
+                                          recipe.identifier == "kaggle"
+                                              ? recipe.imageSrc
+                                              : recipe.imageUrl;
+                                      return SizedBox(
+                                        height: double.infinity,
+                                        width: 210,
+                                        child: Card(
+                                          clipBehavior: Clip.hardEdge,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          borderOnForeground: true,
+                                          elevation: 2,
+                                          child: Stack(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ResponsiveWrapper
+                                                              .builder(
+                                                        RecipeView(
+                                                            recipe: recipe),
+                                                        breakpoints: const [
+                                                          ResponsiveBreakpoint
+                                                              .resize(480,
+                                                                  name: MOBILE),
+                                                          ResponsiveBreakpoint
+                                                              .resize(800,
+                                                                  name: TABLET),
+                                                          ResponsiveBreakpoint
+                                                              .autoScale(1000,
+                                                                  name:
+                                                                      DESKTOP),
+                                                          ResponsiveBreakpoint
+                                                              .autoScale(2460,
+                                                                  name: '4K'),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Stack(
+                                                  children: [
+                                                    Image.network(
+                                                      imageUrl ?? "",
+                                                      fit: BoxFit.cover,
+                                                      height: 265,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Container(
+                                                          color: Colors.grey,
+                                                          child: const Center(
+                                                            child: Text(
+                                                                ''),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                    Positioned(
+                                                      bottom: 0,
+                                                      left: 0,
+                                                      right: 0,
+                                                      child: Container(
+                                                        height: 280,
+                                                        color: Colors.black
+                                                            .withOpacity(0.1),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                vertical: 8.0,
+                                                                horizontal:
+                                                                    12.0),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            recipe.recipeName,
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .clip,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const ResponsiveRowColumnItem(
+                    child: SizedBox(
+                  height: 20,
+                )),
                 ResponsiveRowColumnItem(
                   child: Container(
                     height: 220,
@@ -310,8 +512,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                         return Container(
                                                           color: Colors.grey,
                                                           child: const Center(
-                                                            child: Text(
-                                                                'Image not found'),
+                                                            child: Text('Image not found'),
                                                           ),
                                                         );
                                                       },
@@ -352,87 +553,42 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                       ),
                                                     ),
                                                     Positioned(
-                                                      top: 10,
-                                                      right: 10,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                          color: const Color
-                                                              .fromARGB(255,
-                                                              255, 255, 255),
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 0.1,
-                                                                horizontal:
-                                                                    0.1),
-                                                        child: IconButton(
-                                                          onPressed: () {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (BuildContext
-                                                                      context) {
-                                                                return AlertDialog(
-                                                                  title: const Text(
-                                                                      'Save Recipe'),
-                                                                  content:
-                                                                      const Text(
-                                                                          'Please log in to save recipes.'),
-                                                                  actions: <Widget>[
-                                                                    TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .pop();
-                                                                      },
-                                                                      child: const Text(
-                                                                          'OK'),
-                                                                    ),
-                                                                    TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        // Navigate to login screen
-                                                                        Navigator
-                                                                            .pushReplacement(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                ResponsiveWrapper.builder(
-                                                                              const LoginView(),
-                                                                              breakpoints: const [
-                                                                                ResponsiveBreakpoint.resize(480, name: MOBILE),
-                                                                                ResponsiveBreakpoint.resize(800, name: TABLET),
-                                                                                ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-                                                                                ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                      child: const Text(
-                                                                          'Log In'),
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
-                                                            );
-                                                          },
-                                                          icon: Icon(
-                                                            MdiIcons
-                                                                .heartOutline,
-                                                            color: const Color
-                                                                .fromARGB(255,
-                                                                153, 142, 160),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+                                        top: 8,
+                                        right: 3,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: const Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
+                                          padding: const EdgeInsets.all(
+                                              0), // Adjusted padding
+                                          child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                                        builder: (context, likedRecipes) {
+                                          final isLiked = likedRecipes.any((liked) => liked.recipeId == recipe.recipeId);
+                                          return IconButton(
+                                            onPressed: () {
+                                              // setState(() {
+                                                final saveRecipe = context
+                                                    .read<SaveRecipeCubit>();
+
+                                                if(isLiked) {
+                                                  saveRecipe.unlike(recipe.recipeId);
+                                                }
+                                                else {
+                                                  saveRecipe.likeRecipe(recipe);
+                                                }
+                                            },
+                                            icon: Icon(
+                                              isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                                              color: isLiked ? Colors.red :Colors.grey 
+                                            ),
+                                          );
+                                        }
+                                        ),
+                                      ),
+                                      ),
                                                   ],
                                                 ),
                                               ),
@@ -454,196 +610,6 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                   ),
                 ),
                 // Third Container
-                ResponsiveRowColumnItem(
-                  child: Container(
-                    height: 310,
-                    decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 246, 247, 245),
-                      borderRadius: BorderRadius.all(Radius.circular(18)),
-                    ),
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                "Recently Viewed",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 0, 0, 0)),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding:
-                                const EdgeInsets.only(bottom: 25, left: 16),
-                            child: inifiteRecipes.isEmpty
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : ListView.builder(
-                                    controller: scrollController,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 15,
-                                    itemBuilder: (context, index) {
-                                      final displayRecipes =
-                                          inifiteRecipes.take(15).toList();
-                                      final recipe = displayRecipes[index];
-                                      final imageUrl =
-                                          recipe.identifier == "kaggle"
-                                              ? recipe.imageSrc
-                                              : recipe.imageUrl;
-                                      return SizedBox(
-                                        height: double.infinity,
-                                        width: 210,
-                                        child: Card(
-                                          clipBehavior: Clip.hardEdge,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          borderOnForeground: true,
-                                          elevation: 2,
-                                          child: Stack(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ResponsiveWrapper
-                                                              .builder(
-                                                        RecipeView(
-                                                            recipe: recipe),
-                                                        breakpoints: const [
-                                                          ResponsiveBreakpoint
-                                                              .resize(480,
-                                                                  name: MOBILE),
-                                                          ResponsiveBreakpoint
-                                                              .resize(800,
-                                                                  name: TABLET),
-                                                          ResponsiveBreakpoint
-                                                              .autoScale(1000,
-                                                                  name:
-                                                                      DESKTOP),
-                                                          ResponsiveBreakpoint
-                                                              .autoScale(2460,
-                                                                  name: '4K'),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Stack(
-                                                  children: [
-                                                    Image.network(
-                                                      imageUrl ?? "",
-                                                      fit: BoxFit.cover,
-                                                      height: 265,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return Container(
-                                                          color: Colors.grey,
-                                                          child: const Center(
-                                                            child: Text(
-                                                                'Image not found'),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                    Positioned(
-                                                      bottom: 0,
-                                                      left: 0,
-                                                      right: 0,
-                                                      child: Container(
-                                                        height: 280,
-                                                        color: Colors.black
-                                                            .withOpacity(0.1),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 8.0,
-                                                                horizontal:
-                                                                    12.0),
-                                                        child: Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: Text(
-                                                            recipe.recipeName,
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .clip,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Positioned(
-                                                      top: 10,
-                                                      right: 10,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      100),
-                                                          color: const Color
-                                                              .fromARGB(255,
-                                                              255, 255, 255),
-                                                        ),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                vertical: 0.1,
-                                                                horizontal:
-                                                                    0.1),
-                                                        child: IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            MdiIcons
-                                                                .heartOutline,
-                                                            color: const Color
-                                                                .fromARGB(255,
-                                                                153, 142, 160),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const ResponsiveRowColumnItem(
-                    child: SizedBox(
-                  height: 20,
-                )),
                 ResponsiveRowColumnItem(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

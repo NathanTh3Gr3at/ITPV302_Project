@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
@@ -10,6 +11,7 @@ import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/utilities/dialogs/logout_dialog.dart';
 import 'package:thyme_to_cook/views/profile_screen/profile_view.dart';
+import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 
 class GroceryListView extends StatefulWidget {
@@ -46,7 +48,7 @@ class _GroceryListViewState extends State<GroceryListView> {
         backgroundColor: backgroundColor,
         title: const Text(
           // _recipeName,
-          'Ingredients',
+          'Grocery Lists',
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
@@ -126,9 +128,62 @@ class _GroceryListViewState extends State<GroceryListView> {
                   child: Text(state.errorMessage),
                 );
               }
-              return const Center(
-                child: Text("No recipes added"),
-              );
+              return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Image(
+              image: AssetImage('assets/images/sad_image.png'),
+              height: 200, // Adjust height as needed
+            ),
+            const SizedBox(height: 20),
+            Card(
+              margin: const EdgeInsets.symmetric(horizontal: 20.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "You have no grocery list, Search for recipes to add",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ResponsiveWrapper.builder(
+                              const AdjustedSearchView(),
+                              breakpoints: const [
+                                ResponsiveBreakpoint.resize(480, name: MOBILE),
+                                ResponsiveBreakpoint.resize(800, name: TABLET),
+                                ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
+                                ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Search for recipes'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
             },
           )
           // ? const Center(child: Text('No ingredients to buy'))

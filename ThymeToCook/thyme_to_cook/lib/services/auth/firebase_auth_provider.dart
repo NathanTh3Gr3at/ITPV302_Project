@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseAuthException;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:thyme_to_cook/firebase_options.dart';
@@ -22,6 +23,7 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
 @override
+
 Future<AuthUser> registerUser({
   required String email,
   required String password,
@@ -44,7 +46,9 @@ Future<AuthUser> registerUser({
         "userPreferences": [],
       };
       // Creating the user document when a user registers
-      await _authUserStorage.createUserDocument(user.uid, userData);
+      await _authUserStorage.createUserDocument(userData);
+      // Initialize user collections
+      await _authUserStorage.initializeUserCollections();
       return AuthUser.fromFirebase(user, userData);
     } else {
       throw UserNotLoggedInAuthException();
@@ -64,6 +68,8 @@ Future<AuthUser> registerUser({
     throw GenericAuthException();
   }
 }
+
+
 
   @override
   Future<AuthUser> createUserDoc({
@@ -86,7 +92,7 @@ Future<AuthUser> registerUser({
         };
         log(username);
         // Creating the user document when a user registers
-        await _authUserStorage.updateUserDocument(user.uid, userData);
+        await _authUserStorage.updateUserDocument(userData);
         return AuthUser.fromFirebase(user, userData);
       } else {
         throw UserNotLoggedInAuthException();
@@ -115,7 +121,7 @@ Future<AuthUser> logIn({
     );
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      Map<String, dynamic> userData = await _authUserStorage.getUserData(user.uid);
+      Map<String, dynamic> userData = await _authUserStorage.getUserData();
       return AuthUser.fromFirebase(user, userData);
     } else {
       throw UserNotLoggedInAuthException();

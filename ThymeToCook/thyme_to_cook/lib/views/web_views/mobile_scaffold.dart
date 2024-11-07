@@ -190,7 +190,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ResponsiveWrapper.builder(
-                              const MealPannerView(),
+                              const MealPlannerView(),
                               breakpoints: const [
                                 ResponsiveBreakpoint.resize(480, name: MOBILE),
                                 ResponsiveBreakpoint.resize(800, name: TABLET),

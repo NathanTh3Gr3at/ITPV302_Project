@@ -12,7 +12,7 @@ class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
 
   @override
-  _VerifyEmailViewState createState() => _VerifyEmailViewState();
+  State<VerifyEmailView> createState() => _VerifyEmailViewState();
 }
 
 class _VerifyEmailViewState extends State<VerifyEmailView> {
@@ -59,7 +59,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           bottom: const PreferredSize(
             preferredSize: Size.fromHeight(4.0),
             child: LinearProgressIndicator(
-              value: 1 / 4,
+              value: 4/ 4,
               backgroundColor: Color.fromARGB(255, 233, 233, 233),
               valueColor: AlwaysStoppedAnimation(Color.fromARGB(255, 162, 206, 100)),
             ),

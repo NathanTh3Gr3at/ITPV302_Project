@@ -9,11 +9,15 @@ import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_event.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_state.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/create_recipe_screen/create_recipe_view.dart';
+import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
 import 'package:thyme_to_cook/views/guest_user_screens/grocery_list_guest.dart';
 import 'package:thyme_to_cook/views/guest_user_screens/home_view_guest.dart';
 import 'package:thyme_to_cook/views/guest_user_screens/planner_guest.dart';
 import 'package:thyme_to_cook/views/guest_user_screens/saved_guest.dart';
 import 'package:thyme_to_cook/views/home_screen/adjusted_home_view.dart';
+import 'package:thyme_to_cook/views/meal_planner_screen/meal_panner_view.dart';
+import 'package:thyme_to_cook/views/save_screen/save_view.dart';
 import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
 
 
@@ -83,6 +87,49 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
+
+     void showBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.add),
+              title: const Text('Add New Recipe'),
+              onTap: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => const CreateRecipeView(),
+        ),);
+              },
+            ),
+            ListTile(
+              leading: Icon(MdiIcons.calendarPlus),
+              title: const Text('Add Recipe to Meal Plan'),
+              onTap: () {
+                // Handle add recipe to meal plan
+                Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => const MealPlannerView(),
+        ),);
+              },
+            ),
+            ListTile(
+              leading: Icon(MdiIcons.heartPlus),
+              title: const Text('Add Recipe to Collection'),
+              onTap: () {
+                // Handle add recipe to collection
+                Navigator.pushReplacement(context, MaterialPageRoute(
+          builder: (context) => const AdjustedSearchView(),
+        ),);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
         // Depending on the state of the user, change the screens shown 
@@ -100,7 +147,7 @@ class _MainNavigationState extends State<MainNavigation> {
               screens[1],
               const AdjustedSearchView(),
               screens[3],
-              screens[4],
+              const GroceryListView(),
             ]
           : [
               ResponsiveWrapper.builder(
@@ -130,7 +177,9 @@ class _MainNavigationState extends State<MainNavigation> {
                 right: 16.0,
                 bottom: 20.0,
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showBottomSheet();
+                  },
                   backgroundColor: const Color.fromARGB(255, 162, 206, 100),
                   shape: const CircleBorder(),
                   elevation: 20,

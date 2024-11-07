@@ -299,6 +299,12 @@ class _RecipeViewState extends State<RecipeView>
   }
 
   Stack _imageArea() {
+    String imageUrl = "";
+    if (widget.recipe.identifier == "kaggle") {
+      imageUrl = widget.recipe.imageSrc!;
+    } else{
+      imageUrl = widget.recipe.imageUrl!;
+    }
     return Stack(children: [
       Container(
         width: double.infinity,
@@ -306,7 +312,8 @@ class _RecipeViewState extends State<RecipeView>
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(
-                widget.recipe.imageSrc ?? widget.recipe.imageUrl ?? ""),
+              imageUrl
+            ),
             fit: BoxFit.cover,
           ),
         ),

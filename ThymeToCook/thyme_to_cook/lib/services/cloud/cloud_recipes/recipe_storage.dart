@@ -155,12 +155,14 @@ class RecipeStorage {
     for (var doc in snapshot.docs) {
       var recipe = CloudRecipe.fromSnapshot(doc as QueryDocumentSnapshot<Map<String, dynamic>>);
 
-      // Fetch the image URL
-      String? imageUrl = await getImageUrl(recipe.imageSrc);
-      devTools.log("Fetched image URL: $imageUrl for recipe: ${recipe.recipeId}");
+      if (recipe.identifier == "kaggle") {
+        // Fetch the image URL
+        String? imageUrl = await getImageUrl(recipe.imageSrc);
+        devTools.log("Fetched image URL: $imageUrl for recipe: ${recipe.recipeId}");
 
-      // Store the image URL in the recipe
-      recipe = recipe.copyWith(imageSrc: imageUrl);
+        // Store the image URL in the recipe
+        recipe = recipe.copyWith(imageSrc: imageUrl);
+      }
 
       // Store the recipe in Hive
       await box.put(recipe.recipeId, recipe);
@@ -216,8 +218,12 @@ Future<List<CloudRecipe>> fetchRecipes({
       health: health,
     );
   } else {
-    await fetchAndStoreRecipesInHive();
+    
     final box = Hive.box<CloudRecipe>('recipes');
+    
+    if (box.isEmpty) {
+      await fetchAndStoreRecipesInHive();
+    }
 
     filteredRecipes = box.values.where((recipe) {
       bool matches = true;

@@ -1,22 +1,21 @@
-import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-// import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/firebase_options.dart';
 import 'package:thyme_to_cook/helpers/loading/loading_screen.dart';
 import 'package:thyme_to_cook/navigation/bloc/navigation_bloc.dart';
+import 'package:thyme_to_cook/services/auth/auth_user.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
+import 'package:thyme_to_cook/services/auth/bloc/meal_planner_function/meal_planner_cubit.dart';
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
-// import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/firebase_auth_provider.dart';
 import 'package:thyme_to_cook/services/auth/user_provider.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/recipe_storage.dart';
@@ -24,7 +23,6 @@ import 'package:thyme_to_cook/views/main_navigation.dart';
 import 'package:thyme_to_cook/views/register_login_section/forgot_password_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/login_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/new_user_intro/username_choice.dart';
-// import 'package:thyme_to_cook/views/register_login_section/open_app_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/register_view.dart';
 import 'package:thyme_to_cook/views/register_login_section/verify_email_view.dart';
 import 'package:thyme_to_cook/views/web_views/home_screen.dart';
@@ -35,12 +33,38 @@ void main() async {
 
   // Make sure Hive is fully initialized before creating RecipeStorage
   RecipeStorage recipeStorage = await RecipeStorage.getInstance();
-
+  User? user = FirebaseAuth.instance.currentUser;
+  AuthUser? authUser;
+  if (user != null) {
+    authUser = await fetchUserDetails(user);
+  }
   runApp(
-    MyApp(recipeStorage: recipeStorage),
+   ChangeNotifierProvider<AuthUser>(
+          create: (context) => authUser ?? AuthUser (
+            id: "guest_id",
+            email: "guest_email",
+            isEmailVerified: false,
+            createDate: DateTime.now(),
+            updateDate: DateTime.now(),
+            role: "user",
+            userPreferences: {},
+            username: "Guest User",
+        ),
+    child: MyApp(recipeStorage: recipeStorage),
+    ),
   );
 }
 
+Future<AuthUser> fetchUserDetails(User user) async {
+  DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+  if (userDoc.exists) {
+    Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+    return AuthUser.fromFirebase(user, userData);
+  } else {
+    throw Exception('User not found in Firestore');
+  }
+}
 
 class MyApp extends StatelessWidget {
   final RecipeStorage recipeStorage;
@@ -57,7 +81,7 @@ class MyApp extends StatelessWidget {
         // handles bloc provider error usually
         BlocProvider(create: (context) => GroceryListBloc()),
         BlocProvider(create: (context) => SaveRecipeCubit()),
-       
+        BlocProvider(create: (context) => MealPlannerCubit()), 
         Provider<RecipeStorage>.value(value: recipeStorage),
       ],
       child: MaterialApp(
@@ -105,7 +129,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late StreamSubscription<InternetStatus> _internetSubscription;
+  // late StreamSubscription<InternetStatus> _internetSubscription;
   bool isFirstTime = true;
 
   @override
@@ -114,21 +138,21 @@ class _HomePageState extends State<HomePage> {
     // Checks if this is the users first time
     // checkFirstTime();
     // Subscribe to changes in connection status after the initial check
-    _internetSubscription =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      bool currentlyConnected = (status == InternetStatus.connected);
-      if (currentlyConnected != isFirstTime) {
-        isFirstTime = currentlyConnected;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(currentlyConnected
-                ? "Welcome back online!"
-                : "Device disconnected"),
-            duration: const Duration(seconds: 3),
-          ));
-        });
-      }
-    });
+    // _internetSubscription =
+    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
+    //   bool currentlyConnected = (status == InternetStatus.connected);
+    //   if (currentlyConnected != isFirstTime) {
+    //     isFirstTime = currentlyConnected;
+    //     WidgetsBinding.instance.addPostFrameCallback((_) {
+    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //         content: Text(currentlyConnected
+    //             ? "Welcome back online!"
+    //             : "Device disconnected"),
+    //         duration: const Duration(seconds: 3),
+    //       ));
+    //     });
+    //   }
+    // });
   }
 
   // Future<void> inspectHiveBox() async {
@@ -141,7 +165,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _internetSubscription.cancel();
+    // _internetSubscription.cancel();
     super.dispose();
   }
   //  Future<void> checkFirstTime() async {

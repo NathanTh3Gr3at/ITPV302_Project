@@ -125,6 +125,12 @@ void fetchMoreRecipes({int pageIndex = 0}) {
                         itemCount: recipes.length,
                         itemBuilder: (context, index) {
                           CloudRecipe recipe = recipes[index];
+                          String imageUrl = "";
+                          if (recipe.identifier == "kaggle") {
+                            imageUrl = recipe.imageSrc!;
+                          } else {
+                            imageUrl = recipe.imageUrl!;
+                          }
                           return Card(
                             clipBehavior: Clip.hardEdge,
                             shape: RoundedRectangleBorder(
@@ -160,9 +166,7 @@ void fetchMoreRecipes({int pageIndex = 0}) {
                                   child: Stack(
                                     children: [
                                       Image.network(
-                                        recipe.imageSrc ??
-                                            recipe.imageUrl ??
-                                            "",
+                                        imageUrl,
                                         fit: BoxFit.cover,
                                         height: double.infinity,
                                         width: double.infinity,

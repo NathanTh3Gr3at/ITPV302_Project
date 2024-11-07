@@ -9,6 +9,6 @@ final List<Widget> screens = [
   const HomeView(),
   const SaveView(),
   const AdjustedSearchView(),
-  const MealPannerView(),
+  const MealPlannerView(),
   const GroceryListView(),
 ];

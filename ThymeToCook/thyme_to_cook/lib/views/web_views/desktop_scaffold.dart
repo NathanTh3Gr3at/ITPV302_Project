@@ -158,7 +158,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold>  with SingleTickerPro
                               ],
                             ),),
           Center(child: ResponsiveWrapper.builder(
-                              const MealPannerView(),
+                              const MealPlannerView(),
                               breakpoints: const [
                                 ResponsiveBreakpoint.resize(480, name: MOBILE),
                                 ResponsiveBreakpoint.resize(800, name: TABLET),

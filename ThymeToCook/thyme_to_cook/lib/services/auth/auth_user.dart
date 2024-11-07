@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
-class AuthUser {
+class AuthUser  with ChangeNotifier{
   final String id;
   final String email;
   final bool isEmailVerified;
