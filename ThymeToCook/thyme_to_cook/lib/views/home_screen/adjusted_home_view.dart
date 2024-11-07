@@ -94,7 +94,8 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
     if (_recipeStorage != null) {
       _recipeStorage!
           .fetchRecipes(
-        limit: 200,
+            // limit was 200 before
+        limit: 20,
         pageIndex: pageIndex,
       )
           .then((recipes) {

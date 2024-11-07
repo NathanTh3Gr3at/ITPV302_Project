@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:thyme_to_cook/helpers/saving_recipes/heart_icon.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/search_function/search_function_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
@@ -172,15 +173,12 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
                                     color: const Color.fromARGB(255, 255, 255, 255),
                                   ),
                                   padding: const EdgeInsets.symmetric(vertical: 0.1, horizontal: 0.1),
-                                  child: IconButton(
-                                    onPressed: () {
-                                      log(isLiked.toString());
-                                    },
-                                    icon: Icon(
-                                      MdiIcons.heartOutline,
-                                      color: const Color.fromARGB(255, 153, 142, 160),
-                                    ),
+                                  child: HeartIconButton(
+                                    recipeId: recipe.recipeId, 
+                                    recipe: recipe,
                                   ),
+                              
+                                 
                                 ),
                               ),
                             ],
