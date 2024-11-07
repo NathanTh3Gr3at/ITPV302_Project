@@ -5,6 +5,7 @@ import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_l
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
 
 class RecipeView extends StatefulWidget {
   final CloudRecipe recipe;
@@ -287,6 +288,13 @@ class _RecipeViewState extends State<RecipeView>
               SnackBar(
                 content:
                     Text("${widget.recipe.recipeName} added to grocery list"),
+                    duration: const Duration(seconds: 3),
+                    action: SnackBarAction(label: "View grocery list", 
+                    onPressed: () {
+                     Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => const GroceryListView()));
+                    }),
+                    
               ),
             );
           }

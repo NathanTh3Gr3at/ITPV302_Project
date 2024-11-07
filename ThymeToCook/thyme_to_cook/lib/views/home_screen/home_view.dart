@@ -276,7 +276,10 @@ class _HomeViewState extends State<HomeView> {
                           child: IconButton(
                               onPressed: () {},
                               icon:
-                                  const Icon(Icons.favorite_outline_outlined))),
+                                  const Icon(Icons.favorite_outline_outlined,
+                                  ),
+                                ),
+                              ),
                     ),
                     Text(
                       categories[index].name,

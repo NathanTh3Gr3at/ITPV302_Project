@@ -72,7 +72,8 @@ class RecipeStorage {
     document.set(data);
   }
 
-  Future<void> fetchAndCacheRecipes({int limit = 500, int startAfter = 0}) async {
+  // for fetching amount of recipes, limit was 500 before
+  Future<void> fetchAndCacheRecipes({int limit = 10, int startAfter = 0}) async {
     log('Fetching and caching recipes...');
     List<CloudRecipe> fetchedRecipes = await fetchRecipes(startAfterDocument: _lastDocument);
     log('Fetched recipes count: ${fetchedRecipes.length}');
@@ -185,8 +186,10 @@ class RecipeStorage {
         .replaceAll(' ', '_');
   }
 
+// dont forget to make limit back to 500 after testing
 Future<List<CloudRecipe>> fetchRecipes({
-  int limit = 500,
+  // int limit = 500,
+  int limit = 10,
   int pageIndex = 0,
   DocumentSnapshot? startAfterDocument,
   String searchQuery = '',

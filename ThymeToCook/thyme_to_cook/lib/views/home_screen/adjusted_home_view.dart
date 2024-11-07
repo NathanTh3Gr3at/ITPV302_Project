@@ -70,7 +70,8 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
     if (_recipeStorage != null) {
       _recipeStorage!
           .fetchRecipes(
-        limit: 200,
+            // limit was 200 before
+        limit: 20,
         pageIndex: pageIndex,
       )
           .then((recipes) {
@@ -613,16 +614,16 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                                 vertical: 0.1,
                                                                 horizontal:
                                                                     0.1),
-                                                        child: IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            MdiIcons
-                                                                .heartOutline,
-                                                            color: const Color
-                                                                .fromARGB(255,
-                                                                153, 142, 160),
-                                                          ),
-                                                        ),
+                                                        // child: IconButton(
+                                                        //   onPressed: () {},
+                                                        //   icon: Icon(
+                                                        //     MdiIcons
+                                                        //         .heartOutline,
+                                                        //     color: const Color
+                                                        //         .fromARGB(255,
+                                                        //         153, 142, 160),
+                                                        //   ),
+                                                        // ),
                                                       ),
                                                     ),
                                                   ],

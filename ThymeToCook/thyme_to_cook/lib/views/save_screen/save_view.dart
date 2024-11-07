@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+<<<<<<< HEAD
+=======
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:thyme_to_cook/helpers/saving_recipes/heart_icon.dart';
+import 'package:thyme_to_cook/models/recipe_model.dart';
+import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+>>>>>>> 6c60a5a (Updated save feature)
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
@@ -57,12 +64,12 @@ class _SaveViewState extends State<SaveView> {
                     "No recipes saved yet",
                     style: TextStyle(fontSize: 20),
                   ));
-                } 
+                }
                 // else {
-                  // return ListView.builder(
-                  //      itemCount: likedRecipes.length,
-                  //      itemBuilder: (context, index) {
-                  return _likedRecipes(likedRecipes);
+                // return ListView.builder(
+                //      itemCount: likedRecipes.length,
+                //      itemBuilder: (context, index) {
+                return _likedRecipes(likedRecipes);
                 // }
               }),
             )
@@ -106,7 +113,7 @@ class _SaveViewState extends State<SaveView> {
           //   height: 10,
           // ),
           SizedBox(
-            height: 350,
+            height: 450,
             // width: 400,
             child: GridView.builder(
               //  padding: const EdgeInsets.only(left: 10, right: 10),
@@ -121,127 +128,133 @@ class _SaveViewState extends State<SaveView> {
               itemCount: likedRecipes.length,
               itemBuilder: (context, index) {
                 CloudRecipe recipe = likedRecipes[index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => RecipeView(recipe: recipe)));
-                    // setState(() {});
-                  },
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      // colour or image of tile
-                      color:
-                          //   recipes[index].liked
-                          // ? const Color.fromARGB(255, 240, 240, 240)
-                          const Color.fromARGB(255, 240, 240, 240),
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 232, 232, 232),
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(235, 217, 217, 217)
-                              .withOpacity(0.5),
-                          offset: const Offset(0, 9),
-                          blurRadius: 20,
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                      ),
-                      child: Column(
-                        //  crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // Heart Icon
 
-                              IconButton(
-                                onPressed: () {
-                                  // unliking recipe
-                                  context
-                                      .read<SaveRecipeCubit>()
-                                      .unlike(recipe.recipeId);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    content: Text("${recipe.recipeName} was removed from your saved list" ),
-                                    // must be tested
-                                    duration: const Duration(seconds: 3),
-                                    action: SnackBarAction(
-                                      label: 'Undo', 
-                                      onPressed: () {
-                                        context.read<SaveRecipeCubit>().likeRecipe(recipe);
+                 return Card(
+                            clipBehavior: Clip.hardEdge,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 2,
+                            child: Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ResponsiveWrapper.builder(
+                                                  RecipeView(recipe: recipe),
+                                                  breakpoints: const [
+                                                    ResponsiveBreakpoint.resize(
+                                                        480,
+                                                        name: MOBILE),
+                                                    ResponsiveBreakpoint.resize(
+                                                        800,
+                                                        name: TABLET),
+                                                    ResponsiveBreakpoint
+                                                        .autoScale(1000,
+                                                            name: DESKTOP),
+                                                    ResponsiveBreakpoint
+                                                        .autoScale(2460,
+                                                            name: '4K'),
+                                                  ],
+                                                )));
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Image.network(
+                                        recipe.imageSrc ??
+                                            recipe.imageUrl ??
+                                            "",
+                                        fit: BoxFit.cover,
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.grey,
+                                            child: const Center(
+                                              child: Text('Image not found'),
+                                            ),
+                                          );
                                         },
                                       ),
+                                      Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 350,
+                                          color: Colors.black.withOpacity(0.3),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0, horizontal: 12.0),
+                                          child: Align(
+                                            alignment: Alignment.bottomLeft,
+                                            child: Text(
+                                              recipe.recipeName,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.clip,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // Like button
+                                      Positioned(
+                                        top: 8,
+                                        right: 3,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            color: const Color.fromARGB(
+                                                255, 255, 255, 255),
+                                          ),
+                                          padding: const EdgeInsets.all(
+                                              0), // Adjusted padding
+                                              child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                                                builder: (context, likedRecipes) {
+                                                  return HeartIconButton(
+                                                    recipeId: recipe.recipeId, 
+                                                    recipe: recipe);
+                                                }
+                                              
+                                              ),
+                                          // child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                                          // builder: (context, likedRecipes) {
+                                          //   final isLiked = likedRecipes.any((liked) => liked.recipeId == recipe.recipeId);
+                                          //   return IconButton(
+                                          //   onPressed: () {
+                                          //     // setState(() {
+                                          //       final saveRecipe = context
+                                          //           .read<SaveRecipeCubit>();
 
-                                    ),
-                                  );
-
-                                  // recipes[index].liked =
-                                  //     !recipes[index].liked;
-                                },
-                                // icon: Icon(recipes[index].liked
-                                //     ? Icons.keyboard_control
-                                //     : Icons.keyboard_control),
-                                icon: const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
+                                          //       if(isLiked) {
+                                          //         saveRecipe.unlike(recipe.recipeId);
+                                          //       }
+                                          //       else {
+                                          //         saveRecipe.likeRecipe(recipe);
+                                          //       }
+                                          //   },
+                                          //   icon: Icon(
+                                          //     isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
+                                          //     color: isLiked ? Colors.red :Colors.grey 
+                                          //   ),
+                                          // );
+                                        // }
+                                        ),
+                                      ),
+                                     
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  recipe.recipeName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                      fontSize: 20),
-                                ),
-                                
-                              
-                                // Text(
-                                //   '${recipe.recipeDescription}',
-                                //   style: const TextStyle(
-                                //       color: Colors.black,
-                                //       fontSize: 14,
-                                //       fontWeight: FontWeight.w300),
-                                // ),
                               ],
                             ),
-                          ),
-
-                          // positioning of image (must still fix displaying of images)
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 20),
-                          //  child: 
-                          //  Image.network(recipe.imageSrc ?? recipe.imageUrl ?? "",
-                          //   width: 100,
-                          //   height: 100,
-                          //  )
-                            // recipe image
-                            // child: Image.asset(
-                            //   recipe[index].iconPath,
-                            //   width: 100,
-                            //   height: 100,
-                            // ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                          );
               },
             ),
           ),
