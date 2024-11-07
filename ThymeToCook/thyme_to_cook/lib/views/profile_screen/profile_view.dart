@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:thyme_to_cook/models/user_model.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/settings_screen/settings_view.dart';
 
 class ProfileView extends StatelessWidget {
   static const routeName = '/profile';
-  const ProfileView({super.key});
+  final UserModel? user;
+  const ProfileView({super.key,   this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +113,7 @@ class ProfileView extends StatelessWidget {
                   ),
                   // section for user details, must fill in
 
-                  const Text("User"),
+                 Text(user?.username ?? 'User'),
                 ],
               ),
             ],
