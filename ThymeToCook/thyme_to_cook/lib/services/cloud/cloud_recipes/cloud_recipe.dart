@@ -384,8 +384,9 @@ class Ingredient{
 class GroceryList {
   final String recipeName;
   final List<RecipeIngredient> recipeIngredients;
+  final String? imageUrl;
 
-  GroceryList({required this.recipeName, required this.recipeIngredients});
+  GroceryList({required this.recipeName, required this.recipeIngredients, required this.imageUrl});
 }
    
     

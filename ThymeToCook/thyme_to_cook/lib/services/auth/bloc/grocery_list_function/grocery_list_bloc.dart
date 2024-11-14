@@ -31,6 +31,7 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
         recipes.add(GroceryList(
           recipeName: event.recipeName,
           recipeIngredients: event.ingredients,
+          imageUrl: event.imageUrl
         ));
       }
         // ?List<Ingredient>.from((state as GroceryListLoaded).ingredients)
@@ -66,6 +67,7 @@ class GroceryListBloc extends Bloc<GroceryListEvent, GroceryListState> {
         updateRecipe[event.recipeIndex] = GroceryList(
           recipeName: recipe.recipeName,
           recipeIngredients: updateIngredient,
+          imageUrl: recipe.imageUrl
         );
 
         emit(GroceryListLoaded(recipes: updateRecipe

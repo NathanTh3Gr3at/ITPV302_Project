@@ -397,6 +397,14 @@ void fetchMoreRecipes({int pageIndex = 0}) {
           child: Padding(
             padding: const EdgeInsets.only(top: 20),
             child: AppBar(
+              leading: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(
+                  MdiIcons.chevronLeft,
+                ),
+                iconSize: 35,
+              ),
+              leadingWidth: 40,
               backgroundColor: backgroundColor,
               scrolledUnderElevation: 0,
               title: SizedBox(
@@ -558,28 +566,7 @@ void fetchMoreRecipes({int pageIndex = 0}) {
                                                 }
                                               
                                               ),
-                                          // child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
-                                          // builder: (context, likedRecipes) {
-                                          //   final isLiked = likedRecipes.any((liked) => liked.recipeId == recipe.recipeId);
-                                          //   return IconButton(
-                                          //   onPressed: () {
-                                          //     // setState(() {
-                                          //       final saveRecipe = context
-                                          //           .read<SaveRecipeCubit>();
-
-                                          //       if(isLiked) {
-                                          //         saveRecipe.unlike(recipe.recipeId);
-                                          //       }
-                                          //       else {
-                                          //         saveRecipe.likeRecipe(recipe);
-                                          //       }
-                                          //   },
-                                          //   icon: Icon(
-                                          //     isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
-                                          //     color: isLiked ? Colors.red :Colors.grey 
-                                          //   ),
-                                          // );
-                                        // }
+                                          
                                         ),
                                       ),
                                      

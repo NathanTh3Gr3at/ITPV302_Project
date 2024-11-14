@@ -16,9 +16,10 @@ class GroceryListInitialize extends GroceryListEvent {
 class GroceryListLoadEvent extends GroceryListEvent {
   final String recipeName;
   final List<RecipeIngredient> ingredients;
+  final String imageUrl;
   // final List<Ingredient> ingredients;
 
-  const GroceryListLoadEvent({required this.recipeName, required this.ingredients});
+  const GroceryListLoadEvent({required this.recipeName, required this.ingredients, required this.imageUrl});
 
   @override
   List<Object> get props => [recipeName, ingredients];

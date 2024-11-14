@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
@@ -45,6 +46,14 @@ class _GroceryListViewState extends State<GroceryListView> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
+        leading: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(
+                  MdiIcons.chevronLeft,
+                ),
+                iconSize: 35,
+              ),
+              leadingWidth: 40,
         backgroundColor: backgroundColor,
         title: const Text(
           // _recipeName,
@@ -194,79 +203,92 @@ class _GroceryListViewState extends State<GroceryListView> {
   }
 
   ListView _groceryListMethod(List<GroceryList> recipes) {
-    return ListView(
-      children: recipes.map((recipe) {
-        final recipeIndex = recipes.indexOf(recipe);
-        _expandedStates.putIfAbsent(recipeIndex, () => false);
-        // feature for delete on sliding
-        return Dismissible(
-          key: Key(recipe.recipeName),
-          // direction of sliding to remove
-          direction: DismissDirection.endToStart,
-          background: Container(
-            color: secondaryButtonColor,
-            alignment: Alignment.centerRight,
+  return ListView(
+    children: recipes.map((recipe) {
+      final recipeIndex = recipes.indexOf(recipe);
+      _expandedStates.putIfAbsent(recipeIndex, () => false);
+
+      return Dismissible(
+        key: Key(recipe.recipeName),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          color: secondaryButtonColor,
+          alignment: Alignment.centerRight,
+          child: const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: Icon(Icons.delete, color: Colors.white),
           ),
-          onDismissed: (direction) {
-            context.read<GroceryListBloc>().add(
-                  GroceryListRemoveEvent(recipeIndex: recipeIndex),
-                );
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text("${recipe.recipeName} was removed from grocery list"),
-              ),
-            );
-          },
-
-          child: ExpansionTile(
-            title: Text(recipe.recipeName),
-            // for changing dropdown arrow to other icon
-            trailing: Icon(
-              _expandedStates[recipeIndex] == true
-                  ? Icons.restaurant_menu_rounded
-                  : Icons.restaurant_rounded,
-            ),
-            onExpansionChanged: (bool expanded) {
-              setState(() {
-                _expandedStates[recipeIndex] = expanded;
-              });
-            },
-            children: recipe.recipeIngredients.map((ingredient) {
-              final ingredientIndex =
-                  recipe.recipeIngredients.indexOf(ingredient);
-
-              final convertedIngredient = ingredient.toIngredient();
-              // displays quantity as fraction
-              String formattedQuantity = ingredient.getQuantityAsFraction();
-
-              return ListTile(
-                title: Text(
-                  " $formattedQuantity  ${convertedIngredient.unit ?? ''} ${convertedIngredient.name}",
-                  style: TextStyle(
-                    decoration: ingredient.isChecked
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                    color: ingredient.isChecked ? Colors.grey : Colors.black,
-                  ),
-                ),
-                trailing: Icon(
-                  ingredient.isChecked
-                      ? Icons.check_circle
-                      : Icons.radio_button_unchecked,
-                  color: ingredient.isChecked ? Colors.green : Colors.grey,
-                ),
-                onTap: () => context.read<GroceryListBloc>().add(
-                      GroceryListToggleStatusEvent(
-                        recipeIndex: recipeIndex,
-                        ingredientIndex: ingredientIndex,
-                      ),
-                    ),
+        ),
+        onDismissed: (direction) {
+          context.read<GroceryListBloc>().add(
+                GroceryListRemoveEvent(recipeIndex: recipeIndex),
               );
-            }).toList(),
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("${recipe.recipeName} was removed from grocery list"),
+            ),
+          );
+        },
+
+        child: ExpansionTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0), // Rounded corners for the image
+            child: Image.network(
+              recipe.imageUrl ?? '',
+              fit: BoxFit.cover,
+              width: 50,
+              height: 50,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.grey,
+                  child: const Icon(Icons.image, color: Colors.white),
+                );
+              },
+            ),
           ),
-        );
-      }).toList(),
-    );
-  }
+          title: Text(recipe.recipeName),
+          trailing: Icon(
+            _expandedStates[recipeIndex] == true
+                ? Icons.restaurant_menu_rounded
+                : Icons.restaurant_rounded,
+          ),
+          onExpansionChanged: (bool expanded) {
+            setState(() {
+              _expandedStates[recipeIndex] = expanded;
+            });
+          },
+          children: recipe.recipeIngredients.map((ingredient) {
+            final ingredientIndex = recipe.recipeIngredients.indexOf(ingredient);
+
+            final convertedIngredient = ingredient.toIngredient();
+            String formattedQuantity = ingredient.getQuantityAsFraction();
+
+            return ListTile(
+              title: Text(
+                " $formattedQuantity  ${convertedIngredient.unit ?? ''} ${convertedIngredient.name}",
+                style: TextStyle(
+                  decoration: ingredient.isChecked ? TextDecoration.lineThrough : TextDecoration.none,
+                  color: ingredient.isChecked ? Colors.grey : Colors.black,
+                ),
+              ),
+              trailing: Icon(
+                ingredient.isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+                color: ingredient.isChecked ? Colors.green : Colors.grey,
+              ),
+              onTap: () => context.read<GroceryListBloc>().add(
+                    GroceryListToggleStatusEvent(
+                      recipeIndex: recipeIndex,
+                      ingredientIndex: ingredientIndex,
+                    ),
+                  ),
+            );
+          }).toList(),
+        ),
+      );
+    }).toList(),
+  );
+}
+
 }

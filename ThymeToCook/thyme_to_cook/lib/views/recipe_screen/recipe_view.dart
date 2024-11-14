@@ -5,6 +5,7 @@ import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_l
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_event.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/cook_with_me_view.dart';
 import 'package:thyme_to_cook/views/grocery_list_screen/grocery_list_view.dart';
 
 class RecipeView extends StatefulWidget {
@@ -24,6 +25,7 @@ class _RecipeViewState extends State<RecipeView>
   late int recipeServings;
   String _selectedOption = "Convert Units";
   late int initialServings = widget.recipe.recipeServings ?? 1;
+  late List<RecipeInstructions> to_instructions = widget.recipe.recipeInstructions;
 
   List<RecipeIngredient> _adjustIngredients() {
     return widget.recipe.recipeIngredients.map((ingredient) {
@@ -265,10 +267,10 @@ class _RecipeViewState extends State<RecipeView>
           child: TabBarView(
             controller: _tabController,
             children: [
-              overview(),
+              SingleChildScrollView(child: overview(),),
               ingredients(),
-              instructions(),
-              nutritionalInfo()
+              instructions(widget.recipe.recipeInstructions),
+              SingleChildScrollView(child: nutritionalInfo())
             ],
           ),
         ),
@@ -281,6 +283,7 @@ class _RecipeViewState extends State<RecipeView>
                   recipeName: widget.recipe.recipeName,
                   ingredients:
                       widget.recipe.recipeIngredients.cast<RecipeIngredient>(),
+                  imageUrl: widget.recipe.identifier == "kaggle" ? widget.recipe.imageSrc! : widget.recipe.imageUrl! 
                   // widget.recipe.recipeIngredients.cast<Ingredient>(),
                 ));
 
@@ -339,7 +342,7 @@ class _RecipeViewState extends State<RecipeView>
     ]);
   }
 
-  Column instructions() {
+  Column instructions(List<RecipeInstructions> instructions) {
     return Column(
       children: [
         Align(
@@ -348,10 +351,17 @@ class _RecipeViewState extends State<RecipeView>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: const ElevatedButton(
+              child:  ElevatedButton(
                   // Do logic !!!!
-                  onPressed: null,
-                  child: Text(
+                  onPressed: () {
+                      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CookWithMeView(instructions: instructions),
+        ),
+      );
+                  },
+                  child: const Text(
                     "Cook with me",
                     style: TextStyle(
                       color: Colors.black,
@@ -510,15 +520,165 @@ class _RecipeViewState extends State<RecipeView>
     );
   }
 
+
   Column overview() {
-    return const Column(children: [Text("This is the Overview")]);
-  }
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 10),
+      _buildOverviewItem(
+        label: "Calories",
+        value: widget.recipe.calories?.toString() ?? "N/A",
+        icon: Icons.local_fire_department,
+        color: Colors.red,
+      ),
+      const SizedBox(height: 10),
+      _buildOverviewItem(
+        label: "Cuisine",
+        value: widget.recipe.cuisinePath?.join(", ") ?? "N/A",
+        icon: Icons.restaurant,
+        color: Colors.orange,
+      ),
+      const SizedBox(height: 10),
+      _buildOverviewItem(
+        label: "Cautions",
+        value: _formatTags(widget.recipe.tags, "cautions"),
+        icon: Icons.warning,
+        color: Colors.yellow.shade700,
+      ),
+      const SizedBox(height: 10),
+      _buildOverviewItem(
+        label: "Diet Labels",
+        value: _formatTags(widget.recipe.tags, "diet_labels"),
+        icon: Icons.label,
+        color: Colors.green,
+      ),
+      const SizedBox(height: 10),
+      _buildOverviewItem(
+        label: "Health Labels",
+        value: _formatTags(widget.recipe.tags, "health_labels"),
+        icon: Icons.local_hospital,
+        color: Colors.blue,
+      ),
+    ],
+  );
+}
+
+Widget _buildOverviewItem({required String label, required String value, required IconData icon, required Color color}) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Icon(icon, color: color),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
 
   Column nutritionalInfo() {
-    return const Column(
-        children: [Text("This is the nutritional information")]);
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 10),
+      ListView.builder(
+        shrinkWrap: true, // This is important to avoid unbounded height error
+        physics: const NeverScrollableScrollPhysics(), // Disable scrolling within ListView
+        itemCount: widget.recipe.nutritionalInfo.length,
+        itemBuilder: (context, index) {
+          String nutrient = widget.recipe.nutritionalInfo[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Card(
+              color: Colors.white,
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ListTile(
+                title: Text(
+                  nutrient,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                leading: Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
   }
 
+  Widget _buildOverviewRow(String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$label: ",
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatTags(Map<String, dynamic> tags, String key) {
+    if (tags.containsKey(key) && tags[key] is List) {
+      return (tags[key] as List).join(", ");
+    }
+    return "N/A";
+  }
   Future<bool> _showGroceryConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,

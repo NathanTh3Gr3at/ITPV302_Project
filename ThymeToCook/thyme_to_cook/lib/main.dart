@@ -13,6 +13,7 @@ import 'package:thyme_to_cook/services/auth/auth_user.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_event.dart';
 import 'package:thyme_to_cook/services/auth/bloc/auth_state.dart';
+import 'package:thyme_to_cook/services/auth/bloc/create_recipe_function/created_recipe_qubit.dart';
 import 'package:thyme_to_cook/services/auth/bloc/grocery_list_function/grocery_list_bloc.dart';
 import 'package:thyme_to_cook/services/auth/bloc/meal_planner_function/meal_planner_cubit.dart';
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => GroceryListBloc()),
         BlocProvider(create: (context) => SaveRecipeCubit()),
         BlocProvider(create: (context) => MealPlannerCubit()), 
+        BlocProvider(create: (context) => CreateRecipeQubit()),
         Provider<RecipeStorage>.value(value: recipeStorage),
       ],
       child: MaterialApp(
