@@ -24,7 +24,7 @@ static List<RecipeModel> getRecipe() {
   
   recipe.add(     
     RecipeModel(
-      name: '....',       // placeholder text
+      name: 'Recipe Name',       // placeholder text
       iconPath: 'assets/images/placeholder_image.jpg', 
       nutrition: 'vegan', 
       duration: '30 min',
@@ -35,7 +35,7 @@ static List<RecipeModel> getRecipe() {
 
   recipe.add(     
     RecipeModel(
-      name: '....',       // placeholder text
+      name: 'Recipe Name',       // placeholder text
       iconPath: 'assets/images/placeholder_image.jpg', 
       nutrition: 'vegan', 
       duration: '30 min',
@@ -46,7 +46,7 @@ static List<RecipeModel> getRecipe() {
 
   recipe.add(     
       RecipeModel(
-        name: '....',       // placeholder text
+        name: 'Recipe Name',       // placeholder text
         iconPath: 'assets/images/placeholder_image.jpg', 
         nutrition: 'vegan', 
         duration: '30 min',

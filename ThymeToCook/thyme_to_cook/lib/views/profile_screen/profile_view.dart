@@ -36,6 +36,7 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
+
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -53,6 +54,7 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ],
         ),
+
         backgroundColor: backgroundColor,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),

@@ -16,6 +16,7 @@ class RecipeView extends StatefulWidget {
   State<RecipeView> createState() => _RecipeViewState();
 }
 
+
 class _RecipeViewState extends State<RecipeView>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
@@ -151,6 +152,7 @@ class _RecipeViewState extends State<RecipeView>
     recipeServings = initialServings;
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -730,4 +732,9 @@ class _SliverAppBarTabBar extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_SliverAppBarTabBar oldDelegate) {
     return false;
   }
+}
+class _RecipeInstruction{
+  final String instruction;
+  bool isDone;
+  _RecipeInstruction({required this.instruction, this.isDone = false});
 }

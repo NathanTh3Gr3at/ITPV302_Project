@@ -13,12 +13,15 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
+
         return BottomNavigationBar(
           currentIndex: state.selectedTabIndex,
           onTap: (index) {
             context.read<NavigationBloc>().add(SelectTabEvent(index));
+
           },
           backgroundColor: navigationBarColor,
+
           selectedItemColor: const Color.fromARGB(255, 162, 206, 100),
           unselectedItemColor: navIconColor,
           type: BottomNavigationBarType.fixed,
@@ -58,6 +61,7 @@ class BottomNavBar extends StatelessWidget {
               ),
               label: "Lists",
             ),
+
           ],
         );
       },

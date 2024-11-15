@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
 import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
 import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
 import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
@@ -29,8 +31,10 @@ class _SaveViewState extends State<SaveView> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: backgroundColor,
+
         appBar: appBar(),
         body: Column(
+
           children: [
             // using cubit to fill tiles
             Expanded(
@@ -114,7 +118,7 @@ class _SaveViewState extends State<SaveView> {
     );
   }
 
-  AppBar appBar() {
+ /*  AppBar appBar() {
     return AppBar(
       backgroundColor: backgroundColor,
       title: const Text(
@@ -130,7 +134,7 @@ class _SaveViewState extends State<SaveView> {
       //   child: _filterTabs(),
       // ),
     );
-  }
+  } */
 
   Widget _likedRecipes(List<CloudRecipe> likedRecipes) {
     return GridView.builder(
@@ -141,6 +145,7 @@ class _SaveViewState extends State<SaveView> {
         mainAxisSpacing: 10,
         childAspectRatio: 1 / 1.5,
       ),
+
       itemCount: likedRecipes.length,
       itemBuilder: (context, index) {
         CloudRecipe recipe = likedRecipes[index];
@@ -207,8 +212,11 @@ class _SaveViewState extends State<SaveView> {
                         children: [
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+
                             mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+
                               IconButton(
                                 onPressed: () {
                                   context
@@ -239,6 +247,7 @@ class _SaveViewState extends State<SaveView> {
                           ),
                         ],
                       ),
+
                     ),
                   ],
                 ),
@@ -255,6 +264,8 @@ class _SaveViewState extends State<SaveView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
+
         SingleChildScrollView(
           // wraps filter row for scrolling
           scrollDirection: Axis.horizontal,
@@ -281,7 +292,7 @@ class _SaveViewState extends State<SaveView> {
         ),
         padding: const EdgeInsets.all(2),
         selected: selectedFilter.contains(label),
-        selectedColor: const Color.fromARGB(255, 226, 226, 226),
+        selectedColor: const Color.fromARGB(255, 123, 175, 116),
         onSelected: (bool selected) {
           setState(() {
             if (selected) {

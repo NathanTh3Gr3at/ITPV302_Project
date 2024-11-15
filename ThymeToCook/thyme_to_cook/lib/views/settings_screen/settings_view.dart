@@ -86,12 +86,14 @@ class _SettingsViewState extends State<SettingsView> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
+
         title: const Text("Settings"),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(MdiIcons.chevronLeft),
           iconSize: 30,
         ),
+
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -109,7 +111,10 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.lock),
+                leading: const Icon(
+                  Icons.lock,
+                  size: 30,
+                ),
                 title: const Text('Change Password'),
                 subtitle: const Text('Update your password'),
                 trailing: TextButton(
@@ -135,7 +140,10 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
               ListTile(
-                leading: const Icon(Icons.straighten),
+                leading: const Icon(
+                  Icons.straighten,
+                  size: 30,
+                ),
                 title: const Text('Measurement Units'),
                 subtitle: const Text('Select your preferred units'),
                 trailing: DropdownButton<String>(
@@ -160,8 +168,12 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
               ExpansionTile(
-                leading: const Icon(Icons.emoji_emotions),
-                title: const Text('Dietary preferences'),
+                leading: const Icon(
+                  Icons.food_bank,
+                  size: 30,
+                ),
+                title: const Text('Dietary Preferences'),
+                subtitle: const Text('Select your Dietary Preferences'),
                 children: _diets.keys.map((String key) {
                   return CheckboxListTile(
                     title: Text(key),
@@ -176,8 +188,12 @@ class _SettingsViewState extends State<SettingsView> {
                 }).toList(),
               ),
               ExpansionTile(
-                leading: const Icon(Icons.warning),
-                title: const Text('Select Ingredients'),
+                leading: const Icon(
+                  Icons.warning,
+                  size: 30,
+                ),
+                title: const Text('Ingredients to Avoid'),
+                subtitle: const Text('Select Ingredients'),
                 children: _ingredients.keys.map((String key) {
                   return CheckboxListTile(
                     title: Text(key),
@@ -219,4 +235,6 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 }
+
  
+
