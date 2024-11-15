@@ -99,21 +99,7 @@ void showFilterBottomSheet (BuildContext context, {String? filterLabel}) async {
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          // Work on later!!!
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   if (filterLabel != null) {
-          //       final targetKey = GlobalObjectKey(filterLabel);
-          //       final targetContext = targetKey.currentContext;
-          //       if (targetContext != null) {
-          //         final box = targetContext.findRenderObject() as RenderBox;
-          //         modalController.animateTo(
-          //           modalController.position.pixels + box.localToGlobal(Offset.zero).dy,
-          //           duration: const Duration(milliseconds: 300),
-          //           curve: Curves.easeInOut,
-          //         );
-          //       }
-          //     }
-          // });
+          
           return Stack(
             children: [
             Container(
@@ -149,19 +135,7 @@ void showFilterBottomSheet (BuildContext context, {String? filterLabel}) async {
                       ]
                     ),
                     
-                    // const SizedBox(height: 20),
-                    // FilterOption(
-                    //   key: const GlobalObjectKey('Ingredients'),
-                    //   label: "Ingredients",
-                    //   options: ingredients,
-                    //   // options: const ["lemon juice","apple" , "applesauce","apricot", "asparagus", "bacon", "banana", "bagel", "basil", "bean", "beef", "beet", "berry", "blackberry", "blueberry", "bread", "broccoli", "butter"],
-                    //   selectedOptions: selectedIngredients,
-                    //   onSelected: (selectedOptions) {
-                    //     setState(() {
-                    //       selectedIngredientCount = selectedOptions.length;
-                    //     });
-                    //   },
-                    // ),
+                    
                     const SizedBox(height: 20),
                     FilterOption(
                       key: const GlobalObjectKey('Meal Types'),
@@ -649,14 +623,7 @@ void fetchMoreRecipes({int pageIndex = 0}) {
                   showFilterBottomSheet(context, filterLabel: "Ratings");
                 },
               ),
-              // const SizedBox(width: 10),
-              // FilterButton(
-              //   label: "Nutrition",
-              //   count: selectedNutritionCount,
-              //   onTap: () {
-              //     log("Nutrition Tapped");
-              //   },
-              // ),
+              
               const SizedBox(width: 10),
               FilterButton(
                 label: "Prep Time",

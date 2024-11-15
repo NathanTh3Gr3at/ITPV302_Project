@@ -28,8 +28,6 @@ class AdjustedHomeView extends StatefulWidget {
 
 class _AdjustedHomeViewState extends State<AdjustedHomeView>
     with TickerProviderStateMixin {
-  // late TabController _tabController;
-  // late TabController _disTabController;
   bool isOffline = false;
   final ScrollController scrollController = ScrollController();
   final ScrollController exploreController = ScrollController();
@@ -96,7 +94,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
     if (_recipeStorage != null) {
       _recipeStorage!
           .fetchRecipes(
-            // limit was 200 before
+        // limit was 200 before
         limit: 20,
         pageIndex: pageIndex,
       )
@@ -125,11 +123,13 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
       });
     }
   }
-    @override
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final authUser = Provider.of<AuthUser>(context); 
-    firstLetter = authUser.username.isNotEmpty ? authUser.username[0].toUpperCase() : '';
+    final authUser = Provider.of<AuthUser>(context);
+    firstLetter =
+        authUser.username.isNotEmpty ? authUser.username[0].toUpperCase() : '';
   }
 
   @override
@@ -176,34 +176,35 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                 fontWeight: FontWeight.bold,
               )),
           Container(
-  height: 50, // Ensure height is equal to width
-  width: 50,  // Ensure width is equal to height
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(50), // Adjust to height/width to make it perfectly round
-    color: const Color.fromARGB(255, 162, 206, 100),
-  ),
-  child: IconButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfileView(user: UserModel(username: username ?? '')),
-        ),
-      );
-    },
-    icon: Center(
-      child: Text(
-        firstLetter,
-        style: const TextStyle(
-          fontSize: 24,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  ),
-)
-
+            height: 50, // Ensure height is equal to width
+            width: 50, // Ensure width is equal to height
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                  50), // Adjust to height/width to make it perfectly round
+              color: const Color.fromARGB(255, 162, 206, 100),
+            ),
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ProfileView(user: UserModel(username: username ?? '')),
+                  ),
+                );
+              },
+              icon: Center(
+                child: Text(
+                  firstLetter,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          )
         ]),
         backgroundColor: backgroundColor,
       ),
@@ -232,7 +233,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                     height: 20,
                   ),
                 ),
-                                ResponsiveRowColumnItem(
+                ResponsiveRowColumnItem(
                   child: Container(
                     height: 310,
                     decoration: const BoxDecoration(
@@ -330,8 +331,7 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                         return Container(
                                                           color: Colors.grey,
                                                           child: const Center(
-                                                            child: Text(
-                                                                ''),
+                                                            child: Text(''),
                                                           ),
                                                         );
                                                       },
@@ -527,7 +527,8 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                         return Container(
                                                           color: Colors.grey,
                                                           child: const Center(
-                                                            child: Text('Image not found'),
+                                                            child: Text(
+                                                                'Image not found'),
                                                           ),
                                                         );
                                                       },
@@ -568,42 +569,65 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                                                       ),
                                                     ),
                                                     Positioned(
-                                        top: 8,
-                                        right: 3,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            color: const Color.fromARGB(
-                                                255, 255, 255, 255),
-                                          ),
-                                          padding: const EdgeInsets.all(
-                                              0), // Adjusted padding
-                                          child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
-                                        builder: (context, likedRecipes) {
-                                          final isLiked = likedRecipes.any((liked) => liked.recipeId == recipe.recipeId);
-                                          return IconButton(
-                                            onPressed: () {
-                                              // setState(() {
-                                                final saveRecipe = context
-                                                    .read<SaveRecipeCubit>();
+                                                      top: 8,
+                                                      right: 3,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                          color: const Color
+                                                              .fromARGB(255,
+                                                              255, 255, 255),
+                                                        ),
+                                                        padding: const EdgeInsets
+                                                            .all(
+                                                            0), // Adjusted padding
+                                                        child: BlocBuilder<
+                                                                SaveRecipeCubit,
+                                                                List<
+                                                                    CloudRecipe>>(
+                                                            builder: (context,
+                                                                likedRecipes) {
+                                                          final isLiked = likedRecipes
+                                                              .any((liked) =>
+                                                                  liked
+                                                                      .recipeId ==
+                                                                  recipe
+                                                                      .recipeId);
+                                                          return IconButton(
+                                                            onPressed: () {
+                                                              // setState(() {
+                                                              final saveRecipe =
+                                                                  context.read<
+                                                                      SaveRecipeCubit>();
 
-                                                if(isLiked) {
-                                                  saveRecipe.unlike(recipe.recipeId);
-                                                }
-                                                else {
-                                                  saveRecipe.likeRecipe(recipe);
-                                                }
-                                            },
-                                            icon: Icon(
-                                              isLiked ? MdiIcons.heart : MdiIcons.heartOutline,
-                                              color: isLiked ? Colors.red :Colors.grey 
-                                            ),
-                                          );
-                                        }
-                                        ),
-                                      ),
-                                      ),
+                                                              if (isLiked) {
+                                                                saveRecipe.unlike(
+                                                                    recipe
+                                                                        .recipeId);
+                                                              } else {
+                                                                saveRecipe
+                                                                    .likeRecipe(
+                                                                        recipe);
+                                                              }
+                                                            },
+                                                            icon: Icon(
+                                                                isLiked
+                                                                    ? MdiIcons
+                                                                        .heart
+                                                                    : MdiIcons
+                                                                        .heartOutline,
+                                                                color: isLiked
+                                                                    ? Colors.red
+                                                                    : Colors
+                                                                        .grey),
+                                                          );
+                                                        }),
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -625,171 +649,209 @@ class _AdjustedHomeViewState extends State<AdjustedHomeView>
                   ),
                 ),
                 // Third Container
-ResponsiveRowColumnItem(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 246, 247, 245),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(18),
-            topRight: Radius.circular(18),
-          ),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.only(bottom: 10, top: 16, left: 8),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 15),
-              child: Text(
-                "Explore Recipes",
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      ListView.builder(
-        controller: exploreController,
-        physics: const NeverScrollableScrollPhysics(), // Ensures it uses the main scroll
-        shrinkWrap: true, // Ensures it doesn't expand infinitely
-        itemCount: inifiteRecipes.length,
-        itemBuilder: (context, index) {
-          final recipe = inifiteRecipes[index];
-          String? imageUrl = recipe.identifier == "kaggle" ? recipe.imageSrc : recipe.imageUrl;
-
-          return Padding(
-            padding: const EdgeInsets.only(left: 12, top: 12),
-            child: Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(15),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ResponsiveWrapper.builder(
-                        RecipeView(recipe: recipe),
-                        breakpoints: const [
-                          ResponsiveBreakpoint.resize(480, name: MOBILE),
-                          ResponsiveBreakpoint.resize(800, name: TABLET),
-                          ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-                          ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                          ),
-                          child: Image.network(
-                            imageUrl ?? "",
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 200,
-                                color: Colors.grey,
-                                child: const Center(child: Text('Image not found')),
-                              );
-                            },
+                ResponsiveRowColumnItem(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 246, 247, 245),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(18),
+                            topRight: Radius.circular(18),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                recipe.recipeName,
-                                style: const TextStyle(
-                                  fontSize: 18,
+                        child: const Padding(
+                          padding:
+                              EdgeInsets.only(bottom: 10, top: 16, left: 8),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Text(
+                                "Explore Recipes",
+                                style: TextStyle(
+                                  fontSize: 19,
                                   fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 0, 0, 0),
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  const Icon(Icons.star, color: Colors.amber, size: 18),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    recipe.rating?.toString() ?? 'N/A',
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  const Spacer(),
-                                  const Icon(Icons.local_fire_department, color: Colors.red, size: 18),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    recipe.calories?.toString() ?? 'N/A',
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  const Icon(Icons.schedule, color: Colors.grey, size: 18),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    recipe.totalTime?.toString() ?? 'N/A',
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                        ),
-                        padding: const EdgeInsets.all(0), 
-                        child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
-                          builder: (context, likedRecipes) {
-                            return HeartIconButton(
-                              recipeId: recipe.recipeId,
-                              recipe: recipe,
-                            );
-                          },
-                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    ],
-  ),
-),
+                      ListView.builder(
+                        controller: exploreController,
+                        physics:
+                            const NeverScrollableScrollPhysics(), // Ensures it uses the main scroll
+                        shrinkWrap:
+                            true, // Ensures it doesn't expand infinitely
+                        itemCount: inifiteRecipes.length,
+                        itemBuilder: (context, index) {
+                          final recipe = inifiteRecipes[index];
+                          String? imageUrl = recipe.identifier == "kaggle"
+                              ? recipe.imageSrc
+                              : recipe.imageUrl;
 
-const ResponsiveRowColumnItem(child: SizedBox(height: 100,)),
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 12, top: 12),
+                            child: Card(
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ResponsiveWrapper.builder(
+                                        RecipeView(recipe: recipe),
+                                        breakpoints: const [
+                                          ResponsiveBreakpoint.resize(480,
+                                              name: MOBILE),
+                                          ResponsiveBreakpoint.resize(800,
+                                              name: TABLET),
+                                          ResponsiveBreakpoint.autoScale(1000,
+                                              name: DESKTOP),
+                                          ResponsiveBreakpoint.autoScale(2460,
+                                              name: '4K'),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Stack(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(15),
+                                            topRight: Radius.circular(15),
+                                          ),
+                                          child: Image.network(
+                                            imageUrl ?? "",
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 200,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Container(
+                                                height: 200,
+                                                color: Colors.grey,
+                                                child: const Center(
+                                                    child: Text(
+                                                        'Image not found')),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                recipe.recipeName,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.star,
+                                                      color: Colors.amber,
+                                                      size: 18),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    recipe.rating?.toString() ??
+                                                        'N/A',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                  const Spacer(),
+                                                  const Icon(
+                                                      Icons
+                                                          .local_fire_department,
+                                                      color: Colors.red,
+                                                      size: 18),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    recipe.calories
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.schedule,
+                                                      color: Colors.grey,
+                                                      size: 18),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    recipe.totalTime
+                                                            ?.toString() ??
+                                                        'N/A',
+                                                    style: const TextStyle(
+                                                        fontSize: 14),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Positioned(
+                                      top: 8,
+                                      right: 3,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          color: const Color.fromARGB(
+                                              255, 255, 255, 255),
+                                        ),
+                                        padding: const EdgeInsets.all(0),
+                                        child: BlocBuilder<SaveRecipeCubit,
+                                            List<CloudRecipe>>(
+                                          builder: (context, likedRecipes) {
+                                            return HeartIconButton(
+                                              recipeId: recipe.recipeId,
+                                              recipe: recipe,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                const ResponsiveRowColumnItem(
+                  child: SizedBox(
+                    height: 100,
+                  ),
+                ),
               ]),
         ),
       ),

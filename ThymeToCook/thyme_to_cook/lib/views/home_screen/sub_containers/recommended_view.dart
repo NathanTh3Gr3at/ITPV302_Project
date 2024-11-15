@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/helpers/saving_recipes/heart_icon.dart';
@@ -125,15 +124,7 @@ class _RecommendedViewState extends State<RecommendedView> {
                           recipeId: recipe.recipeId, 
                           recipe: recipe,
                         ),
-                        // child: IconButton(
-                        //   onPressed: () {
-                        //     log(isLiked.toString());
-                        //   },
-                        //   icon: Icon(
-                        //     MdiIcons.heartOutline,
-                        //     color: const Color.fromARGB(255, 153, 142, 160),
-                        //   ) ,
-                        // ),
+                        
                       ),
                     ),
                             ]

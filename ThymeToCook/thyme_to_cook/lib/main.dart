@@ -40,8 +40,10 @@ void main() async {
     authUser = await fetchUserDetails(user);
   }
   runApp(
-   ChangeNotifierProvider<AuthUser>(
-          create: (context) => authUser ?? AuthUser (
+    ChangeNotifierProvider<AuthUser>(
+      create: (context) =>
+          authUser ??
+          AuthUser(
             id: "guest_id",
             email: "guest_email",
             isEmailVerified: false,
@@ -50,14 +52,15 @@ void main() async {
             role: "user",
             userPreferences: {},
             username: "Guest User",
-        ),
-    child: MyApp(recipeStorage: recipeStorage),
+          ),
+      child: MyApp(recipeStorage: recipeStorage),
     ),
   );
 }
 
 Future<AuthUser> fetchUserDetails(User user) async {
-  DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+  DocumentSnapshot userDoc =
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
 
   if (userDoc.exists) {
     Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
@@ -82,7 +85,7 @@ class MyApp extends StatelessWidget {
         // handles bloc provider error usually
         BlocProvider(create: (context) => GroceryListBloc()),
         BlocProvider(create: (context) => SaveRecipeCubit()),
-        BlocProvider(create: (context) => MealPlannerCubit()), 
+        BlocProvider(create: (context) => MealPlannerCubit()),
         BlocProvider(create: (context) => CreateRecipeQubit()),
         Provider<RecipeStorage>.value(value: recipeStorage),
       ],
@@ -123,6 +126,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -131,160 +135,56 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // late StreamSubscription<InternetStatus> _internetSubscription;
+ 
   bool isFirstTime = true;
 
   @override
   void initState() {
     super.initState();
-    // Checks if this is the users first time
-    // checkFirstTime();
-    // Subscribe to changes in connection status after the initial check
-    // _internetSubscription =
-    //     InternetConnection().onStatusChange.listen((InternetStatus status) {
-    //   bool currentlyConnected = (status == InternetStatus.connected);
-    //   if (currentlyConnected != isFirstTime) {
-    //     isFirstTime = currentlyConnected;
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //         content: Text(currentlyConnected
-    //             ? "Welcome back online!"
-    //             : "Device disconnected"),
-    //         duration: const Duration(seconds: 3),
-    //       ));
-    //     });
-    //   }
-    // });
   }
-
-  // Future<void> inspectHiveBox() async {
-  // var box = await Hive.openBox<CloudRecipe>('recipes');
-  // log('Hive box length: ${box.length}');
-  // for (var recipe in box.values) {
-  //   log('Recipe: ${recipe.recipeName}');
-  // }
-  // }
 
   @override
   void dispose() {
-    // _internetSubscription.cancel();
     super.dispose();
   }
-  //  Future<void> checkFirstTime() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   bool hasOpenedAppBefore = prefs.getBool('hasOpenedAppBefore') ?? false;
 
-  //   if (!hasOpenedAppBefore) {
-  //     await prefs.setBool('hasOpenedAppBefore', true);
-  //     context.read<AuthBloc>().add(const AuthEventLogOut());
-  //   }
-  // }
-
-@override
-Widget build(BuildContext context) {
-  context.read<AuthBloc>().add(const AuthEventInitialize());
-  return BlocConsumer<AuthBloc, AuthState>(
-    listener: (context, state) {
-      if (state.isLoading) {
-        LoadingScreen().show(
-          context: context,
-          text: state.loadingText ?? 'Please wait a moment',
-        );
-      } else {
-        LoadingScreen().hide();
-      }
-    },
-    builder: (context, state) {
-      if (state is AuthStateLoggedIn) {
-        return const MainNavigation(isLoggedIn: true);
-      } else if (state is AuthStateNeedsVerification) {
-        return const VerifyEmailView();
-      } else if (state is AuthStateRegisterUsername) {
-        return const UsernameChoiceView();
-      } else if (state is AuthStateForgotPassword) {
-        return  const ForgotPasswordView();
-      } else if (state is AuthStateLoggedOut) {
-        return const MainNavigation(isLoggedIn: false);
-      } else if (state is AuthStateRegistering) {
-        return const RegisterView();
-      } else if (state is AuthStateLoggingIn) {
-        return const LoginView();
-      }
-      else {
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
-    },
-  );
-}
-}
-        //the original
-         
-
-        // if (state is AuthStateLoggedIn) {
-        //   return const MainNavigation();
-        // } else if (state is AuthStateNeedsVerification) {
-        //   return const VerifyEmailView();
-        // } else if (state is AuthStateForgotPassword) {
-        //   return const ForgotPasswordView();
-        // } else if (state is AuthStateLoggedOut) {
-        //   //return const OpenAppView();
-        // //OpenAppView is a new screen for the intro to app
-        //   return const LoginView();
-        // } else if (state is AuthStateRegistering) {
-        //   return const RegisterView();
-        //   //will need to add the routing to the 3 screens
-        // } else {
-        //   return const Scaffold(
-        //     body: CircularProgressIndicator(),
-        //   );
-        // }
-
-
-    /* _internetSubscription =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (status == InternetStatus.connected) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Welcome back online!"),
-              duration: Duration(seconds: 3),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    context.read<AuthBloc>().add(const AuthEventInitialize());
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.isLoading) {
+          LoadingScreen().show(
+            context: context,
+            text: state.loadingText ?? 'Please wait a moment',
           );
-        } else if (status == InternetStatus.disconnected) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Device disconnected!"),
-              duration: Duration(seconds: 3),
+        } else {
+          LoadingScreen().hide();
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthStateLoggedIn) {
+          return const MainNavigation(isLoggedIn: true);
+        } else if (state is AuthStateNeedsVerification) {
+          return const VerifyEmailView();
+        } else if (state is AuthStateRegisterUsername) {
+          return const UsernameChoiceView();
+        } else if (state is AuthStateForgotPassword) {
+          return const ForgotPasswordView();
+        } else if (state is AuthStateLoggedOut) {
+          return const MainNavigation(isLoggedIn: false);
+        } else if (state is AuthStateRegistering) {
+          return const RegisterView();
+        } else if (state is AuthStateLoggingIn) {
+          return const LoginView();
+        } else {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           );
         }
-      });
-    }); */
-
-    // _checkInitialConnectionStatus();
-  // }
-
-  // Future<void> _checkInitialConnectionStatus() async {
-  //   // Check the initial connection status synchronously
-  //   final initialStatus = await Connectivity().checkConnectivity();
-  //   if (initialStatus == ConnectivityResult.none) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text("Device disconnected from WIFI!"),
-  //           duration: Duration(seconds: 3),
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
-
-  // To Handle the UI changes when Connected/Disconnected
-  // void _updateUIBasedOnConnectivity(bool isConnected) {
-  //   if (isConnected) {
-  //   } else {}
-  // }
+      },
+    );
+  }
+}

@@ -1,6 +1,6 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:thyme_to_cook/helpers/saving_recipes/heart_icon.dart';
@@ -14,7 +14,8 @@ class FifteenMinuteRecipesView extends StatefulWidget {
   const FifteenMinuteRecipesView({super.key});
 
   @override
-  State<FifteenMinuteRecipesView> createState() => _FifteenMinuteRecipesViewState();
+  State<FifteenMinuteRecipesView> createState() =>
+      _FifteenMinuteRecipesViewState();
 }
 
 class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
@@ -30,7 +31,8 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
   List<CloudRecipe> _recipes = [];
 
   void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
       fetchMoreRecipes();
     }
   }
@@ -115,19 +117,22 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ResponsiveWrapper.builder(
-                                  RecipeView(recipe: recipe),
-                                  breakpoints: const [
-                                    ResponsiveBreakpoint.resize(480, name: MOBILE),
-                                    ResponsiveBreakpoint.resize(800, name: TABLET),
-                                    ResponsiveBreakpoint.autoScale(1000, name: DESKTOP),
-                                    ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-                                  ],
-                                )
-                              )
-                            );
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ResponsiveWrapper.builder(
+                                          RecipeView(recipe: recipe),
+                                          breakpoints: const [
+                                            ResponsiveBreakpoint.resize(480,
+                                                name: MOBILE),
+                                            ResponsiveBreakpoint.resize(800,
+                                                name: TABLET),
+                                            ResponsiveBreakpoint.autoScale(1000,
+                                                name: DESKTOP),
+                                            ResponsiveBreakpoint.autoScale(2460,
+                                                name: '4K'),
+                                          ],
+                                        )));
                           },
                           child: Stack(
                             children: [
@@ -138,7 +143,8 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
                                     color: Colors.grey,
-                                    child: const Center(child: Text('Image not found')),
+                                    child: const Center(
+                                        child: Text('Image not found')),
                                   );
                                 },
                               ),
@@ -149,7 +155,8 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
                                 child: Container(
                                   height: 280,
                                   color: Colors.black.withOpacity(0.1),
-                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 12.0),
                                   child: Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Text(
@@ -170,15 +177,15 @@ class _FifteenMinuteRecipesViewState extends State<FifteenMinuteRecipesView> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(100),
-                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
                                   ),
-                                  padding: const EdgeInsets.symmetric(vertical: 0.1, horizontal: 0.1),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 0.1, horizontal: 0.1),
                                   child: HeartIconButton(
-                                    recipeId: recipe.recipeId, 
+                                    recipeId: recipe.recipeId,
                                     recipe: recipe,
                                   ),
-                              
-                                 
                                 ),
                               ),
                             ],

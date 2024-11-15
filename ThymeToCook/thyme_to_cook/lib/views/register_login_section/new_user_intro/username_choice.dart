@@ -46,7 +46,8 @@ class _UsernameChoiceViewState extends State<UsernameChoiceView> {
             child: LinearProgressIndicator(
               value: 1 / 4,
               backgroundColor: Color.fromARGB(255, 233, 233, 233),
-              valueColor: AlwaysStoppedAnimation(Color.fromARGB(255, 162, 206, 100)),
+              valueColor:
+                  AlwaysStoppedAnimation(Color.fromARGB(255, 162, 206, 100)),
             ),
           ),
         ),
@@ -74,42 +75,44 @@ class _UsernameChoiceViewState extends State<UsernameChoiceView> {
             Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: TextField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      errorText: !_isUsernameValid ? 'Please enter your name' : null,
-                      errorStyle: const TextStyle(
-                        color: errorMessagesAndAlertsColor,
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green),
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                    ),
+                controller: usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  errorText:
+                      !_isUsernameValid ? 'Please enter your name' : null,
+                  errorStyle: const TextStyle(
+                    color: errorMessagesAndAlertsColor,
+                  ),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green),
+                  ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
                   ),
                 ),
+              ),
+            ),
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 60.0, left: 40, right: 40),
+                padding:
+                    const EdgeInsets.only(bottom: 60.0, left: 40, right: 40),
                 child: ElevatedButton(
-                onPressed: () {
-                  _validateAndProceed();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryButtonColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  onPressed: () {
+                    _validateAndProceed();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryButtonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text(
+                    'Next',
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
               ),
             ),
           ],

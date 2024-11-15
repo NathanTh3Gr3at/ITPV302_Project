@@ -56,13 +56,7 @@ class _RegisterViewState extends State<RegisterView> {
     else {
       final email = _email.text;
       final password = _password.text;
-                            // Replace with register Step state
-                            // context.read<AuthBloc>().add(
-                            //       AuthEventRegister(
-                            //         email,
-                            //         password,
-                            //   ),
-                            // );
+                            
       Provider.of<UserProvider>(context, listen: false).updateEmail(email);
       Provider.of<UserProvider>(context, listen: false).updatePassword(password);
       context.read<AuthBloc>().add(const AuthEventRegisterIgredientsToAvoid());
@@ -187,23 +181,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
             ),
-                // Padding(
-                //   padding: const EdgeInsets.only(top: 20.0),
-                //   child: TextField(
-                //     controller: _password,
-                //     obscureText: true,
-                //     enableSuggestions: false,
-                //     autocorrect: false,
-                //     decoration: const InputDecoration(
-                //         hintText: 'Enter your password here'),
-                //     // decoration: const InputDecoration(
-                //     //     hintText: 'Enter your password here',
-                //     //     labelText: "Password",
-                //     //     filled: true,
-                //     //     fillColor: openAppBackgroundColor
-                //     // ),    
-                //   ),
-                // ),
+                
                 Center(
                   child: Column(
                     children: [

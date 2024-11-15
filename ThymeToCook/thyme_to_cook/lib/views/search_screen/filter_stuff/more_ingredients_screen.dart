@@ -84,10 +84,7 @@ class _MoreIngredientsScreenState extends State<MoreIngredientsScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: searchController,
-              // decoration: const InputDecoration(
-              //   labelText: 'Search Ingredients',
-              //   border: OutlineInputBorder(),
-              // ),
+              
               decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 2),
                       hintStyle: const TextStyle(

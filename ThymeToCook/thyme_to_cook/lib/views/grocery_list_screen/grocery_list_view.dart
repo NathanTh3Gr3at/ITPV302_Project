@@ -30,19 +30,12 @@ class _GroceryListViewState extends State<GroceryListView> {
   void initState() {
     super.initState();
     groceryBloc = BlocProvider.of<GroceryListBloc>(context);
-    // initialize grocery list
-    // context.read<GroceryListBloc>().add(const GroceryListInitialize());
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)!.settings.arguments as Map;
-    // if (_recipeName.isEmpty) {
-    //   _recipeName = args['recipeName'] as String;
-    //   final ingredients = args['ingredients'] as List<dynamic>;
-    //   _initializeIngredients(ingredients.cast<Ingredient>());
-    // }
-
+    
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -195,10 +188,9 @@ class _GroceryListViewState extends State<GroceryListView> {
       );
             },
           )
-          // ? const Center(child: Text('No ingredients to buy'))
-          // : _groceryListMethod(),
+          
           ),
-      // bottomNavigationBar: const BottomNavBar(),
+      
     );
   }
 
