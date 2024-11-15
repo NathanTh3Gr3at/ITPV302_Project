@@ -16,11 +16,18 @@ Planning of deliverables has been done using the GitHub projects feature.
 Discussions are done through Discord or Email.
 
 ## Repositry Contents
- - Business Case
- - Implementaion Doc
- - Planning for project
- - Project proposal
- - Requirements Documentation
- - ThymeToCook
+ - [Business Case](Business%20Case/)
+ - [Firebase_admin_key](Firebase_admin_key/)
+ - [Implementaion Doc](Implementation%20Doc/)
+ - [Planning for project](Planning%20for%20project/)
+ - [Powerpoint Slides](PowerPoint%20Slides/)
+ - [Presentation](Presentation/)
+ - [Project proposal](Project%20Proposal/)
+ - [Requirements Documentation](Requirements%20Documentaion/)
+ - [ThymeToCook](ThymeToCook/)
  - 4 Week development plan general
+ - Final Doc (1)
+ - Final Doc Outdated
+ - FinalDocumentation
+ - ITPV302 Demo Video
  - README.md
