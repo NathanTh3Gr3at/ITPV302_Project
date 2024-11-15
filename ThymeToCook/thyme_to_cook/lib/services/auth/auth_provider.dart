@@ -7,15 +7,20 @@ abstract class AuthProvider{
     required String email,
     required String password,
   });
-  Future<AuthUser> createUser({
+  Future<AuthUser> createUserDoc({
     required String email,
-    required String password,
+    required String username,
+    required Map<String, dynamic> userPreferences,
   });
   Future<void> logOut();
   Future<void> sendEmailVerification();
   Future<void>sendPasswordReset({required String toEmail});
 
-  
+  Future<AuthUser> registerUser({
+    required String email,
+    required String password,
+  });
 
-  
+  Future<void> refreshUser();
+
 }

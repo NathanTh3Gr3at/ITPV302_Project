@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:thyme_to_cook/enums/menu_action.dart';
 import 'package:thyme_to_cook/models/category_model.dart';
@@ -161,8 +161,7 @@ class _HomeViewState extends State<HomeView> {
               height: 15,
             ),
             Container(
-              // color: Colors.green,
-              // height of container
+             
               height: 120,
               child: ListView.separated(
                 itemBuilder: (context, index) {
@@ -270,12 +269,16 @@ class _HomeViewState extends State<HomeView> {
                         shape: BoxShape.circle,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.favorite_outline_outlined),
-                        ),
-                      ),
+
+                          padding: const EdgeInsets.all(5.0),
+                          child: IconButton(
+                              onPressed: () {},
+                              icon:
+                                  const Icon(Icons.favorite_outline_outlined,
+                                  ),
+                                ),
+                              ),
+
                     ),
                     Text(
                       categories[index].name,
@@ -333,3 +336,4 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+ 

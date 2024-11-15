@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:thyme_to_cook/models/recipe_model.dart';
-import 'package:thyme_to_cook/navigation/bottom_nav_bar.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:responsive_framework/responsive_wrapper.dart';
+import 'package:thyme_to_cook/services/auth/bloc/save_recipe_function/save_cubit.dart';
+import 'package:thyme_to_cook/services/cloud/cloud_recipes/cloud_recipe.dart';
+
 import 'package:thyme_to_cook/themes/colors/colors.dart';
+import 'package:thyme_to_cook/views/recipe_screen/recipe_view.dart';
+import 'package:thyme_to_cook/views/search_screen/adjusted_search_view.dart';
 
 class SaveView extends StatefulWidget {
   const SaveView({super.key});
@@ -11,33 +17,103 @@ class SaveView extends StatefulWidget {
 }
 
 class _SaveViewState extends State<SaveView> {
-  List<RecipeModel> recipes = [];
+  List<CloudRecipe> recipes = [];
   Set<String> selectedFilter = {};
-
-  void _getRecipes() {
-    recipes = RecipeModel.getRecipe();
-  }
 
   @override
   void initState() {
     super.initState();
-    _getRecipes();
   }
 
   @override
   Widget build(BuildContext context) {
-    // _getInitial();
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         backgroundColor: backgroundColor,
-        //appBar: appBar(),
-        body: ListView(
+
+        appBar: appBar(),
+        body: Column(
+
           children: [
-            _likedRecipes(),
+            // using cubit to fill tiles
+            Expanded(
+              // Use Expanded here to take remaining space
+              child: BlocBuilder<SaveRecipeCubit, List<CloudRecipe>>(
+                builder: (context, likedRecipes) {
+                  if (likedRecipes.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Image(
+                            image: AssetImage('assets/images/sad_image.png'),
+                            height: 200, // Adjust height as needed
+                          ),
+                          const SizedBox(height: 20),
+                          Card(
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            elevation: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "You have no saved recipes, Search for recipes to add",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ResponsiveWrapper.builder(
+                                            const AdjustedSearchView(),
+                                            breakpoints: const [
+                                              ResponsiveBreakpoint.resize(480,
+                                                  name: MOBILE),
+                                              ResponsiveBreakpoint.resize(800,
+                                                  name: TABLET),
+                                              ResponsiveBreakpoint.autoScale(
+                                                  1000,
+                                                  name: DESKTOP),
+                                              ResponsiveBreakpoint.autoScale(
+                                                  2460,
+                                                  name: '4K'),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Search for recipes'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return _likedRecipes(likedRecipes);
+                  }
+                },
+              ),
+            ),
           ],
         ),
-        bottomNavigationBar: const BottomNavBar(),
       ),
     );
   }
@@ -53,194 +129,133 @@ class _SaveViewState extends State<SaveView> {
           fontWeight: FontWeight.bold,
         ),
       ),
+      // bottom: PreferredSize(
+      //   preferredSize: const Size.fromHeight(50),
+      //   child: _filterTabs(),
+      // ),
     );
   } */
 
-  Column _likedRecipes() {
-    return Column(children: [
-      const SizedBox(
-        height: 2,
+  Widget _likedRecipes(List<CloudRecipe> likedRecipes) {
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1 / 1.5,
       ),
-      _searchField(),
-      const SizedBox(
-        height: 5,
-      ),
-      _filterTabs(),
-      const SizedBox(
-        height: 10,
-      ),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 8, bottom: 20),
-            child: Text(
-              "Recipes",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+
+      itemCount: likedRecipes.length,
+      itemBuilder: (context, index) {
+        CloudRecipe recipe = likedRecipes[index];
+        String imageUrl =
+            recipe.identifier == "kaggle" ? recipe.imageSrc! : recipe.imageUrl!;
+        return Card(
+          clipBehavior: Clip.hardEdge,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-          SizedBox(
-            height: 520,
-            // width: 400,
-            child: GridView.builder(
-              //  padding: const EdgeInsets.only(left: 10, right: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10, // spacing between grid
-                mainAxisSpacing: 10,
-                childAspectRatio: 1 / 1.5,
-              ),
-
-              shrinkWrap: true, // wraps list content
-
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {});
-                  },
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: recipes[index].liked
-                          // tile background
-                          //? const Color.fromARGB(255, 240, 240, 240)
-                          ? const Color.fromARGB(255, 190, 233, 170)
-                          : Colors.transparent,
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 232, 232, 232),
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: recipes[index].liked
-                          ? [
-                              BoxShadow(
-                                color: const Color.fromARGB(235, 217, 217, 217)
-                                    .withOpacity(0.5),
-                                offset: const Offset(0, 9),
-                                blurRadius: 20,
-                                spreadRadius: 0,
-                              )
-                            ]
-                          : [],
+          elevation: 2,
+          child: Stack(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecipeView(recipe: recipe),
+                      ));
+                },
+                child: Stack(
+                  children: [
+                    Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      height: double.infinity,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey,
+                          child: const Center(
+                            child: Text('Image not found'),
+                          ),
+                        );
+                      },
                     ),
-                    child: Column(
-                      //  crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            // Heart Icon
-
-                            IconButton(
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    recipes[index].liked =
-                                        !recipes[index].liked;
-                                  },
-                                );
-                              },
-                              icon: Icon(recipes[index].liked
-                                  ? Icons.keyboard_control
-                                  : Icons.keyboard_control),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 350,
+                        color: Colors.black.withOpacity(0.3),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 12.0),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            recipe.recipeName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
+                            overflow: TextOverflow.clip,
+                          ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Column(
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                recipes[index].name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                    fontSize: 16),
-                              ),
-                              Text(
-                                recipes[index].nutrition,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                              Text(
-                                recipes[index].duration,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300),
+
+                              IconButton(
+                                onPressed: () {
+                                  context
+                                      .read<SaveRecipeCubit>()
+                                      .unlike(recipe.recipeId);
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Text(
+                                        "${recipe.recipeName} was removed from your saved list"),
+                                    duration: const Duration(seconds: 3),
+                                    action: SnackBarAction(
+                                      label: 'Undo',
+                                      onPressed: () {
+                                        context
+                                            .read<SaveRecipeCubit>()
+                                            .likeRecipe(recipe);
+                                      },
+                                    ),
+                                  ));
+                                },
+                                icon: const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                        ],
+                      ),
 
-                        // positioning of image
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          // recipe image
-                          child: Image.asset(
-                            recipes[index].iconPath,
-                            width: 150,
-                            height: 150,
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                );
-              },
-
-              itemCount: recipes.length,
-            ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      )
-    ]);
-  }
-
-  Container _searchField() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-              color: const Color.fromARGB(255, 246, 235, 235).withOpacity(0.11),
-              blurRadius: 40,
-              spreadRadius: 0.0)
-        ],
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: searchbarBackgroundColor,
-          contentPadding: const EdgeInsets.all(15),
-          prefixIcon: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.search),
-          ),
-          hintText: "Search Saved Recipes",
-          hintStyle: const TextStyle(
-            color: Color.fromARGB(122, 0, 0, 0),
-            fontSize: 12,
-          ),
-          suffixIcon: const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Icon(Icons.filter_alt_rounded),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -249,24 +264,13 @@ class _SaveViewState extends State<SaveView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(
-            8
-          ),
-          child: Text(
-            "Recipe Collection",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+
+
         SingleChildScrollView(
           // wraps filter row for scrolling
           scrollDirection: Axis.horizontal,
           child: Row(children: <Widget>[
-            filterRow('All Recipes'),
+            filterRow('All Saved Recipes'),
             filterRow('Recently Viewed'),
             filterRow('Nutrition'),
             filterRow('Duration'),

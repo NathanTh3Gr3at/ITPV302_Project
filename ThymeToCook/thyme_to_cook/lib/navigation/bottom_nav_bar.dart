@@ -13,46 +13,55 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) {
-        return NavigationBar(
-          onDestinationSelected: (index) {
-            context.read<NavigationBloc>().add(
-                  SelectTabEvent(index),
-                );
+
+        return BottomNavigationBar(
+          currentIndex: state.selectedTabIndex,
+          onTap: (index) {
+            context.read<NavigationBloc>().add(SelectTabEvent(index));
+
           },
-          indicatorColor: navIconSelectedColor,
-          selectedIndex: state.selectedTabIndex,
           backgroundColor: navigationBarColor,
-          destinations: <Widget>[
-            NavigationDestination(
-                icon: Icon(
-                  MdiIcons.homeVariant,
-                  color: navIconColor,
-                ),
-                label: "Home"),
-            NavigationDestination(
-                icon: Icon(
-                  MdiIcons.heart,
-                  color: navIconColor,
-                ),
-                label: "Saved",tooltip: 'Saved Recipes',),
-            NavigationDestination(
-                icon: Icon(
-                  MdiIcons.magnify,
-                  color: navIconColor,
-                ),
-                label: "Search",tooltip: 'Search for Recipes',),
-            NavigationDestination(
-                icon: Icon(
-                  MdiIcons.calendarBlank,
-                  color: navIconColor,
-                ),
-                label: "Planner",tooltip: 'Meal Planner',),
-            NavigationDestination(
-                icon: Icon(
-                  MdiIcons.listBox,
-                  color: navIconColor,
-                ),
-                label: "Lists",tooltip: 'Grocery List',)
+
+          selectedItemColor: const Color.fromARGB(255, 162, 206, 100),
+          unselectedItemColor: navIconColor,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.homeVariant,
+                size: 24
+              ),
+              label: "Home",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.heart,
+                size: 24,
+              ),
+              label: "Saved",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.magnify,
+                size: 24,
+              ),
+              label: "Search",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.calendarBlank,
+                size: 24
+              ),
+              label: "Planner",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                MdiIcons.listBox,
+                size: 24
+              ),
+              label: "Lists",
+            ),
+
           ],
         );
       },

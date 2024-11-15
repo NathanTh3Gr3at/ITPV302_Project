@@ -44,63 +44,69 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           }
         }
       },
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: AppBar(
+      child: GestureDetector(
+        onTap:()=>FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
           backgroundColor: backgroundColor,
-          title: const Text('Forgot Password'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Text(
-                  'If you forgot your password, simply enter your email and we will send you a password reset link.'),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                autocorrect: false,
-                autofocus: true,
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Your email address....',
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    final email = _controller.text;
-                    context
-                        .read<AuthBloc>()
-                        .add(AuthEventForgotPassword(email: email));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryButtonColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            title: const Text('Forgot Password?'),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const Text(
+                    'If you forgot your password, simply enter your email and we will send you a password reset link.'),
+                Padding(
+                  padding: const EdgeInsets.only(top:30,bottom:30),
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
+                    //autofocus: true,
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: 'Your email address....',
                     ),
                   ),
-                  child: const Text('Send me password reset link'),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogOut(),
-                        );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryButtonColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final email = _controller.text;
+                      context
+                          .read<AuthBloc>()
+                          .add(AuthEventForgotPassword(email: email));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryButtonColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
+                    child: const Text('Send me password reset link'),
                   ),
-                  child: const Text('Back to login page'),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                            const AuthEventLogOut(),
+                          );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryButtonColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text('Back to login page'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
